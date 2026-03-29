@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="sw" class="scroll-smooth">
 <head>
@@ -11,9 +12,9 @@
         body { font-family: 'Outfit', sans-serif; background-color: #FFFFFF; color: #1a1a1a; }
         
         /* --- SLIDER STYLING --- */
-        .slider-container { position: relative; width: 100%; max-width: 800px; margin: 0 auto 30px; height: 350px; overflow: hidden; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .slider-container { position: relative; width: 100%; max-width: 800px; margin: 0 auto 30px; height: 400px; overflow: hidden; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         .slider { display: flex; transition: transform 0.7s ease-in-out; height: 100%; }
-        .slider img { width: 100%; height: 100%; object-cover: cover; flex-shrink: 0; }
+        .slider img { width: 100%; height: 100%; object-fit: cover; flex-shrink: 0; }
 
         /* --- MENU TABS STYLING --- */
         .menu-container { text-align: center; padding: 40px 20px; background: #fffaf5; border-radius: 20px; margin: 20px auto; max-width: 900px; }
@@ -26,11 +27,11 @@
         /* --- ORDER SYSTEM STYLING --- */
         .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #f0f0f0; transition: 0.2s; }
         .menu-item:hover { background: #fffcf9; }
-        .qty-controls { display: flex; items-center: center; gap: 12px; background: #f8f8f8; padding: 5px 12px; border-radius: 10px; }
+        .qty-controls { display: flex; align-items: center; gap: 12px; background: #f8f8f8; padding: 5px 12px; border-radius: 10px; }
         .qty-btn { width: 28px; height: 28px; background: #d35400; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
         .qty-val { font-weight: 800; min-width: 20px; text-align: center; }
 
-        .order-summary-btn { display: inline-block; margin-top: 25px; padding: 15px 35px; background: #25D366; color: white; text-decoration: none; border-radius: 12px; font-weight: 800; transition: 0.3s; width: 100%; max-width: 300px; }
+        .order-summary-btn { display: inline-block; margin-top: 25px; padding: 15px 35px; background: #25D366; color: white; text-decoration: none; border-radius: 12px; font-weight: 800; transition: 0.3s; width: 100%; max-width: 300px; cursor: pointer; border: none; }
         .order-summary-btn:hover { background: #128C7E; transform: scale(1.03); }
 
         /* --- FOOTER --- */
@@ -57,11 +58,14 @@
     <section class="py-10 bg-yellow-50">
         <div class="slider-container">
             <div class="slider" id="main-slider">
+                <img src="1000275268.webp" alt="Wali na Kuku">
+                <img src="1000275267.webp" alt="Kisinia Mixed Meats">
+                <img src="1000275255.webp" alt="Ugali na Samaki">
                 <img src="shishi-food.webp" alt="Menu 1">
                 <img src="background-chini.webp" alt="Menu 2">
             </div>
         </div>
-        <div class="text-center">
+        <div class="text-center px-4">
             <h1 class="text-4xl font-black uppercase">Ladha Halisi ya <span class="text-yellow-500">Kiafrika</span></h1>
             <p class="text-gray-600 italic">Chagua chakula chako, weka oda, tukuletee!</p>
         </div>
@@ -157,11 +161,13 @@
     </footer>
 
     <script>
-        // 1. Slider Logic
+        // 1. Slider Logic iliyoboreshwa kwa picha 5
         let slideIndex = 0;
         const slider = document.getElementById('main-slider');
+        const totalSlides = 5; // Idadi ya picha sasa ni 5
+
         function rotateSlider() {
-            slideIndex = (slideIndex + 1) % 2;
+            slideIndex = (slideIndex + 1) % totalSlides;
             slider.style.transform = `translateX(-${slideIndex * 100}%)`;
         }
         setInterval(rotateSlider, 4000);
@@ -175,7 +181,6 @@
                 tablinks[i].classList.remove("active");
             }
             evt.currentTarget.classList.add("active");
-            // Hapa tunaweza pia ku-reset oda kama unataka kila siku ianze upya
         }
 
         // 3. Order Logic
@@ -207,7 +212,7 @@
             }
             text += `%0A*Nasubiri majibu ya oda yangu.*`;
             
-            // Weka namba yako hapa
+            // Namba yako ya WhatsApp (Kawe, Dar es Salaam)
             const phone = "255712345678"; 
             window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
         }
