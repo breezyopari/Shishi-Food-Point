@@ -1,221 +1,240 @@
-
 <!DOCTYPE html>
 <html lang="sw" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shishi Food Point | Ladha Halisi ya Kiafrika</title>
+    <title>Shishi Food Point | Login & Order</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Outfit', sans-serif; background-color: #FFFFFF; color: #1a1a1a; }
+        body { font-family: 'Outfit', sans-serif; background-color: #fcfcfc; }
+        .hidden { display: none; }
         
-        /* --- SLIDER STYLING --- */
-        .slider-container { position: relative; width: 100%; max-width: 800px; margin: 0 auto 30px; height: 400px; overflow: hidden; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        /* --- PROFILE ICON STYLING --- */
+        #user-profile { width: 45px; height: 45px; background: #d35400; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 2px solid white; }
+
+        /* --- SLIDER --- */
+        .slider-container { position: relative; width: 100%; max-width: 800px; margin: 0 auto 20px; height: 300px; overflow: hidden; border-radius: 20px; }
         .slider { display: flex; transition: transform 0.7s ease-in-out; height: 100%; }
         .slider img { width: 100%; height: 100%; object-fit: cover; flex-shrink: 0; }
 
-        /* --- MENU TABS STYLING --- */
-        .menu-container { text-align: center; padding: 40px 20px; background: #fffaf5; border-radius: 20px; margin: 20px auto; max-width: 900px; }
-        .day-tabs { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 25px; }
-        .tab-btn { padding: 12px 20px; border: 1px solid #d35400; background: white; cursor: pointer; border-radius: 30px; font-weight: bold; transition: 0.3s; color: #d35400; }
-        .tab-btn.active { background: #d35400; color: white; box-shadow: 0 4px 10px rgba(211, 84, 0, 0.3); }
-        .tab-content { display: none; padding: 25px; background: white; border-radius: 15px; border-top: 4px solid #d35400; box-shadow: 0 10px 20px rgba(0,0,0,0.05); animation: fadeEffect 0.5s; }
-        @keyframes fadeEffect { from {opacity: 0;} to {opacity: 1;} }
+        /* --- FORMS --- */
+        .auth-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 400px; margin: 40px auto; }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 5px; }
+        .input-group input { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 12px; outline: none; transition: 0.3s; }
+        .input-group input:focus { border-color: #d35400; }
 
-        /* --- ORDER SYSTEM STYLING --- */
-        .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #f0f0f0; transition: 0.2s; }
-        .menu-item:hover { background: #fffcf9; }
-        .qty-controls { display: flex; align-items: center; gap: 12px; background: #f8f8f8; padding: 5px 12px; border-radius: 10px; }
-        .qty-btn { width: 28px; height: 28px; background: #d35400; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
-        .qty-val { font-weight: 800; min-width: 20px; text-align: center; }
-
-        .order-summary-btn { display: inline-block; margin-top: 25px; padding: 15px 35px; background: #25D366; color: white; text-decoration: none; border-radius: 12px; font-weight: 800; transition: 0.3s; width: 100%; max-width: 300px; cursor: pointer; border: none; }
-        .order-summary-btn:hover { background: #128C7E; transform: scale(1.03); }
-
-        /* --- FOOTER --- */
-        footer.site-footer {
-            background-image: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('background-chini.webp');
-            background-size: cover; background-position: center; color: #ffffff; padding: 60px 20px; text-align: center; border-top: 4px solid #FFD700;
-        }
+        /* --- ORDER BAR --- */
+        .total-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 15px 20px; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; z-index: 100; border-radius: 20px 20px 0 0; }
     </style>
 </head>
 <body>
 
-    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md p-4 border-b-2 border-yellow-500">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <div class="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center shadow-md">
-                    <i class="fas fa-utensils text-black text-xl"></i>
-                </div>
-                <span class="text-2xl font-extrabold">SHISHI <span class="text-yellow-500">FOOD</span></span>
-            </div>
-            <a href="#menu" class="bg-black text-white px-6 py-2 rounded-full font-bold hover:bg-yellow-500 hover:text-black">Angalia Menu</a>
+    <div id="auth-screen" class="container mx-auto px-4 text-center">
+        <div class="mt-10 mb-6">
+            <h1 class="text-3xl font-black text-orange-600">SHISHI FOOD POINT</h1>
+            <p class="text-gray-500 text-sm">Jisajili ili uanze kuagiza chakula</p>
         </div>
-    </nav>
 
-    <section class="py-10 bg-yellow-50">
-        <div class="slider-container">
+        <div class="auth-card" id="register-form">
+            <h2 class="text-xl font-bold mb-6">Tengeneza Akaunti</h2>
+            <div class="input-group">
+                <label>Jina Kamili</label>
+                <input type="text" id="reg-name" placeholder="Mfano: Peterson">
+            </div>
+            <div class="input-group">
+                <label>Namba ya Simu</label>
+                <input type="tel" id="reg-phone" placeholder="07XXXXXXXX">
+            </div>
+            <div class="input-group">
+                <label>Password (Herufi 6+)</label>
+                <input type="password" id="reg-pass" placeholder="******">
+            </div>
+            <button onclick="handleRegister()" class="w-100 bg-orange-600 text-white w-full py-3 rounded-xl font-bold shadow-lg">Jisajili Sasa</button>
+            <p class="mt-4 text-sm">Tayari una akaunti? <a href="#" onclick="toggleAuth()" class="text-orange-600 font-bold">Ingia hapa</a></p>
+        </div>
+
+        <div class="auth-card hidden" id="login-form">
+            <h2 class="text-xl font-bold mb-6">Ingia Kwenye Akaunti</h2>
+            <div class="input-group">
+                <label>Namba ya Simu</label>
+                <input type="tel" id="login-phone">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="login-pass">
+            </div>
+            <button onclick="handleLogin()" class="w-100 bg-orange-600 text-white w-full py-3 rounded-xl font-bold shadow-lg">Ingia</button>
+            <p class="mt-4 text-sm">Hauna akaunti? <a href="#" onclick="toggleAuth()" class="text-orange-600 font-bold">Jisajili</a></p>
+        </div>
+    </div>
+
+    <div id="app-screen" class="hidden">
+        <nav class="bg-white p-4 shadow-sm flex justify-between items-center sticky top-0 z-50">
+            <div class="flex items-center gap-3">
+                <div id="user-profile">P</div> <div>
+                    <p class="text-[10px] text-gray-500 leading-none uppercase">Karibu,</p>
+                    <p id="display-name" class="font-bold text-sm">Mteja</p>
+                </div>
+            </div>
+            <button onclick="logout()" class="text-xs text-red-500 font-bold">Logout</button>
+        </nav>
+
+        <div class="slider-container mt-4 mx-4">
             <div class="slider" id="main-slider">
-                <img src="1000275268.webp" alt="Wali na Kuku">
-                <img src="1000275267.webp" alt="Kisinia Mixed Meats">
-                <img src="1000275255.webp" alt="Ugali na Samaki">
-                <img src="shishi-food.webp" alt="Menu 1">
-                <img src="background-chini.webp" alt="Menu 2">
+                <img src="1000275268.webp" alt="Food 1">
+                <img src="1000275267.webp" alt="Food 2">
+                <img src="1000275255.webp" alt="Food 3">
             </div>
         </div>
-        <div class="text-center px-4">
-            <h1 class="text-4xl font-black uppercase">Ladha Halisi ya <span class="text-yellow-500">Kiafrika</span></h1>
-            <p class="text-gray-600 italic">Chagua chakula chako, weka oda, tukuletee!</p>
-        </div>
-    </section>
 
-    <section id="menu" class="container mx-auto px-4 py-10">
-        <div class="menu-container">
-            <h2 class="text-2xl font-black mb-6 uppercase">Orodha ya Vyakula na Bei</h2>
+        <div class="px-4 pb-32">
+            <h3 class="font-black text-lg mb-4">MENU YA LEO</h3>
             
-            <div class="day-tabs">
-                <button class="tab-btn active" onclick="openMenu(event, 'Jumatatu')">Jumatatu</button>
-                <button class="tab-btn" onclick="openMenu(event, 'Jumanne')">Jumanne</button>
-                <button class="tab-btn" onclick="openMenu(event, 'Jumatano')">Jumatano</button>
-                <button class="tab-btn" onclick="openMenu(event, 'Alhamisi')">Alhamisi</button>
-                <button class="tab-btn" onclick="openMenu(event, 'Ijumaa')">Ijumaa</button>
-                <button class="tab-btn" onclick="openMenu(event, 'Jumamosi')">Jumamosi</button>
-                <button class="tab-btn" onclick="openMenu(event, 'Jumapili')">Jumapili</button>
-            </div>
-
-            <div class="tab-content" id="menu-box" style="display:block;">
-                <div id="items-list">
-                    <div class="menu-item">
-                        <div class="text-left">
-                            <span class="block font-bold">Ugali & Kuku wa Kukaanga</span>
-                            <span class="text-orange-600 text-sm">12,000 - 15,000 TZS</span>
-                        </div>
-                        <div class="qty-controls">
-                            <div class="qty-btn" onclick="changeQty(this, -1, 'Ugali & Kuku')">-</div>
-                            <span class="qty-val">0</span>
-                            <div class="qty-btn" onclick="changeQty(this, 1, 'Ugali & Kuku')">+</div>
-                        </div>
+            <div class="space-y-4">
+                <div class="bg-white p-4 rounded-2xl flex justify-between items-center shadow-sm border border-gray-100">
+                    <div>
+                        <p class="font-bold">Ugali & Kuku</p>
+                        <p class="text-orange-600 font-black text-sm">12,000 TZS</p>
                     </div>
-                    <div class="menu-item">
-                        <div class="text-left">
-                            <span class="block font-bold">Ugali na Samaki (Sato/Sangara)</span>
-                            <span class="text-orange-600 text-sm">15,000 - 18,000 TZS</span>
-                        </div>
-                        <div class="qty-controls">
-                            <div class="qty-btn" onclick="changeQty(this, -1, 'Ugali & Samaki')">-</div>
-                            <span class="qty-val">0</span>
-                            <div class="qty-btn" onclick="changeQty(this, 1, 'Ugali & Samaki')">+</div>
-                        </div>
-                    </div>
-                    <div class="menu-item">
-                        <div class="text-left">
-                            <span class="block font-bold">Wali/Biriyani ya Mbuzi</span>
-                            <span class="text-orange-600 text-sm">12,000 - 15,000 TZS</span>
-                        </div>
-                        <div class="qty-controls">
-                            <div class="qty-btn" onclick="changeQty(this, -1, 'Wali/Biriyani Mbuzi')">-</div>
-                            <span class="qty-val">0</span>
-                            <div class="qty-btn" onclick="changeQty(this, 1, 'Wali/Biriyani Mbuzi')">+</div>
-                        </div>
-                    </div>
-                    <div class="menu-item">
-                        <div class="text-left">
-                            <span class="block font-bold">Pilau Kuku/Mbuzi</span>
-                            <span class="text-orange-600 text-sm">10,000 - 12,000 TZS</span>
-                        </div>
-                        <div class="qty-controls">
-                            <div class="qty-btn" onclick="changeQty(this, -1, 'Pilau Kuku/Mbuzi')">-</div>
-                            <span class="qty-val">0</span>
-                            <div class="qty-btn" onclick="changeQty(this, 1, 'Pilau Kuku/Mbuzi')">+</div>
-                        </div>
-                    </div>
-                    <div class="menu-item">
-                        <div class="text-left">
-                            <span class="block font-bold">Kisinia (Mixed Meats)</span>
-                            <span class="text-orange-600 text-sm">25,000 - 45,000 TZS</span>
-                        </div>
-                        <div class="qty-controls">
-                            <div class="qty-btn" onclick="changeQty(this, -1, 'Kisinia')">-</div>
-                            <span class="qty-val">0</span>
-                            <div class="qty-btn" onclick="changeQty(this, 1, 'Kisinia')">+</div>
-                        </div>
+                    <div class="flex items-center gap-3 bg-gray-50 p-2 rounded-xl">
+                        <button onclick="updateQty('Ugali & Kuku', -1, 12000)" class="w-8 h-8 bg-white rounded-lg shadow-sm font-bold">-</button>
+                        <span id="qty-Ugali & Kuku" class="font-bold">0</span>
+                        <button onclick="updateQty('Ugali & Kuku', 1, 12000)" class="w-8 h-8 bg-orange-600 text-white rounded-lg shadow-sm font-bold">+</button>
                     </div>
                 </div>
 
-                <button onclick="sendWhatsAppOrder()" class="order-summary-btn">
-                    <i class="fab fa-whatsapp"></i> Tuma Oda WhatsApp
-                </button>
-                <p class="mt-4 text-xs text-gray-500">*Baada ya kutuma, subiri majibu ya oda yako kutoka kwetu.*</p>
+                <div class="bg-white p-4 rounded-2xl flex justify-between items-center shadow-sm border border-gray-100">
+                    <div>
+                        <p class="font-bold">Kisinia (Mixed)</p>
+                        <p class="text-orange-600 font-black text-sm">25,000 TZS</p>
+                    </div>
+                    <div class="flex items-center gap-3 bg-gray-50 p-2 rounded-xl">
+                        <button onclick="updateQty('Kisinia', -1, 25000)" class="w-8 h-8 bg-white rounded-lg shadow-sm font-bold">-</button>
+                        <span id="qty-Kisinia" class="font-bold">0</span>
+                        <button onclick="updateQty('Kisinia', 1, 25000)" class="w-8 h-8 bg-orange-600 text-white rounded-lg shadow-sm font-bold">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6">
+                <label class="text-sm font-bold text-gray-600">Maelekezo Maalum:</label>
+                <textarea id="order-note" class="w-full mt-2 p-4 border-2 border-gray-100 rounded-2xl outline-none focus:border-orange-500" rows="2" placeholder="Mfano: Pilipili nyingi..."></textarea>
             </div>
         </div>
-    </section>
 
-    <footer class="site-footer">
-        <div class="container mx-auto">
-            <h3 class="text-yellow-500 font-black text-2xl mb-4">SHISHI FOOD POINT</h3>
-            <p>Kawe, Dar es Salaam. Fungua kila siku 07:00 AM - 10:00 PM.</p>
-            <p class="mt-10 opacity-50 text-sm">&copy; 2026 Shishi Food Point. Haki zote zimehifadhiwa.</p>
+        <div class="total-bar">
+            <div>
+                <p class="text-xs text-gray-500">Jumla ya Malipo</p>
+                <p class="text-xl font-black text-orange-600"><span id="grand-total">0</span> TZS</p>
+            </div>
+            <button onclick="sendOrder()" class="bg-green-500 text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2">
+                <i class="fab fa-whatsapp"></i> Tuma Oda
+            </button>
         </div>
-    </footer>
+    </div>
 
     <script>
-        // 1. Slider Logic iliyoboreshwa kwa picha 5
-        let slideIndex = 0;
-        const slider = document.getElementById('main-slider');
-        const totalSlides = 5; // Idadi ya picha sasa ni 5
+        let userData = JSON.parse(localStorage.getItem('shishiUser')) || null;
+        let currentOrder = {};
+        let grandTotal = 0;
 
-        function rotateSlider() {
-            slideIndex = (slideIndex + 1) % totalSlides;
-            slider.style.transform = `translateX(-${slideIndex * 100}%)`;
-        }
-        setInterval(rotateSlider, 4000);
-
-        // 2. Tab Logic
-        let currentDay = "Jumatatu";
-        function openMenu(evt, dayName) {
-            currentDay = dayName;
-            var tablinks = document.getElementsByClassName("tab-btn");
-            for (var i = 0; i < tablinks.length; i++) {
-                tablinks[i].classList.remove("active");
-            }
-            evt.currentTarget.classList.add("active");
+        // 1. AUTH LOGIC
+        function toggleAuth() {
+            document.getElementById('register-form').classList.toggle('hidden');
+            document.getElementById('login-form').classList.toggle('hidden');
         }
 
-        // 3. Order Logic
-        let myOrder = {};
+        function handleRegister() {
+            const name = document.getElementById('reg-name').value;
+            const phone = document.getElementById('reg-phone').value;
+            const pass = document.getElementById('reg-pass').value;
 
-        function changeQty(btn, delta, name) {
-            const display = btn.parentElement.querySelector('.qty-val');
-            let currentVal = parseInt(display.innerText) + delta;
-            
-            if (currentVal < 0) currentVal = 0;
-            display.innerText = currentVal;
-
-            if (currentVal > 0) {
-                myOrder[name] = currentVal;
-            } else {
-                delete myOrder[name];
-            }
-        }
-
-        function sendWhatsAppOrder() {
-            if (Object.keys(myOrder).length === 0) {
-                alert("Tafadhali chagua chakula angalau kimoja!");
+            if(name === "" || phone === "" || pass.length < 6) {
+                alert("Tafadhali jaza maelezo yote. Password lazima iwe na herufi 6 au zaidi.");
                 return;
             }
 
-            let text = `Habari Shishi Food! Naomba kuagiza chakula kwa ajili ya siku ya ${currentDay}:%0A%0A`;
-            for (let food in myOrder) {
-                text += `✅ ${food}: ${myOrder[food]}%0A`;
-            }
-            text += `%0A*Nasubiri majibu ya oda yangu.*`;
-            
-            // Namba yako ya WhatsApp (Kawe, Dar es Salaam)
-            const phone = "255712345678"; 
-            window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+            const user = { name, phone, pass };
+            localStorage.setItem('shishiUser', JSON.stringify(user));
+            alert("Usajili Umekamilika! Sasa ingia.");
+            toggleAuth();
         }
+
+        function handleLogin() {
+            const phone = document.getElementById('login-phone').value;
+            const pass = document.getElementById('login-pass').value;
+            const savedUser = JSON.parse(localStorage.getItem('shishiUser'));
+
+            if(savedUser && savedUser.phone === phone && savedUser.pass === pass) {
+                userData = savedUser;
+                showApp();
+            } else {
+                alert("Namba ya simu au Password siyo sahihi!");
+            }
+        }
+
+        function showApp() {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('app-screen').classList.remove('hidden');
+            
+            // Weka Herufi ya Kwanza ya Jina
+            const firstLetter = userData.name.charAt(0).toUpperCase();
+            document.getElementById('user-profile').innerText = firstLetter;
+            document.getElementById('display-name').innerText = userData.name;
+        }
+
+        // 2. ORDER LOGIC
+        function updateQty(item, delta, price) {
+            if(!currentOrder[item]) currentOrder[item] = 0;
+            currentOrder[item] += delta;
+            if(currentOrder[item] < 0) currentOrder[item] = 0;
+
+            document.getElementById(`qty-${item}`).innerText = currentOrder[item];
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            // Mfano wa bei: Ugali (12000), Kisinia (25000)
+            let total = (currentOrder['Ugali & Kuku'] || 0) * 12000 + 
+                        (currentOrder['Kisinia'] || 0) * 25000;
+            grandTotal = total;
+            document.getElementById('grand-total').innerText = total.toLocaleString();
+        }
+
+        function sendOrder() {
+            if(grandTotal === 0) {
+                alert("Chagua chakula kwanza!");
+                return;
+            }
+            const note = document.getElementById('order-note').value;
+            let text = `Habari Shishi Food! Oda kutoka kwa ${userData.name}:%0A`;
+            for(let key in currentOrder) {
+                if(currentOrder[key] > 0) text += `✅ ${key}: ${currentOrder[key]}%0A`;
+            }
+            text += `%0A💰 *JUMLA: ${grandTotal.toLocaleString()} TZS*`;
+            if(note) text += `%0A📝 Maelekezo: ${note}`;
+            
+            window.open(`https://wa.me/255712345678?text=${text}`, '_blank');
+        }
+
+        function logout() {
+            localStorage.removeItem('shishiUser');
+            location.reload();
+        }
+
+        // Auto-login kama ana akaunti
+        if(userData) showApp();
+
+        // Slider Logic
+        let sIdx = 0;
+        setInterval(() => {
+            sIdx = (sIdx + 1) % 3;
+            document.getElementById('main-slider').style.transform = `translateX(-${sIdx * 100}%)`;
+        }, 4000);
     </script>
 </body>
 </html>
+
