@@ -12,7 +12,47 @@
         .text-yellow { color: #FFD700; }
         .bg-yellow { background-color: #FFD700; }
         .card-shadow { shadow-sm hover:shadow-xl transition: 0.4s; border: 1px solid #f3f4f6; }
-        .sticky-nav { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); border-bottom: 2px solid #FFD700; }
+        .sticky-nav { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); border-bottom: 2px solid #FFD700
+<style>
+    /* Code zako nyingine za CSS zilizopo zibaki... */
+
+    /* Hapa tunaweka style ya footer */
+    .site-footer {
+        position: relative; /* Muhimu kwa ajili ya background layer */
+        background-color: #333; /* Rangi ya nyuma (kama picha haitafunguka) */
+        color: white; /* Rangi ya maandishi ya footer */
+        padding: 40px 20px; /* Nafasi ndani ya footer */
+        text-align: center;
+        overflow: hidden; /* Kuzuia vitu kutoka nje */
+    }
+
+    /* Hapa ndipo tunapoweka picha ya background na kuifanya ionekane kwa mbali */
+    .site-footer::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        
+        /* WEKA JINA LA PICHA YAKO HAPA */
+        background-image: url('background-chini.webp'); 
+        
+        background-size: cover; /* Picha itandame eneo lote */
+        background-position: center; /* Picha ikae katikati */
+        background-repeat: no-repeat;
+        
+        /* HAPA NDIYO TUNAPUNGUZA UKALI (OPACITY) */
+        opacity: 0.15; /* Thamani kati ya 0.0 (haionekani) na 1.0 (inaonekana kabisa). 0.15 ni nzuri kwa "mbali" */
+        
+        z-index: 1; /* Inaweka picha nyuma ya maandishi */
+    }
+
+    /* Kuhakikisha maandishi yanasomeka juu ya picha */
+    .footer-content {
+        position: relative;
+        z-index: 2; /* Inaweka maandishi mbele ya picha */
+    }
+</style>
+
+
     </style>
 </head>
 <body>
@@ -146,6 +186,14 @@
     <a href="https://wa.me/255XXXXXXXXX" class="fixed bottom-6 right-6 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-2xl hover:scale-110 transition z-[100]">
         <i class="fab fa-whatsapp"></i>
     </a>
-
+<footer class="site-footer">
+        <div class="footer-content">
+            <h3>Shishi Food Point</h3>
+            <p>Ladha Halisi ya Nyumbani, Kila Siku.</p>
+            <p>&copy; 2024 Shishi Food Point. Haki zote zimehifadhiwa.</p>
+            <p>Tufuate: Instagram | Facebook</p>
+        </div>
+    </footer>
 </body>
+
 </html>
