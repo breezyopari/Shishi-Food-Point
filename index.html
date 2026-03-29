@@ -3,145 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shishi Food Point | Login & Order</title>
+    <title>Shishi Food Point | Official App</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Outfit', sans-serif; background-color: #fcfcfc; }
+        body { font-family: 'Outfit', sans-serif; background-color: #f9f9f9; color: #1a1a1a; }
         .hidden { display: none; }
         
-        /* --- PROFILE ICON STYLING --- */
-        #user-profile { width: 45px; height: 45px; background: #d35400; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 2px solid white; }
+        #user-avatar { width: 45px; height: 45px; background: #d35400; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; border: 2px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
-        /* --- SLIDER --- */
-        .slider-container { position: relative; width: 100%; max-width: 800px; margin: 0 auto 20px; height: 300px; overflow: hidden; border-radius: 20px; }
+        .slider-container { position: relative; width: 100%; max-width: 800px; margin: 0 auto 20px; height: 350px; overflow: hidden; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         .slider { display: flex; transition: transform 0.7s ease-in-out; height: 100%; }
         .slider img { width: 100%; height: 100%; object-fit: cover; flex-shrink: 0; }
 
-        /* --- FORMS --- */
-        .auth-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 400px; margin: 40px auto; }
-        .input-group { margin-bottom: 15px; text-align: left; }
-        .input-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 5px; }
-        .input-group input { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 12px; outline: none; transition: 0.3s; }
+        .auth-card { background: white; padding: 30px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); width: 100%; max-width: 400px; margin: 40px auto; }
+        .input-group input { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 12px; outline: none; margin-bottom: 15px; }
         .input-group input:focus { border-color: #d35400; }
 
-        /* --- ORDER BAR --- */
-        .total-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 15px 20px; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; z-index: 100; border-radius: 20px 20px 0 0; }
+        .history-card { background: #fffaf5; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid #d35400; text-align: left; }
+
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 15px 25px; box-shadow: 0 -10px 25px rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: center; z-index: 1000; border-radius: 25px 25px 0 0; }
     </style>
 </head>
 <body>
 
-    <div id="auth-screen" class="container mx-auto px-4 text-center">
-        <div class="mt-10 mb-6">
-            <h1 class="text-3xl font-black text-orange-600">SHISHI FOOD POINT</h1>
-            <p class="text-gray-500 text-sm">Jisajili ili uanze kuagiza chakula</p>
-        </div>
+    <div id="auth-screen" class="container mx-auto px-4 py-10 text-center">
+        <h1 class="text-4xl font-black text-orange-600 mb-2">SHISHI FOOD</h1>
+        <p class="text-gray-500 mb-8 uppercase tracking-widest text-xs font-bold">Ladha Halisi ya Kiafrika</p>
 
         <div class="auth-card" id="register-form">
-            <h2 class="text-xl font-bold mb-6">Tengeneza Akaunti</h2>
+            <h2 class="text-xl font-bold mb-6">Jisajili sasa</h2>
             <div class="input-group">
-                <label>Jina Kamili</label>
-                <input type="text" id="reg-name" placeholder="Mfano: Peterson">
+                <input type="text" id="reg-name" placeholder="Jina lako la kwanza">
+                <input type="tel" id="reg-phone" placeholder="Namba ya simu">
+                <input type="password" id="reg-pass" placeholder="Password (Herufi 6+)">
             </div>
-            <div class="input-group">
-                <label>Namba ya Simu</label>
-                <input type="tel" id="reg-phone" placeholder="07XXXXXXXX">
-            </div>
-            <div class="input-group">
-                <label>Password (Herufi 6+)</label>
-                <input type="password" id="reg-pass" placeholder="******">
-            </div>
-            <button onclick="handleRegister()" class="w-100 bg-orange-600 text-white w-full py-3 rounded-xl font-bold shadow-lg">Jisajili Sasa</button>
-            <p class="mt-4 text-sm">Tayari una akaunti? <a href="#" onclick="toggleAuth()" class="text-orange-600 font-bold">Ingia hapa</a></p>
+            <button onclick="handleRegister()" class="w-full bg-orange-600 text-white py-4 rounded-xl font-bold shadow-lg hover:bg-orange-700 transition">Tengeneza Akaunti</button>
+            <p class="mt-4 text-sm text-gray-500">Tayari una akaunti? <a href="#" onclick="toggleAuth()" class="text-orange-600 font-bold underline">Ingia hapa</a></p>
         </div>
 
         <div class="auth-card hidden" id="login-form">
-            <h2 class="text-xl font-bold mb-6">Ingia Kwenye Akaunti</h2>
+            <h2 class="text-xl font-bold mb-6">Ingia Kwenye App</h2>
             <div class="input-group">
-                <label>Namba ya Simu</label>
-                <input type="tel" id="login-phone">
+                <input type="tel" id="login-phone" placeholder="Namba ya simu">
+                <input type="password" id="login-pass" placeholder="Password">
             </div>
-            <div class="input-group">
-                <label>Password</label>
-                <input type="password" id="login-pass">
-            </div>
-            <button onclick="handleLogin()" class="w-100 bg-orange-600 text-white w-full py-3 rounded-xl font-bold shadow-lg">Ingia</button>
-            <p class="mt-4 text-sm">Hauna akaunti? <a href="#" onclick="toggleAuth()" class="text-orange-600 font-bold">Jisajili</a></p>
+            <button onclick="handleLogin()" class="w-full bg-black text-white py-4 rounded-xl font-bold shadow-lg hover:opacity-90 transition">Ingia</button>
+            <p class="mt-4 text-sm text-gray-500">Hauna akaunti bado? <a href="#" onclick="toggleAuth()" class="text-orange-600 font-bold underline">Jisajili hapa</a></p>
         </div>
     </div>
 
     <div id="app-screen" class="hidden">
-        <nav class="bg-white p-4 shadow-sm flex justify-between items-center sticky top-0 z-50">
-            <div class="flex items-center gap-3">
-                <div id="user-profile">P</div> <div>
-                    <p class="text-[10px] text-gray-500 leading-none uppercase">Karibu,</p>
-                    <p id="display-name" class="font-bold text-sm">Mteja</p>
-                </div>
-            </div>
-            <button onclick="logout()" class="text-xs text-red-500 font-bold">Logout</button>
-        </nav>
-
-        <div class="slider-container mt-4 mx-4">
-            <div class="slider" id="main-slider">
-                <img src="1000275268.webp" alt="Food 1">
-                <img src="1000275267.webp" alt="Food 2">
-                <img src="1000275255.webp" alt="Food 3">
-            </div>
-        </div>
-
-        <div class="px-4 pb-32">
-            <h3 class="font-black text-lg mb-4">MENU YA LEO</h3>
-            
-            <div class="space-y-4">
-                <div class="bg-white p-4 rounded-2xl flex justify-between items-center shadow-sm border border-gray-100">
+        
+        <header class="bg-white/80 backdrop-blur-md sticky top-0 z-[100] border-b p-4">
+            <div class="container mx-auto flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div id="user-avatar">?</div>
                     <div>
-                        <p class="font-bold">Ugali & Kuku</p>
-                        <p class="text-orange-600 font-black text-sm">12,000 TZS</p>
-                    </div>
-                    <div class="flex items-center gap-3 bg-gray-50 p-2 rounded-xl">
-                        <button onclick="updateQty('Ugali & Kuku', -1, 12000)" class="w-8 h-8 bg-white rounded-lg shadow-sm font-bold">-</button>
-                        <span id="qty-Ugali & Kuku" class="font-bold">0</span>
-                        <button onclick="updateQty('Ugali & Kuku', 1, 12000)" class="w-8 h-8 bg-orange-600 text-white rounded-lg shadow-sm font-bold">+</button>
+                        <p class="text-[10px] text-gray-400 font-bold uppercase leading-none">Karibu tena,</p>
+                        <p id="user-name-display" class="font-extrabold text-gray-800">Mteja</p>
                     </div>
                 </div>
+                <button onclick="logout()" class="text-red-500 font-bold text-xs bg-red-50 px-3 py-2 rounded-lg hover:bg-red-100 transition">Logout</button>
+            </div>
+        </header>
 
-                <div class="bg-white p-4 rounded-2xl flex justify-between items-center shadow-sm border border-gray-100">
-                    <div>
-                        <p class="font-bold">Kisinia (Mixed)</p>
-                        <p class="text-orange-600 font-black text-sm">25,000 TZS</p>
-                    </div>
-                    <div class="flex items-center gap-3 bg-gray-50 p-2 rounded-xl">
-                        <button onclick="updateQty('Kisinia', -1, 25000)" class="w-8 h-8 bg-white rounded-lg shadow-sm font-bold">-</button>
-                        <span id="qty-Kisinia" class="font-bold">0</span>
-                        <button onclick="updateQty('Kisinia', 1, 25000)" class="w-8 h-8 bg-orange-600 text-white rounded-lg shadow-sm font-bold">+</button>
-                    </div>
+        <section class="p-4 bg-white">
+            <div class="slider-container">
+                <div class="slider" id="main-slider">
+                    <img src="1000275268.webp" alt="Food 1">
+                    <img src="1000275267.webp" alt="Food 2">
+                    <img src="1000275255.webp" alt="Food 3">
+                    <img src="shishi-food.webp" alt="Food 4">
+                    <img src="background-chini.webp" alt="Food 5">
+                </div>
+            </div>
+        </section>
+
+        <section class="container mx-auto px-4 py-6 pb-32">
+            <div class="flex justify-between items-end mb-6">
+                <div>
+                    <h2 id="menu-header-date" class="text-2xl font-black uppercase text-gray-800">Menu ya Leo</h2>
+                    <p id="current-day-display" class="text-orange-600 font-bold text-sm">Inasoma...</p>
+                </div>
+                <div class="text-right">
+                    <a href="#history-section" class="text-xs font-bold text-gray-400 hover:text-orange-600 transition"><i class="fas fa-history"></i> Oda Zangu</a>
                 </div>
             </div>
 
-            <div class="mt-6">
-                <label class="text-sm font-bold text-gray-600">Maelekezo Maalum:</label>
-                <textarea id="order-note" class="w-full mt-2 p-4 border-2 border-gray-100 rounded-2xl outline-none focus:border-orange-500" rows="2" placeholder="Mfano: Pilipili nyingi..."></textarea>
-            </div>
-        </div>
+            <div id="menu-items-list" class="space-y-4"></div>
 
-        <div class="total-bar">
+            <div class="mt-8">
+                <label class="font-bold text-sm text-gray-600 ml-1">Maelekezo Maalum (Mfano: Bila Pilipili):</label>
+                <textarea id="special-instructions" class="w-full mt-2 p-4 bg-white border border-gray-100 rounded-2xl outline-none focus:border-orange-500 shadow-sm" rows="2" placeholder="Andika hapa..."></textarea>
+            </div>
+
+            <div id="history-section" class="mt-12 pt-8 border-t border-dashed border-gray-200">
+                <h3 class="font-black text-gray-400 text-sm mb-4 uppercase tracking-widest">Kumbukumbu ya Oda</h3>
+                <div id="history-list">
+                    <p class="text-xs text-gray-400 italic text-center">Bado haujatuma oda yoyote.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-black text-white p-10 text-center rounded-t-[40px] mb-20 shadow-2xl">
+            <h3 class="text-yellow-500 font-black text-xl mb-2">SHISHI FOOD POINT</h3>
+            <p class="text-xs opacity-70">Police Mabatini Kijitonyama, Dar es Salaam.<br>Saa 08:00 Asubuhi - 06:00 Usiku</p>
+            <div class="flex justify-center gap-6 mt-8">
+                <a href="https://goo.gl/maps/fgyAuxwUnnMytCqn8" target="_blank" class="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center"><i class="fas fa-map-marker-alt"></i></a>
+                <a href="https://www.instagram.com/shishifood" target="_blank" class="w-10 h-10 bg-gradient-to-tr from-yellow-400 to-purple-600 rounded-full flex items-center justify-center"><i class="fab fa-instagram"></i></a>
+            </div>
+            <p class="text-[10px] text-gray-500 mt-10">&copy; 2026 Shishi Food Point.</p>
+        </footer>
+
+        <div class="bottom-nav">
             <div>
-                <p class="text-xs text-gray-500">Jumla ya Malipo</p>
-                <p class="text-xl font-black text-orange-600"><span id="grand-total">0</span> TZS</p>
+                <p class="text-[10px] text-gray-400 font-bold uppercase leading-none">Jumla ya Malipo</p>
+                <p class="text-2xl font-black text-orange-600"><span id="grand-total">0</span> <small class="text-xs">TZS</small></p>
             </div>
-            <button onclick="sendOrder()" class="bg-green-500 text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2">
-                <i class="fab fa-whatsapp"></i> Tuma Oda
+            <button onclick="handleOrderNow()" class="bg-green-500 text-white px-8 py-4 rounded-2xl font-black shadow-lg flex items-center gap-2 hover:bg-green-600 transition">
+                <i class="fab fa-whatsapp text-xl"></i> TUMA ODA
             </button>
         </div>
     </div>
 
     <script>
-        let userData = JSON.parse(localStorage.getItem('shishiUser')) || null;
-        let currentOrder = {};
-        let grandTotal = 0;
+        const prices = {
+            "Ugali & Kuku wa Kukaanga": 12000, "Wali & Maharage": 5000, "Biriyani ya Mbuzi": 15000,
+            "Ugali & Samaki Sato": 12000, "Pilau Kuku": 12000, "Ugali & Kuku": 12000,
+            "Wali & Kuku": 12000, "Ugali & Maini": 8000, "Biriyani Special": 15000,
+            "Kisinia Mixed Meats": 30000, "Kisinia Special": 45000, "Ugali & Samaki": 12000, "Pilau Special": 15000
+        };
 
-        // 1. AUTH LOGIC
+        const menuData = {
+            "Jumatatu": ["Ugali & Kuku wa Kukaanga", "Wali & Maharage"],
+            "Jumanne": ["Biriyani ya Mbuzi", "Ugali & Samaki Sato"],
+            "Jumatano": ["Pilau Kuku", "Ugali & Kuku"],
+            "Alhamisi": ["Wali & Kuku", "Ugali & Maini"],
+            "Ijumaa": ["Biriyani Special", "Kisinia Mixed Meats"],
+            "Jumamosi": ["Kisinia Special", "Ugali & Samaki"],
+            "Jumapili": ["Pilau Special", "Ugali & Kuku"]
+        };
+
+        let userData = JSON.parse(localStorage.getItem('shishiUser')) || null;
+        let cart = {};
+        let orderHistory = JSON.parse(localStorage.getItem('shishiHistory')) || [];
+
         function toggleAuth() {
             document.getElementById('register-form').classList.toggle('hidden');
             document.getElementById('login-form').classList.toggle('hidden');
@@ -151,89 +159,132 @@
             const name = document.getElementById('reg-name').value;
             const phone = document.getElementById('reg-phone').value;
             const pass = document.getElementById('reg-pass').value;
-
-            if(name === "" || phone === "" || pass.length < 6) {
-                alert("Tafadhali jaza maelezo yote. Password lazima iwe na herufi 6 au zaidi.");
-                return;
-            }
-
-            const user = { name, phone, pass };
-            localStorage.setItem('shishiUser', JSON.stringify(user));
-            alert("Usajili Umekamilika! Sasa ingia.");
-            toggleAuth();
+            if(!name || !phone || pass.length < 6) { alert("Jaza taarifa zote!"); return; }
+            userData = { name, phone, pass };
+            localStorage.setItem('shishiUser', JSON.stringify(userData));
+            initApp();
         }
 
         function handleLogin() {
             const phone = document.getElementById('login-phone').value;
             const pass = document.getElementById('login-pass').value;
-            const savedUser = JSON.parse(localStorage.getItem('shishiUser'));
-
-            if(savedUser && savedUser.phone === phone && savedUser.pass === pass) {
-                userData = savedUser;
-                showApp();
-            } else {
-                alert("Namba ya simu au Password siyo sahihi!");
-            }
+            const saved = JSON.parse(localStorage.getItem('shishiUser'));
+            if(saved && saved.phone === phone && saved.pass === pass) {
+                userData = saved;
+                initApp();
+            } else { alert("Namba au Password siyo sahihi!"); }
         }
 
-        function showApp() {
+        function initApp() {
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('app-screen').classList.remove('hidden');
             
-            // Weka Herufi ya Kwanza ya Jina
-            const firstLetter = userData.name.charAt(0).toUpperCase();
-            document.getElementById('user-profile').innerText = firstLetter;
-            document.getElementById('display-name').innerText = userData.name;
+            const sasa = new Date();
+            const sikuWiki = ["Jumapili", "Jumatatu", "Jumanne", "Jumatano", "Alhamisi", "Ijumaa", "Jumamosi"];
+            const sikuLeo = sikuWiki[sasa.getDay()];
+
+            document.getElementById('menu-header-date').innerText = `Menu ya Leo: ${sasa.toLocaleDateString('en-GB')}`;
+            document.getElementById('current-day-display').innerText = `Leo ni ${sikuLeo}`;
+            document.getElementById('user-avatar').innerText = userData.name.charAt(0).toUpperCase();
+            document.getElementById('user-name-display').innerText = userData.name;
+            
+            renderMenu(sikuLeo);
+            updateHistoryUI();
         }
 
-        // 2. ORDER LOGIC
-        function updateQty(item, delta, price) {
-            if(!currentOrder[item]) currentOrder[item] = 0;
-            currentOrder[item] += delta;
-            if(currentOrder[item] < 0) currentOrder[item] = 0;
+        function renderMenu(siku) {
+            const container = document.getElementById('menu-items-list');
+            const items = menuData[siku] || [];
+            container.innerHTML = items.map(name => `
+                <div class="bg-white p-5 rounded-2xl flex justify-between items-center shadow-sm border border-gray-50">
+                    <div>
+                        <p class="font-extrabold text-gray-800">${name}</p>
+                        <p class="text-orange-600 font-black text-sm">${prices[name].toLocaleString()} TZS</p>
+                    </div>
+                    <div class="flex items-center gap-4 bg-gray-50 p-2 rounded-xl">
+                        <button onclick="updateQty('${name}', -1)" class="w-8 h-8 bg-white shadow-sm rounded-lg font-black">-</button>
+                        <span id="qty-${name}" class="font-black text-lg">0</span>
+                        <button onclick="updateQty('${name}', 1)" class="w-8 h-8 bg-orange-600 text-white rounded-lg font-black">+</button>
+                    </div>
+                </div>
+            `).join('');
+        }
 
-            document.getElementById(`qty-${item}`).innerText = currentOrder[item];
+        function updateQty(name, delta) {
+            if(!cart[name]) cart[name] = 0;
+            cart[name] += delta;
+            if(cart[name] < 0) cart[name] = 0;
+            document.getElementById(`qty-${name}`).innerText = cart[name];
             calculateTotal();
         }
 
         function calculateTotal() {
-            // Mfano wa bei: Ugali (12000), Kisinia (25000)
-            let total = (currentOrder['Ugali & Kuku'] || 0) * 12000 + 
-                        (currentOrder['Kisinia'] || 0) * 25000;
-            grandTotal = total;
+            let total = 0;
+            for(let name in cart) total += cart[name] * (prices[name] || 0);
             document.getElementById('grand-total').innerText = total.toLocaleString();
         }
 
-        function sendOrder() {
-            if(grandTotal === 0) {
-                alert("Chagua chakula kwanza!");
-                return;
-            }
-            const note = document.getElementById('order-note').value;
-            let text = `Habari Shishi Food! Oda kutoka kwa ${userData.name}:%0A`;
-            for(let key in currentOrder) {
-                if(currentOrder[key] > 0) text += `✅ ${key}: ${currentOrder[key]}%0A`;
-            }
-            text += `%0A💰 *JUMLA: ${grandTotal.toLocaleString()} TZS*`;
-            if(note) text += `%0A📝 Maelekezo: ${note}`;
-            
-            window.open(`https://wa.me/255712345678?text=${text}`, '_blank');
+        // Hii ndio sehemu iliyorekebishwa (Moja kwa moja WhatsApp)
+        function handleOrderNow() {
+            const total = document.getElementById('grand-total').innerText;
+            if(total === "0") { alert("Chagua chakula kwanza!"); return; }
+
+            const note = document.getElementById('special-instructions').value;
+            let summary = "";
+            for(let k in cart) if(cart[k] > 0) summary += `${k} (${cart[k]}), `;
+            summary = summary.slice(0, -2);
+
+            // History Save
+            orderHistory.unshift({ date: new Date().toLocaleString(), items: summary, raw: {...cart} });
+            if(orderHistory.length > 5) orderHistory.pop();
+            localStorage.setItem('shishiHistory', JSON.stringify(orderHistory));
+            updateHistoryUI();
+
+            // WhatsApp Redirect
+            const phone = "255716101721"; 
+            let text = `Habari Shishi Food! Oda kutoka kwa *${userData.name}*:%0A%0A✅ *ODA:* ${summary}%0A💰 *JUMLA:* ${total} TZS`;
+            if(note) text += `%0A📝 *MAELEKEZO:* ${note}`;
+            text += `%0A%0A_Imetumwa kupitia Shishi App_`;
+
+            window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
         }
 
-        function logout() {
-            localStorage.removeItem('shishiUser');
-            location.reload();
+        function updateHistoryUI() {
+            const list = document.getElementById('history-list');
+            if(orderHistory.length === 0) return;
+            list.innerHTML = orderHistory.map((o, i) => `
+                <div class="history-card">
+                    <p class="text-[10px] text-gray-400 font-bold">${o.date}</p>
+                    <p class="text-xs font-bold my-1 text-gray-700">${o.items}</p>
+                    <div class="flex gap-2 mt-2">
+                        <button onclick="reorder(${i})" class="text-[10px] bg-orange-600 text-white px-4 py-1.5 rounded-lg font-bold">Kurudia</button>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        // Auto-login kama ana akaunti
-        if(userData) showApp();
+        function reorder(index) {
+            const saved = orderHistory[index].raw;
+            cart = {...saved};
+            document.querySelectorAll("[id^='qty-']").forEach(s => s.innerText = "0");
+            for(let name in cart) {
+                const el = document.getElementById(`qty-${name}`);
+                if(el) el.innerText = cart[name];
+            }
+            calculateTotal();
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
 
-        // Slider Logic
+        function logout() { localStorage.removeItem('shishiUser'); location.reload(); }
+
         let sIdx = 0;
         setInterval(() => {
-            sIdx = (sIdx + 1) % 3;
-            document.getElementById('main-slider').style.transform = `translateX(-${sIdx * 100}%)`;
-        }, 4000);
+            sIdx = (sIdx + 1) % 5;
+            const s = document.getElementById('main-slider');
+            if(s) s.style.transform = `translateX(-${sIdx * 100}%)`;
+        }, 5000);
+
+        if(userData) initApp();
     </script>
 </body>
 </html>
