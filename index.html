@@ -10,29 +10,34 @@
     <style>
         body { font-family: 'Outfit', sans-serif; background-color: #FFFFFF; color: #1a1a1a; }
         
+        /* --- SLIDER STYLING --- */
+        .slider-container { position: relative; width: 100%; max-width: 800px; margin: 0 auto 30px; height: 350px; overflow: hidden; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .slider { display: flex; transition: transform 0.7s ease-in-out; height: 100%; }
+        .slider img { width: 100%; height: 100%; object-cover: cover; flex-shrink: 0; }
+
         /* --- MENU TABS STYLING --- */
-        .menu-container { text-align: center; padding: 40px 20px; background: #fffaf5; border-radius: 20px; margin: 20px 0; }
+        .menu-container { text-align: center; padding: 40px 20px; background: #fffaf5; border-radius: 20px; margin: 20px auto; max-width: 900px; }
         .day-tabs { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 25px; }
         .tab-btn { padding: 12px 20px; border: 1px solid #d35400; background: white; cursor: pointer; border-radius: 30px; font-weight: bold; transition: 0.3s; color: #d35400; }
         .tab-btn.active { background: #d35400; color: white; box-shadow: 0 4px 10px rgba(211, 84, 0, 0.3); }
-        .tab-content { display: none; padding: 30px; background: white; border-radius: 15px; border-top: 4px solid #d35400; box-shadow: 0 10px 20px rgba(0,0,0,0.05); animation: fadeEffect 0.5s; }
+        .tab-content { display: none; padding: 25px; background: white; border-radius: 15px; border-top: 4px solid #d35400; box-shadow: 0 10px 20px rgba(0,0,0,0.05); animation: fadeEffect 0.5s; }
         @keyframes fadeEffect { from {opacity: 0;} to {opacity: 1;} }
-        .order-btn { display: inline-block; margin-top: 15px; padding: 10px 25px; background: #25D366; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; transition: 0.3s; }
-        .order-btn:hover { background: #128C7E; transform: scale(1.05); }
 
-        /* --- FOOTER WITH BACKGROUND IMAGE --- */
+        /* --- ORDER SYSTEM STYLING --- */
+        .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #f0f0f0; transition: 0.2s; }
+        .menu-item:hover { background: #fffcf9; }
+        .qty-controls { display: flex; items-center: center; gap: 12px; background: #f8f8f8; padding: 5px 12px; border-radius: 10px; }
+        .qty-btn { width: 28px; height: 28px; background: #d35400; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
+        .qty-val { font-weight: 800; min-width: 20px; text-align: center; }
+
+        .order-summary-btn { display: inline-block; margin-top: 25px; padding: 15px 35px; background: #25D366; color: white; text-decoration: none; border-radius: 12px; font-weight: 800; transition: 0.3s; width: 100%; max-width: 300px; }
+        .order-summary-btn:hover { background: #128C7E; transform: scale(1.03); }
+
+        /* --- FOOTER --- */
         footer.site-footer {
-            background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('background-chini.webp');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            color: #ffffff;
-            padding: 60px 20px;
-            text-align: center;
-            border-top: 4px solid #FFD700;
+            background-image: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('background-chini.webp');
+            background-size: cover; background-position: center; color: #ffffff; padding: 60px 20px; text-align: center; border-top: 4px solid #FFD700;
         }
-        .footer-content h3 { color: #FFD700; font-size: 2rem; margin-bottom: 15px; text-transform: uppercase; font-weight: 800; }
-        .footer-content p { color: #eeeeee; max-width: 600px; margin: 0 auto 20px; line-height: 1.6; }
     </style>
 </head>
 <body>
@@ -45,17 +50,27 @@
                 </div>
                 <span class="text-2xl font-extrabold">SHISHI <span class="text-yellow-500">FOOD</span></span>
             </div>
-            <a href="https://wa.me/255712345678" class="bg-black text-white px-6 py-2 rounded-full font-bold hover:bg-yellow-500 hover:text-black transition">Agiza Sasa</a>
+            <a href="#menu" class="bg-black text-white px-6 py-2 rounded-full font-bold hover:bg-yellow-500 hover:text-black">Angalia Menu</a>
         </div>
     </nav>
 
-    <section class="py-16 bg-yellow-50 text-center">
-        <h1 class="text-5xl font-black mb-4">Ladha Halisi ya <span class="text-yellow-500">Kiafrika</span></h1>
-        <p class="text-gray-600">Karibu Shishi Food Point kwa chakula bora kila siku.</p>
+    <section class="py-10 bg-yellow-50">
+        <div class="slider-container">
+            <div class="slider" id="main-slider">
+                <img src="shishi-food.webp" alt="Menu 1">
+                <img src="background-chini.webp" alt="Menu 2">
+            </div>
+        </div>
+        <div class="text-center">
+            <h1 class="text-4xl font-black uppercase">Ladha Halisi ya <span class="text-yellow-500">Kiafrika</span></h1>
+            <p class="text-gray-600 italic">Chagua chakula chako, weka oda, tukuletee!</p>
+        </div>
     </section>
 
     <section id="menu" class="container mx-auto px-4 py-10">
         <div class="menu-container">
+            <h2 class="text-2xl font-black mb-6 uppercase">Orodha ya Vyakula na Bei</h2>
+            
             <div class="day-tabs">
                 <button class="tab-btn active" onclick="openMenu(event, 'Jumatatu')">Jumatatu</button>
                 <button class="tab-btn" onclick="openMenu(event, 'Jumanne')">Jumanne</button>
@@ -66,83 +81,135 @@
                 <button class="tab-btn" onclick="openMenu(event, 'Jumapili')">Jumapili</button>
             </div>
 
-            <div id="Jumatatu" class="tab-content" style="display:block;">
-                <h3 class="text-2xl font-bold mb-4">🍗 Jumatatu: Siku ya Kuku</h3>
-                <p>Ugali/Wali na Kuku wa Kukaanga - 12,000/=</p>
-                <p>Chips Kuku - 8,000/=</p>
-                <a href="https://wa.me/255712345678?text=Habari, naomba kuagiza chakula cha Jumatatu" class="order-btn"><i class="fab fa-whatsapp"></i> Agiza kwa WhatsApp</a>
-            </div>
+            <div class="tab-content" id="menu-box" style="display:block;">
+                <div id="items-list">
+                    <div class="menu-item">
+                        <div class="text-left">
+                            <span class="block font-bold">Ugali & Kuku wa Kukaanga</span>
+                            <span class="text-orange-600 text-sm">12,000 - 15,000 TZS</span>
+                        </div>
+                        <div class="qty-controls">
+                            <div class="qty-btn" onclick="changeQty(this, -1, 'Ugali & Kuku')">-</div>
+                            <span class="qty-val">0</span>
+                            <div class="qty-btn" onclick="changeQty(this, 1, 'Ugali & Kuku')">+</div>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="text-left">
+                            <span class="block font-bold">Ugali na Samaki (Sato/Sangara)</span>
+                            <span class="text-orange-600 text-sm">15,000 - 18,000 TZS</span>
+                        </div>
+                        <div class="qty-controls">
+                            <div class="qty-btn" onclick="changeQty(this, -1, 'Ugali & Samaki')">-</div>
+                            <span class="qty-val">0</span>
+                            <div class="qty-btn" onclick="changeQty(this, 1, 'Ugali & Samaki')">+</div>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="text-left">
+                            <span class="block font-bold">Wali/Biriyani ya Mbuzi</span>
+                            <span class="text-orange-600 text-sm">12,000 - 15,000 TZS</span>
+                        </div>
+                        <div class="qty-controls">
+                            <div class="qty-btn" onclick="changeQty(this, -1, 'Wali/Biriyani Mbuzi')">-</div>
+                            <span class="qty-val">0</span>
+                            <div class="qty-btn" onclick="changeQty(this, 1, 'Wali/Biriyani Mbuzi')">+</div>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="text-left">
+                            <span class="block font-bold">Pilau Kuku/Mbuzi</span>
+                            <span class="text-orange-600 text-sm">10,000 - 12,000 TZS</span>
+                        </div>
+                        <div class="qty-controls">
+                            <div class="qty-btn" onclick="changeQty(this, -1, 'Pilau Kuku/Mbuzi')">-</div>
+                            <span class="qty-val">0</span>
+                            <div class="qty-btn" onclick="changeQty(this, 1, 'Pilau Kuku/Mbuzi')">+</div>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="text-left">
+                            <span class="block font-bold">Kisinia (Mixed Meats)</span>
+                            <span class="text-orange-600 text-sm">25,000 - 45,000 TZS</span>
+                        </div>
+                        <div class="qty-controls">
+                            <div class="qty-btn" onclick="changeQty(this, -1, 'Kisinia')">-</div>
+                            <span class="qty-val">0</span>
+                            <div class="qty-btn" onclick="changeQty(this, 1, 'Kisinia')">+</div>
+                        </div>
+                    </div>
+                </div>
 
-            <div id="Jumanne" class="tab-content">
-                <h3 class="text-2xl font-bold mb-4">🐟 Jumanne: Siku ya Samaki</h3>
-                <p>Ugali na Samaki wa Kupaka - 15,000/=</p>
-                <p>Wali na Samaki Sato - 14,000/=</p>
-                <a href="https://wa.me/255712345678?text=Habari, naomba kuagiza chakula cha Jumanne" class="order-btn"><i class="fab fa-whatsapp"></i> Agiza kwa WhatsApp</a>
-            </div>
-
-            <div id="Jumatano" class="tab-content">
-                <h3 class="text-2xl font-bold mb-4">🥘 Jumatano: Biriyani Special</h3>
-                <p>Biriyani ya Mbuzi (Maalum) - 15,000/=</p>
-                <p>Pilau ya Kuku - 12,000/=</p>
-                <a href="https://wa.me/255712345678?text=Habari, naomba kuagiza chakula cha Jumatano" class="order-btn"><i class="fab fa-whatsapp"></i> Agiza kwa WhatsApp</a>
-            </div>
-
-            <div id="Alhamisi" class="tab-content">
-                <h3 class="text-2xl font-bold mb-4">🥘 Alhamisi: Traditional Day</h3>
-                <p>Ugali na Nyama ya Ng'ombe/Maini - 10,000/=</p>
-                <p>Ndizi Nyama - 8,000/=</p>
-                <a href="https://wa.me/255712345678?text=Habari, naomba kuagiza chakula cha Alhamisi" class="order-btn"><i class="fab fa-whatsapp"></i> Agiza kwa WhatsApp</a>
-            </div>
-
-            <div id="Ijumaa" class="tab-content">
-                <h3 class="text-2xl font-bold mb-4">🍛 Ijumaa: Ijumaa Kareem</h3>
-                <p>Wali na Maharage ya Nazi - 6,000/=</p>
-                <p>Pilau ya Samaki - 13,000/=</p>
-                <a href="https://wa.me/255712345678?text=Habari, naomba kuagiza chakula cha Ijumaa" class="order-btn"><i class="fab fa-whatsapp"></i> Agiza kwa WhatsApp</a>
-            </div>
-
-            <div id="Jumamosi" class="tab-content">
-                <h3 class="text-2xl font-bold mb-4">🍖 Jumamosi: Weekend Special</h3>
-                <p>Kisinia (Mixed Grill) - 35,000/=</p>
-                <p>Chips Mayai & Mishkaki - 7,000/=</p>
-                <a href="https://wa.me/255712345678?text=Habari, naomba kuagiza chakula cha Jumamosi" class="order-btn"><i class="fab fa-whatsapp"></i> Agiza kwa WhatsApp</a>
-            </div>
-
-            <div id="Jumapili" class="tab-content">
-                <h3 class="text-2xl font-bold mb-4">🥘 Jumapili: Family Day</h3>
-                <p>Ugali na Kuku wa Kienyeji - 18,000/=</p>
-                <p>Juice ya Matunda Bure kwa kila mlo!</p>
-                <a href="https://wa.me/255712345678?text=Habari, naomba kuagiza chakula cha Jumapili" class="order-btn"><i class="fab fa-whatsapp"></i> Agiza kwa WhatsApp</a>
+                <button onclick="sendWhatsAppOrder()" class="order-summary-btn">
+                    <i class="fab fa-whatsapp"></i> Tuma Oda WhatsApp
+                </button>
+                <p class="mt-4 text-xs text-gray-500">*Baada ya kutuma, subiri majibu ya oda yako kutoka kwetu.*</p>
             </div>
         </div>
     </section>
 
     <footer class="site-footer">
-        <div class="footer-content">
-            <h3>Shishi Food Point</h3>
-            <p>Tunapatikana Kawe, Dar es Salaam. Ladha halisi ya nyumbani, kila siku tangu asubuhi mpaka usiku.</p>
-            <div class="flex justify-center gap-6 my-6 text-2xl">
-                <a href="#" class="hover:text-yellow-500"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="hover:text-yellow-500"><i class="fab fa-facebook"></i></a>
-                <a href="#" class="hover:text-yellow-500"><i class="fab fa-tiktok"></i></a>
-            </div>
-            <p class="text-sm opacity-70">&copy; 2026 Shishi Food Point. Haki zote zimehifadhiwa.</p>
+        <div class="container mx-auto">
+            <h3 class="text-yellow-500 font-black text-2xl mb-4">SHISHI FOOD POINT</h3>
+            <p>Kawe, Dar es Salaam. Fungua kila siku 07:00 AM - 10:00 PM.</p>
+            <p class="mt-10 opacity-50 text-sm">&copy; 2026 Shishi Food Point. Haki zote zimehifadhiwa.</p>
         </div>
     </footer>
 
     <script>
+        // 1. Slider Logic
+        let slideIndex = 0;
+        const slider = document.getElementById('main-slider');
+        function rotateSlider() {
+            slideIndex = (slideIndex + 1) % 2;
+            slider.style.transform = `translateX(-${slideIndex * 100}%)`;
+        }
+        setInterval(rotateSlider, 4000);
+
+        // 2. Tab Logic
+        let currentDay = "Jumatatu";
         function openMenu(evt, dayName) {
-            var i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tab-content");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-            }
-            tablinks = document.getElementsByClassName("tab-btn");
-            for (i = 0; i < tablinks.length; i++) {
+            currentDay = dayName;
+            var tablinks = document.getElementsByClassName("tab-btn");
+            for (var i = 0; i < tablinks.length; i++) {
                 tablinks[i].classList.remove("active");
             }
-            document.getElementById(dayName).style.display = "block";
             evt.currentTarget.classList.add("active");
+            // Hapa tunaweza pia ku-reset oda kama unataka kila siku ianze upya
+        }
+
+        // 3. Order Logic
+        let myOrder = {};
+
+        function changeQty(btn, delta, name) {
+            const display = btn.parentElement.querySelector('.qty-val');
+            let currentVal = parseInt(display.innerText) + delta;
+            
+            if (currentVal < 0) currentVal = 0;
+            display.innerText = currentVal;
+
+            if (currentVal > 0) {
+                myOrder[name] = currentVal;
+            } else {
+                delete myOrder[name];
+            }
+        }
+
+        function sendWhatsAppOrder() {
+            if (Object.keys(myOrder).length === 0) {
+                alert("Tafadhali chagua chakula angalau kimoja!");
+                return;
+            }
+
+            let text = `Habari Shishi Food! Naomba kuagiza chakula kwa ajili ya siku ya ${currentDay}:%0A%0A`;
+            for (let food in myOrder) {
+                text += `✅ ${food}: ${myOrder[food]}%0A`;
+            }
+            text += `%0A*Nasubiri majibu ya oda yangu.*`;
+            
+            // Weka namba yako hapa
+            const phone = "255712345678"; 
+            window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
         }
     </script>
 </body>
