@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="sw" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shishi Food Point | Ladha Halisi ya Kiafrika</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; background-color: #FFFFFF; color: #1a1a1a; }
+        .text-yellow { color: #FFD700; }
+        .bg-yellow { background-color: #FFD700; }
+        .card-shadow { shadow-sm hover:shadow-xl transition: 0.4s; border: 1px solid #f3f4f6; }
+        .sticky-nav { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); border-bottom: 2px solid #FFD700; }
+    </style>
+</head>
+<body>
+
+    <nav class="sticky-nav p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-12 h-12 bg-yellow rounded-full flex items-center justify-center shadow-md">
+                    <i class="fas fa-utensils text-black text-xl"></i>
+                </div>
+                <span class="text-2xl font-extrabold tracking-tight">SHISHI <span class="text-yellow-500">FOOD</span></span>
+            </div>
+            <div class="hidden md:flex gap-8 font-bold text-gray-700">
+                <a href="#home" class="hover:text-yellow-600 transition">Nyumbani</a>
+                <a href="#menu" class="hover:text-yellow-600 transition">Menu</a>
+                <a href="#about" class="hover:text-yellow-600 transition">Kuhusu Sisi</a>
+                <a href="#contact" class="hover:text-yellow-600 transition">Mawasiliano</a>
+            </div>
+            <a href="https://wa.me/255XXXXXXXXX" class="bg-black text-white px-6 py-2 rounded-full font-bold hover:bg-yellow-500 hover:text-black transition">Agiza Sasa</a>
+        </div>
+    </nav>
+
+    <section id="home" class="relative h-[85vh] flex items-center bg-yellow-50 overflow-hidden">
+        <div class="container mx-auto px-4 grid md:grid-cols-2 gap-8 items-center">
+            <div class="z-10">
+                <span class="bg-yellow-200 text-yellow-800 px-4 py-1 rounded-full text-sm font-bold uppercase tracking-widest">Karibu Shishi Food</span>
+                <h1 class="text-5xl md:text-7xl font-black text-gray-900 mt-4 leading-tight">
+                    Ladha Halisi ya <br><span class="text-yellow-500 italic">Kiafrika</span>
+                </h1>
+                <p class="text-xl mt-6 text-gray-600 max-w-md">Chakula kitamu, fresh na cha uhakika kinachopikwa kwa utaalamu wa hali ya juu.</p>
+                <div class="flex flex-wrap gap-4 mt-10">
+                    <a href="#menu" class="bg-yellow-500 text-black px-10 py-4 rounded-xl text-lg font-black shadow-lg hover:bg-black hover:text-white transition-all">Tazama Menu</a>
+                    <a href="#contact" class="border-2 border-black text-black px-10 py-4 rounded-xl text-lg font-bold hover:bg-black hover:text-white transition">Tupate Wapi</a>
+                </div>
+            </div>
+            <div class="relative hidden md:block">
+                <div class="absolute -top-20 -right-20 w-96 h-96 bg-yellow-400 rounded-full blur-3xl opacity-20"></div>
+                <img src="https://images.unsplash.com/photo-1567620985044-07f1273267a4?q=80&w=1920" alt="African Food" class="rounded-3xl shadow-2xl relative z-10 border-8 border-white">
+            </div>
+        </div>
+    </section>
+
+    <section id="menu" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-black uppercase inline-block border-b-4 border-yellow-500 pb-2">Menu ya Wiki</h2>
+                <p class="text-gray-500 mt-4">Chagua mlo wako pendwa wa leo</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                <div class="bg-white p-6 rounded-2xl border-2 border-gray-100 shadow-sm hover:border-yellow-400 transition-all group">
+                    <div class="w-full h-40 bg-gray-100 rounded-xl mb-4 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1541518763669-27fef04b14ea?q=80&w=1000" class="w-full h-full object-cover group-hover:scale-110 transition">
+                    </div>
+                    <h3 class="text-xl font-black mb-2 uppercase">Jumatatu</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 font-medium text-sm italic">Wali + Maharage</span>
+                            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-lg font-bold">3,500/=</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 font-medium text-sm italic">Pilau Nyama</span>
+                            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-lg font-bold">5,000/=</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border-2 border-gray-100 shadow-sm hover:border-yellow-400 transition-all group">
+                    <div class="w-full h-40 bg-gray-100 rounded-xl mb-4 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1589187151003-0dd3c63953e2?q=80&w=1000" class="w-full h-full object-cover group-hover:scale-110 transition">
+                    </div>
+                    <h3 class="text-xl font-black mb-2 uppercase">Jumanne</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 font-medium text-sm italic">Ugali + Samaki</span>
+                            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-lg font-bold">6,000/=</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 font-medium text-sm italic">Ndizi Nyama</span>
+                            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-lg font-bold">4,500/=</span>
+                        </div>
+                    </div>
+                </div>
+                </div>
+        </div>
+    </section>
+
+    <section class="py-12 bg-black text-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-yellow-500 opacity-20 rounded-full -mr-16 -mt-16"></div>
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+            <div>
+                <h2 class="text-3xl font-black">UNA NJAA SANA?</h2>
+                <p class="text-yellow-400">Agiza sasa, delivery inafika ndani ya dakika 30!</p>
+            </div>
+            <a href="https://wa.me/255XXXXXXXXX?text=Mambo!%20Nataka%20kuagiza%20chakula." class="bg-yellow-500 text-black px-12 py-5 rounded-full text-xl font-black shadow-lg hover:scale-105 transition active:scale-95">
+                <i class="fab fa-whatsapp mr-2"></i> AGIZA KWA WHATSAPP
+            </a>
+        </div>
+    </section>
+
+    <footer id="contact" class="bg-gray-50 pt-20 pb-10 border-t border-gray-200">
+        <div class="container mx-auto px-4 grid md:grid-cols-3 gap-12">
+            <div>
+                <h4 class="text-2xl font-black mb-4 uppercase">Shishi <span class="text-yellow-500">Food</span></h4>
+                <p class="text-gray-500">Tunapatikana Kawe, Dar es Salaam.<br>Simu: 0XXXXXXXXX</p>
+                <div class="flex gap-4 mt-6">
+                    <a href="#" class="w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center hover:bg-yellow-500 transition"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center hover:bg-yellow-500 transition"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center hover:bg-yellow-500 transition"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-bold text-gray-900 mb-4 uppercase">Huduma Zetu</h4>
+                <ul class="text-gray-600 space-y-2">
+                    <li>✓ Chakula cha Ofisini</li>
+                    <li>✓ Sherehe na Oda Maalum</li>
+                    <li>✓ Fast Delivery</li>
+                </ul>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+                <h4 class="font-bold text-gray-900 mb-2">Saa za Kufungua</h4>
+                <p class="text-gray-500 text-sm italic">Jumatatu - Jumapili</p>
+                <p class="text-xl font-black text-yellow-600">07:00 AM - 10:00 PM</p>
+            </div>
+        </div>
+        <div class="text-center mt-16 text-gray-400 text-xs tracking-widest uppercase font-bold">
+            &copy; 2026 Shishi Food Point | Built for Success
+        </div>
+    </footer>
+
+    <a href="https://wa.me/255XXXXXXXXX" class="fixed bottom-6 right-6 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-2xl hover:scale-110 transition z-[100]">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+</body>
+</html>
