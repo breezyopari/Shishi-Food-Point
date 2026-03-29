@@ -3,76 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shishi Food Point | Official App</title>
+    <title>Shishi Food Point | Ladha Halisi ya Kiafrika</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Outfit', sans-serif; background-color: #f9f9f9; color: #1a1a1a; }
-        .hidden { display: none; }
+        body { font-family: 'Outfit', sans-serif; background-color: #FFFFFF; color: #1a1a1a; }
         
-        /* Profile Icon */
-        #user-avatar { width: 45px; height: 45px; background: #d35400; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; border: 2px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        /* --- MENU TABS STYLING --- */
+        .menu-container { text-align: center; padding: 40px 20px; background: #fffaf5; border-radius: 20px; margin: 20px 0; }
+        .day-tabs { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 25px; }
+        .tab-btn { padding: 12px 20px; border: 1px solid #d35400; background: white; cursor: pointer; border-radius: 30px; font-weight: bold; transition: 0.3s; color: #d35400; }
+        .tab-btn.active { background: #d35400; color: white; box-shadow: 0 4px 10px rgba(211, 84, 0, 0.3); }
+        .tab-content { display: none; padding: 30px; background: white; border-radius: 15px; border-top: 4px solid #d35400; box-shadow: 0 10px 20px rgba(0,0,0,0.05); animation: fadeEffect 0.5s; }
+        @keyframes fadeEffect { from {opacity: 0;} to {opacity: 1;} }
+        .order-btn { display: inline-block; margin-top: 15px; padding: 10px 25px; background: #25D366; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; transition: 0.3s; }
+        .order-btn:hover { background: #128C7E; transform: scale(1.05); }
 
-        /* Slider */
-        .slider-container { position: relative; width: 100%; max-width: 800px; margin: 0 auto 20px; height: 350px; overflow: hidden; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .slider { display: flex; transition: transform 0.7s ease-in-out; height: 100%; }
-        .slider img { width: 100%; height: 100%; object-fit: cover; flex-shrink: 0; }
-
-        /* Auth Cards */
-        .auth-card { background: white; padding: 30px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); width: 100%; max-width: 400px; margin: 40px auto; }
-        .input-group input { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 12px; outline: none; margin-bottom: 15px; }
-        .input-group input:focus { border-color: #d35400; }
-
-        /* History Styling */
-        .history-card { background: #fffaf5; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid #d35400; text-align: left; }
-
-        /* Floating Total Bar */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 15px 25px; box-shadow: 0 -10px 25px rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: center; z-index: 1000; border-radius: 25px 25px 0 0; }
-
-        /* Success Overlay */
-        #success-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; display: flex; align-items: center; justify-content: center; backdrop-blur: 5px; }
+        /* --- FOOTER WITH BACKGROUND IMAGE --- */
+        footer.site-footer {
+            background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('background-chini.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #ffffff;
+            padding: 60px 20px;
+            text-align: center;
+            border-top: 4px solid #FFD700;
+        }
+        .footer-content h3 { color: #FFD700; font-size: 2rem; margin-bottom: 15px; text-transform: uppercase; font-weight: 800; }
+        .footer-content p { color: #eeeeee; max-width: 600px; margin: 0 auto 20px; line-height: 1.6; }
     </style>
 </head>
 <body>
 
-    <div id="auth-screen" class="container mx-auto px-4 py-10 text-center">
-        <h1 class="text-4xl font-black text-orange-600 mb-2">SHISHI FOOD</h1>
-        <p class="text-gray-500 mb-8 uppercase tracking-widest text-xs font-bold">Ladha Halisi ya Kiafrika</p>
-
-        <div class="auth-card" id="register-form">
-            <h2 class="text-xl font-bold mb-6">Jisajili sasa</h2>
-            <div class="input-group">
-                <input type="text" id="reg-name" placeholder="Jina lako la kwanza">
-                <input type="tel" id="reg-phone" placeholder="Namba ya simu">
-                <input type="password" id="reg-pass" placeholder="Password (Herufi 6+)">
-            </div>
-            <button onclick="handleRegister()" class="w-full bg-orange-600 text-white py-4 rounded-xl font-bold shadow-lg hover:bg-orange-700 transition">Tengeneza Akaunti</button>
-            <p class="mt-4 text-sm text-gray-500">Tayari una akaunti? <a href="#" onclick="toggleAuth()" class="text-orange-600 font-bold underline">Ingia hapa</a></p>
-        </div>
-
-        <div class="auth-card hidden" id="login-form">
-            <h2 class="text-xl font-bold mb-6">Ingia Kwenye App</h2>
-            <div class="input-group">
-                <input type="tel" id="login-phone" placeholder="Namba ya simu">
-                <input type="password" id="login-pass" placeholder="Password">
-            </div>
-            <button onclick="handleLogin()" class="w-full bg-black text-white py-4 rounded-xl font-bold shadow-lg hover:opacity-90 transition">Ingia</button>
-            <p class="mt-4 text-sm text-gray-500">Hauna akaunti bado? <a href="#" onclick="toggleAuth()" class="text-orange-600 font-bold underline">Jisajili hapa</a></p>
-        </div>
-    </div>
-
-    <div id="app-screen" class="hidden">
-        
-        <header class="bg-white/80 backdrop-blur-md sticky top-0 z-[100] border-b p-4">
-            <div class="container mx-auto flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <div id="user-avatar">?</div>
-                    <div>
-                        <p class="text-[10px] text-gray-400 font-bold uppercase leading-none">Karibu tena,</p>
-                        <p id="user-name-display" class="font-extrabold text-gray-800">Mteja</p>
-                    </div>
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md p-4 border-b-2 border-yellow-500">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center shadow-md">
+                    <i class="fas fa-utensils text-black text-xl"></i>
                 </div>
-                <button onclick="logout()" class="text-red-500 font-bold text-xs bg-red-50 px-3 py-2 rounded-lg hover:bg-red-100 transition">Logout</button>
+                <span class="text-2xl font-extrabold">SHISHI <span class="text-yellow-500">FOOD</span></span>
             </div>
-        </header>
+            <a href="https://wa.me/255712345678" class="bg-black text-white px-6 py-2 rounded-full font-bold hover:bg-yellow-500 hover:text-black transition">Agiza Sasa</a>
+        </div>
+    </nav>
+
+    <section class="py-16 bg-yellow-50 text-center">
+        <h1 class="text-5xl font-black mb-4">Ladha Halisi ya <span class="text-yellow-500">Kiafrika</span></h1>
+        <p class="text-gray-600">Karibu Shishi Food Point kwa chakula bora kila siku.</p>
+    </section>
+
+    <section id="menu" class="container mx-auto px-4 py-10">
+        <div class="menu-container">
+            <div class="day-tabs">
+                <button class="tab-btn active" onclick="openMenu(event, 'Jumatatu')">Jumatatu</button>
+                <button class="tab-btn" onclick="openMenu(event, 'Jumanne')">Jumanne</button>
+                <button class="tab-btn" onclick="openMenu(event, 'Jumatano')">Jumatano</button>
+                <button class="tab-btn" onclick="openMenu(event, 'Alhamisi')">Alhamisi</button>
+                <button class="tab-btn" onclick="openMenu(event, 'Ijumaa')">Ijumaa</button>
+                <button class="tab-btn" onclick="openMenu(event, 'Jumamosi')">Jumamosi</button>
+                <button class="tab-btn" onclick="openMenu(event, 'Jumapili')">Jumapili</button>
+            </div>
+
+            <div id="Jumatatu" class="tab-content" style="display:block;">
+                <h3 class="text-2xl font-bold mb-4">🍗 Jumatatu: Siku ya Kuku</h3>
+                <p>Ugali/Wali na Kuku wa Kukaanga - 12,000/=</p>
+                <p>Chips Kuku - 8,000/=</p>
+                <a href="https://wa.me/255712345678?text=Habari, naomba kuagiza chakula cha Jumatatu" class="order-btn"><i class="fab fa-whatsapp"></i> Agiza kwa WhatsApp</a>
+            </div>
+
+            <div id="Jumanne" class="tab-content">
+                <h3 class="text-2xl font-bold mb-4">🐟 Jumanne: Siku ya Samaki</h3>
+                <p>Ugali na Samaki wa Kupaka - 15,000/=</p>
+                <p>Wali na Samaki Sato - 14,000/=</p>
+                <a href="https://wa.me/255712345678?text=Habari, naomba kuagiza chakula cha Jumanne" class="order-btn"><i class="fab fa-whatsapp"></i> Agiza kwa WhatsApp</a>
+            </div>
+
+            <div id="Jumatano" class="tab-content">
+                <h3 class="text-2xl font-bold mb-4">🥘 Jumatano: Biriyani Special</h3>
+                <p>Biriyani ya Mbuzi (Maalum) - 15,000/=</p>
+                <p>Pilau ya Kuku - 12,000/=</p>
+                <a href="https://wa.me/255712345678?text=Habari, naomba kuagiza chakula cha Jumatano" class="order-btn"><i class="fab fa-whatsapp"></i> Agiza kwa WhatsApp</a>
+            </div>
+
+            <div id="Alhamisi" class="tab-content">
+                <h3 class="text-2xl font-bold mb-4">🥘 Alhamisi: Traditional Day</h3>
+                <p>Ugali na Nyama ya Ng'ombe/Maini - 10,000/=</p>
+                <p>Ndizi Nyama - 8,000/=</p>
+                <a href="https://wa.me/255712345678?text=Habari, naomba kuagiza chakula cha Alhamisi" class="order-btn"><i class="fab fa-whatsapp"></i> Agiza kwa WhatsApp</a>
+            </div>
+
+            <div id="Ijumaa" class="tab-content">
+                <h3 class="text-2xl font-bold mb-4">🍛 Ijumaa: Ijumaa Kareem</h3>
+                <p>Wali na Maharage ya Nazi - 6,000/=</p>
+                <p>Pilau ya Samaki - 13,000/=</p>
+                <a href="https://wa.me/255712345678?text=Habari, naomba kuagiza chakula cha Ijumaa" class="order-btn"><i class="fab fa-whatsapp"></i> Agiza kwa WhatsApp</a>
+            </div>
+
+            <div id="Jumamosi" class="tab-content">
+                <h3 class="text-2xl font-bold mb-4">🍖 Jumamosi: Weekend Special</h3>
+                <p>Kisinia (Mixed Grill) - 35,000/=</p>
+                <p>Chips Mayai & Mishkaki - 7,000/=</p>
+                <a href="https://wa.me/255712345678?text=Habari, naomba kuagiza chakula cha Jumamosi" class="order-btn"><i class="fab fa-whatsapp"></i> Agiza kwa WhatsApp</a>
+            </div>
+
+            <div id="Jumapili" class="tab-content">
+                <h3 class="text-2xl font-bold mb-4">🥘 Jumapili: Family Day</h3>
+                <p>Ugali na Kuku wa Kienyeji - 18,000/=</p>
+                <p>Juice ya Matunda Bure kwa kila mlo!</p>
+                <a href="https://wa.me/255712345678?text=Habari, naomba kuagiza chakula cha Jumapili" class="order-btn"><i class="fab fa-whatsapp"></i> Agiza kwa WhatsApp</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <h3>Shishi Food Point</h3>
+            <p>Tunapatikana Kawe, Dar es Salaam. Ladha halisi ya nyumbani, kila siku tangu asubuhi mpaka usiku.</p>
+            <div class="flex justify-center gap-6 my-6 text-2xl">
+                <a href="#" class="hover:text-yellow-500"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="hover:text-yellow-500"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="hover:text-yellow-500"><i class="fab fa-tiktok"></i></a>
+            </div>
+            <p class="text-sm opacity-70">&copy; 2026 Shishi Food Point. Haki zote zimehifadhiwa.</p>
+        </div>
+    </footer>
+
+    <script>
+        function openMenu(evt, dayName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(dayName).style.display = "block";
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+</body>
+</html>
