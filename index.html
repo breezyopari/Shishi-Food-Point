@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ingia | Shishi Food Point</title>
+    <title>Karibu | Shishi Food Point</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -13,89 +13,135 @@
             background-color: #facc15;
             background-image: url("https://www.transparenttextures.com/patterns/cubes.png");
         }
+        .hidden-form { display: none; }
     </style>
 </head>
 <body class="bg-pattern min-h-screen flex items-center justify-center p-4">
 
     <div class="max-w-md w-full bg-white p-8 rounded-[2.5rem] shadow-2xl border-4 border-black/5">
         <div class="text-center mb-8">
-            <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-4 rotate-6 shadow-xl border-4 border-yellow-500 overflow-hidden p-1">
-                <img src="logo.webp" alt="Shishi Logo" class="w-full h-full object-contain rounded-full">
+            <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-4 rotate-6 shadow-xl border-4 border-yellow-500 overflow-hidden">
+                <img src="logo.webp" alt="Shishi Logo" class="w-full h-full object-cover">
             </div>
             
             <h2 class="text-3xl font-black tracking-tighter uppercase text-slate-900">
                 SHISHI <span class="text-yellow-500">FOOD</span>
             </h2>
-            <p class="text-gray-400 text-[10px] font-bold uppercase tracking-[0.2em] mt-1">Ladha Halisi ya Kiafrika</p>
+            <p id="form-subtitle" class="text-gray-400 text-[10px] font-bold uppercase tracking-[0.2em] mt-1 italic">Jisajili kupata huduma</p>
         </div>
         
-        <form id="loginForm" class="space-y-4">
+        <form id="registerForm" class="space-y-4">
             <div class="relative">
                 <i data-lucide="user" class="absolute left-4 top-4 w-5 h-5 text-gray-400"></i>
-                <input type="text" id="username" placeholder="Jina lako kamili" required 
-                    class="w-full pl-12 pr-4 py-4 bg-gray-50 rounded-2xl border-none ring-1 ring-gray-200 focus:ring-2 focus:ring-yellow-500 outline-none transition-all">
+                <input type="text" id="reg-name" placeholder="Jina lako kamili" required 
+                    class="w-full pl-12 pr-4 py-4 bg-gray-50 rounded-2xl border-none ring-1 ring-gray-200 focus:ring-2 focus:ring-yellow-500 outline-none">
             </div>
-
             <div class="relative">
                 <i data-lucide="phone" class="absolute left-4 top-4 w-5 h-5 text-gray-400"></i>
-                <input type="tel" id="phone" placeholder="Namba ya Simu" required 
-                    class="w-full pl-12 pr-4 py-4 bg-gray-50 rounded-2xl border-none ring-1 ring-gray-200 focus:ring-2 focus:ring-yellow-500 outline-none transition-all">
+                <input type="tel" id="reg-phone" placeholder="Namba ya Simu" required 
+                    class="w-full pl-12 pr-4 py-4 bg-gray-50 rounded-2xl border-none ring-1 ring-gray-200 focus:ring-2 focus:ring-yellow-500 outline-none">
             </div>
-
             <div class="relative">
                 <i data-lucide="map-pin" class="absolute left-4 top-4 w-5 h-5 text-gray-400"></i>
-                <select id="branch" class="w-full pl-12 pr-4 py-4 bg-gray-50 rounded-2xl border-none ring-1 ring-gray-200 outline-none appearance-none focus:ring-2 focus:ring-yellow-500">
+                <select id="reg-branch" class="w-full pl-12 pr-4 py-4 bg-gray-50 rounded-2xl border-none ring-1 ring-gray-200 outline-none appearance-none">
                     <option value="Dar es Salaam">Tawi: Dar es Salaam (Mabatini)</option>
                     <option value="Dodoma">Tawi: Dodoma (City Center)</option>
                 </select>
             </div>
-
-            <button type="submit" class="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl hover:bg-yellow-400 transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2">
-                ANZA KUAGIZA <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            <button type="submit" class="w-full bg-black text-white font-black py-4 rounded-2xl hover:bg-slate-800 transition shadow-lg active:scale-95">
+                JISAJILI SASA
             </button>
+            <p class="text-center text-xs font-bold text-gray-400 mt-2 cursor-pointer hover:text-yellow-600" onclick="toggleForms()">Umeshasajiliwa? Login hapa</p>
+        </form>
+
+        <form id="loginForm" class="space-y-4 hidden-form">
+            <div class="text-center mb-4">
+                <p class="text-sm font-bold text-slate-700">Weka namba yako ya simu uliyosajili</p>
+            </div>
+            <div class="relative">
+                <i data-lucide="phone-forwarded" class="absolute left-4 top-4 w-5 h-5 text-gray-400"></i>
+                <input type="tel" id="login-phone" placeholder="Namba ya Simu" required 
+                    class="w-full pl-12 pr-4 py-4 bg-gray-50 rounded-2xl border-none ring-1 ring-gray-200 focus:ring-2 focus:ring-yellow-500 outline-none">
+            </div>
+            <button type="submit" class="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl hover:bg-yellow-400 transition shadow-lg active:scale-95 flex items-center justify-center gap-2">
+                VERIFY & INGIA <i data-lucide="shield-check" class="w-5 h-5"></i>
+            </button>
+            <p class="text-center text-xs font-bold text-gray-400 mt-2 cursor-pointer hover:text-yellow-600" onclick="toggleForms()">Rudi kujisajili upya</p>
         </form>
 
         <div class="relative my-8">
-            <div class="absolute inset-0 flex items-center">
-                <div class="w-full border-t border-gray-100"></div>
-            </div>
-            <div class="relative flex justify-center text-xs uppercase">
-                <span class="bg-white px-4 text-gray-300 font-bold tracking-widest">Au Ingia Kama</span>
+            <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-100"></div></div>
+            <div class="relative flex justify-center text-[10px] uppercase font-bold tracking-widest text-gray-300">
+                <span class="bg-white px-4 italic">Staff Only</span>
             </div>
         </div>
 
-        <div class="space-y-3">
-            <button onclick="window.location.href='admin_login.html'" 
-                class="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl hover:bg-slate-800 transition-all flex items-center justify-center gap-2 shadow-md border-b-4 border-slate-700 active:border-b-0">
-                <i data-lucide="shield-check" class="w-5 h-5 text-yellow-500"></i> 
-                LOGIN AS ADMIN
-            </button>
-        </div>
-
-        <p class="mt-8 text-center text-[11px] text-gray-400 font-medium italic">
-            &copy; 2026 Shishi Food Point. Haki zote zimehifadhiwa.
-        </p>
+        <button onclick="window.location.href='admin_login.html'" 
+            class="w-full bg-slate-100 text-slate-500 font-bold py-3 rounded-2xl hover:bg-slate-200 transition-all flex items-center justify-center gap-2">
+            <i data-lucide="lock" class="w-4 h-4"></i> ADMIN LOGIN
+        </button>
     </div>
 
     <script>
-        // Initialize Icons
         lucide.createIcons();
 
-        // Handle Form Submission
-        document.getElementById('loginForm').onsubmit = (e) => {
-            e.preventDefault();
-            
-            const userData = {
-                name: document.getElementById('username').value,
-                phone: document.getElementById('phone').value,
-                branch: document.getElementById('branch').value
-            };
+        const registerForm = document.getElementById('registerForm');
+        const loginForm = document.getElementById('loginForm');
+        const subtitle = document.getElementById('form-subtitle');
 
-            // Hifadhi taarifa za mteja
-            localStorage.setItem('currentUser', JSON.stringify(userData));
-            
-            // Peleka kwenye Menu
-            window.location.href = 'home.html';
+        // Angalia kama mteja ashawahi kusajiliwa kwenye kifaa hiki
+        const savedUser = JSON.parse(localStorage.getItem('registeredUser'));
+        if (savedUser) {
+            showLogin();
+        }
+
+        function toggleForms() {
+            if (registerForm.classList.contains('hidden-form')) {
+                showRegister();
+            } else {
+                showLogin();
+            }
+        }
+
+        function showLogin() {
+            registerForm.classList.add('hidden-form');
+            loginForm.classList.remove('hidden-form');
+            subtitle.innerText = "Verify Taarifa Zako";
+        }
+
+        function showRegister() {
+            loginForm.classList.add('hidden-form');
+            registerForm.classList.remove('hidden-form');
+            subtitle.innerText = "Jisajili kupata huduma";
+        }
+
+        // 1. Handle Registration
+        registerForm.onsubmit = (e) => {
+            e.preventDefault();
+            const newUser = {
+                name: document.getElementById('reg-name').value,
+                phone: document.getElementById('reg-phone').value,
+                branch: document.getElementById('reg-branch').value
+            };
+            // Hifadhi kwenye kifaa kama mteja halali
+            localStorage.setItem('registeredUser', JSON.stringify(newUser));
+            alert("Usajili Umefanikiwa! Sasa login kuendelea.");
+            showLogin();
+        };
+
+        // 2. Handle Login / Verify
+        loginForm.onsubmit = (e) => {
+            e.preventDefault();
+            const inputPhone = document.getElementById('login-phone').value;
+            const userData = JSON.parse(localStorage.getItem('registeredUser'));
+
+            if (userData && userData.phone === inputPhone) {
+                // Verify imekubali, hifadhi kama Current User ili home.html iisome
+                localStorage.setItem('currentUser', JSON.stringify(userData));
+                window.location.href = 'home.html';
+            } else {
+                alert("Namba hii haijasajiliwa! Tafadhali jisajili kwanza.");
+            }
         };
     </script>
 </body>
