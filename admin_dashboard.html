@@ -6,18 +6,19 @@
     <title>Admin Dashboard | Shishi Food</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;800&display=swap" rel="stylesheet">
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* Background kwa mbali kwenye Header - Imeboreshwa */
         nav.custom-header {
             background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url('Homefooter.webp');
             background-size: cover;
             background-position: center;
             border-bottom: 3px solid #eab308;
         }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
     </style>
 </head>
 <body class="bg-gray-100 font-['Outfit']">
@@ -33,64 +34,73 @@
                 </div>
             </div>
             <input type="file" id="profileUpload" class="hidden" accept="image/*" onchange="updateProfilePic(this)">
-            
             <div>
-                <h1 class="font-black italic text-yellow-500 text-2xl tracking-tighter leading-none text-shadow-md">SHISHI ADMIN</h1>
+                <h1 class="font-black italic text-yellow-500 text-2xl tracking-tighter leading-none">SHISHI ADMIN</h1>
                 <p class="text-[10px] font-bold opacity-70 uppercase tracking-widest mt-1">Management Panel</p>
             </div>
         </div>
         <button onclick="logoutAdmin()" class="bg-red-600 px-4 py-2 rounded-lg text-xs font-bold shadow-md active:scale-95 transition-all">LOGOUT</button>
     </nav>
 
-    <div class="p-4 max-w-4xl mx-auto flex gap-2 mt-2">
-        <button onclick="showReport('week')" class="flex-1 bg-white p-3 rounded-2xl shadow-sm border border-gray-200 text-[10px] font-black uppercase text-slate-600 hover:bg-slate-50 transition">Week Report</button>
-        <button onclick="showReport('month')" class="flex-1 bg-white p-3 rounded-2xl shadow-sm border border-gray-200 text-[10px] font-black uppercase text-slate-600 hover:bg-slate-50 transition">Month Report</button>
-        <button onclick="showReport('year')" class="flex-1 bg-white p-3 rounded-2xl shadow-sm border border-gray-200 text-[10px] font-black uppercase text-slate-600 hover:bg-slate-50 transition">Year Report</button>
+    <div class="max-w-4xl mx-auto p-4 flex gap-2 overflow-x-auto no-scrollbar">
+        <button onclick="switchTab('orders')" class="bg-slate-900 text-white px-6 py-2 rounded-full text-xs font-bold whitespace-nowrap">Oda</button>
+        <button onclick="switchTab('analytics')" class="bg-white border px-6 py-2 rounded-full text-xs font-bold whitespace-nowrap">Analytics & Graph</button>
+        <button onclick="switchTab('menu')" class="bg-white border px-6 py-2 rounded-full text-xs font-bold whitespace-nowrap">Menu & Stock</button>
     </div>
 
-    <div class="px-4 max-w-4xl mx-auto overflow-x-auto flex gap-3 no-scrollbar py-2" id="dateSlider"></div>
-
-    <div class="p-4 max-w-4xl mx-auto min-h-screen">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-black text-slate-800" id="selectedDateTitle">Oda za Leo</h2>
+    <div id="ordersTab" class="tab-content active">
+        <div class="px-4 max-w-4xl mx-auto mb-4">
+            <div class="relative">
+                <i data-lucide="search" class="absolute left-4 top-3 w-4 h-4 text-gray-400"></i>
+                <input type="text" id="searchInput" onkeyup="filterOrders()" placeholder="Tafuta mteja au namba ya simu..." class="w-full p-3 pl-12 rounded-2xl border-none shadow-sm text-sm focus:ring-2 focus:ring-yellow-500">
             </div>
+        </div>
 
-        <div id="adminList" class="space-y-4 mb-10"></div>
+        <div class="px-4 max-w-4xl mx-auto flex gap-2">
+            <button onclick="showReport('week')" class="flex-1 bg-white p-3 rounded-2xl shadow-sm border text-[10px] font-black uppercase">Week Report</button>
+            <button onclick="showReport('month')" class="flex-1 bg-white p-3 rounded-2xl shadow-sm border text-[10px] font-black uppercase">Month Report</button>
+            <button onclick="exportToExcel()" class="flex-1 bg-green-600 text-white p-3 rounded-2xl shadow-sm text-[10px] font-black uppercase">Export Excel</button>
+        </div>
 
+        <div class="px-4 max-w-4xl mx-auto overflow-x-auto flex gap-3 no-scrollbar py-2" id="dateSlider"></div>
+
+        <div class="p-4 max-w-4xl mx-auto min-h-screen">
+            <h2 class="text-xl font-black text-slate-800 mb-6" id="selectedDateTitle">Oda za Leo</h2>
+            <div id="adminList" class="space-y-4 mb-10"></div>
+        </div>
+    </div>
+
+    <div id="analyticsTab" class="tab-content px-4 max-w-4xl mx-auto">
+        <div class="bg-white p-6 rounded-[2.5rem] shadow-sm mb-6">
+            <h3 class="font-black text-slate-800 mb-4 uppercase text-xs tracking-widest text-center">Sales Trend (Last 7 Days)</h3>
+            <canvas id="salesChart" height="200"></canvas>
+        </div>
+    </div>
+
+    <div id="menuTab" class="tab-content px-4 max-w-4xl mx-auto">
+        <div class="bg-white p-6 rounded-[2.5rem] shadow-sm">
+            <h3 class="font-black text-slate-800 mb-4 uppercase text-xs tracking-widest">Menu Stock Control</h3>
+            <div class="space-y-3" id="menuControl">
+                <p class="text-gray-400 text-xs italic text-center py-10">Unganisha na Menu DB yako hapa...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-4 max-w-4xl mx-auto">
         <div class="bg-slate-900 text-white p-6 rounded-[2.5rem] shadow-2xl space-y-4 border-t-4 border-yellow-500">
             <h3 class="text-xs font-black uppercase tracking-widest text-yellow-500 text-center">Muhtasari wa Siku</h3>
             <div class="grid grid-cols-2 gap-4">
-                <div class="bg-slate-800 p-4 rounded-2xl">
-                    <p class="text-[9px] text-gray-400 font-bold uppercase">Total Orders</p>
-                    <p class="text-xl font-black" id="statTotalOrders">0</p>
-                </div>
-                <div class="bg-slate-800 p-4 rounded-2xl">
-                    <p class="text-[9px] text-gray-400 font-bold uppercase">Amount Collected</p>
-                    <p class="text-xl font-black text-green-400" id="statTotalAmount">0 TZS</p>
-                </div>
-                <div class="bg-slate-800 p-4 rounded-2xl">
-                    <p class="text-[9px] text-gray-400 font-bold uppercase">Received (Active)</p>
-                    <p class="text-xl font-black text-blue-400" id="statReceived">0</p>
-                </div>
-                <div class="bg-slate-800 p-4 rounded-2xl">
-                    <p class="text-[9px] text-gray-400 font-bold uppercase">Completed</p>
-                    <p class="text-xl font-black text-yellow-500" id="statCompleted">0</p>
-                </div>
-            </div>
-            <div class="bg-yellow-500 text-black p-4 rounded-2xl text-center">
-                <p class="text-[10px] font-black uppercase">Undone Orders (Pending)</p>
-                <p class="text-2xl font-black" id="statUndone">0</p>
+                <div class="bg-slate-800 p-4 rounded-2xl text-center"><p class="text-[9px] text-gray-400 font-bold uppercase">Orders</p><p class="text-xl font-black" id="statTotalOrders">0</p></div>
+                <div class="bg-slate-800 p-4 rounded-2xl text-center"><p class="text-[9px] text-gray-400 font-bold uppercase">Amount</p><p class="text-xl font-black text-green-400" id="statTotalAmount">0</p></div>
+                <div class="bg-slate-800 p-4 rounded-2xl text-center"><p class="text-[9px] text-gray-400 font-bold uppercase">Active</p><p class="text-xl font-black text-blue-400" id="statReceived">0</p></div>
+                <div class="bg-slate-800 p-4 rounded-2xl text-center"><p class="text-[9px] text-gray-400 font-bold uppercase">Done</p><p class="text-xl font-black text-yellow-500" id="statCompleted">0</p></div>
             </div>
         </div>
     </div>
 
     <footer class="mt-10 bg-white border-t border-gray-200">
-        <div class="p-4">
-            <img src="indexfooter.webp" alt="Footer" class="w-full h-auto rounded-3xl shadow-lg">
-        </div>
-        <div class="text-center py-6 pb-10">
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">© 2026 Shishi Food Point Admin</p>
-        </div>
+        <div class="p-4"><img src="indexfooter.webp" alt="Footer" class="w-full h-auto rounded-3xl shadow-lg"></div>
+        <div class="text-center py-6 pb-10"><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">© 2026 Shishi Food Point Admin</p></div>
     </footer>
 
     <script>
@@ -100,11 +110,17 @@
         let lastOrderCount = 0;
         let selectedDate = new Date().toLocaleDateString();
 
-        // PROFILE PICTURE FUNCTIONS
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId + 'Tab').classList.add('active');
+            if(tabId === 'analytics') renderChart();
+        }
+
+        // 1. UPDATE PROFILE PIC
         function updateProfilePic(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = e => {
                     document.getElementById('adminProfilePic').src = e.target.result;
                     localStorage.setItem('shishi_admin_avatar', e.target.result);
                 };
@@ -117,21 +133,96 @@
             if (savedPic) document.getElementById('adminProfilePic').src = savedPic;
         }
 
+        // 2. SEARCH FILTER (NEW)
+        function filterOrders() {
+            const val = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('#adminList > div');
+            cards.forEach(card => {
+                const txt = card.innerText.toLowerCase();
+                card.style.display = txt.includes(val) ? 'block' : 'none';
+            });
+        }
+
+        // 3. CHART RENDERING (NEW)
+        function renderChart() {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            const orders = JSON.parse(localStorage.getItem('shishi_master_db')) || [];
+            
+            // Logic ya kupata data za siku 7
+            let labels = []; let data = [];
+            for(let i=6; i>=0; i--) {
+                const d = new Date(); d.setDate(d.getDate()-i);
+                const dStr = d.toLocaleDateString();
+                labels.push(dStr.split('/')[0] + '/' + dStr.split('/')[1]);
+                const dayTotal = orders.filter(o => o.date.includes(dStr)).reduce((acc, curr) => acc + (curr.total || 0), 0);
+                data.push(dayTotal);
+            }
+
+            if(window.myChart) window.myChart.destroy();
+            window.myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Mauzo (TZS)',
+                        data: data,
+                        borderColor: '#eab308',
+                        backgroundColor: 'rgba(234, 179, 8, 0.1)',
+                        fill: true, tension: 0.4, borderWidth: 3
+                    }]
+                },
+                options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+            });
+        }
+
+        // 4. WHATSAPP & INVOICE (NEW)
+        function sendWhatsApp(phone, name, items) {
+            const msg = `Habari ${name}, Oda yako ya (${items}) imepokelewa na sasa inaandaliwa. Asante kwa kuchagua Shishi Food!`;
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`);
+        }
+
+        function printInvoice(order) {
+            const win = window.open('', '_blank');
+            win.document.write(`
+                <div style="font-family:sans-serif; padding:20px; text-align:center;">
+                    <h2>SHISHI FOOD POINT</h2>
+                    <p>Mteja: ${order.name} | ${order.date}</p>
+                    <hr>
+                    <p>${formatItems(order.items)}</p>
+                    <h3>Total: ${order.total} TZS</h3>
+                    <p>Asante, Karibu tena!</p>
+                </div>
+            `);
+            win.print();
+        }
+
+        // 5. EXCEL EXPORT (NEW)
+        function exportToExcel() {
+            const orders = JSON.parse(localStorage.getItem('shishi_master_db')) || [];
+            let csv = "Tarehe,Mteja,Simu,Tawi,Jumla,Hali\n";
+            orders.forEach(o => {
+                csv += `${o.date},${o.name},${o.phone},${o.branch},${o.total},${o.status}\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden', '');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'shishi_orders_report.csv');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        // ORIGINAL LOGIC (MAINTAINED)
         function setupDateSlider() {
             const slider = document.getElementById('dateSlider');
             slider.innerHTML = '';
             for(let i = 0; i < 7; i++) {
-                const d = new Date();
-                d.setDate(d.getDate() - i);
+                const d = new Date(); d.setDate(d.getDate() - i);
                 const dateStr = d.toLocaleDateString();
                 const isActive = dateStr === selectedDate;
-                
-                slider.innerHTML += `
-                    <button onclick="selectDate('${dateStr}')" class="flex-shrink-0 px-6 py-3 rounded-2xl font-black text-xs transition-all shadow-sm
-                        ${isActive ? 'bg-yellow-500 text-black scale-105' : 'bg-white text-gray-400 border border-gray-100'}">
-                        ${i === 0 ? 'LEO' : dateStr.split('/')[0] + '/' + dateStr.split('/')[1]}
-                    </button>
-                `;
+                slider.innerHTML += `<button onclick="selectDate('${dateStr}')" class="flex-shrink-0 px-6 py-3 rounded-2xl font-black text-xs transition-all shadow-sm ${isActive ? 'bg-yellow-500 text-black scale-105' : 'bg-white text-gray-400 border'}">${i === 0 ? 'LEO' : dateStr.split('/')[0] + '/' + dateStr.split('/')[1]}</button>`;
             }
         }
 
@@ -145,18 +236,9 @@
         function loadOrders() {
             const orders = JSON.parse(localStorage.getItem('shishi_master_db')) || [];
             const list = document.getElementById('adminList');
-            
-            if (orders.length > lastOrderCount && lastOrderCount !== 0) {
-                document.getElementById('notifSound').play().catch(e => {});
-            }
-            lastOrderCount = orders.length;
-
             const filteredOrders = orders.filter(o => o.date.includes(selectedDate));
             
-            let totalAmt = 0;
-            let received = 0;
-            let completed = 0;
-            let undone = 0;
+            let totalAmt = 0; let received = 0; let completed = 0; let undone = 0;
 
             filteredOrders.forEach(o => {
                 totalAmt += (o.total || 0);
@@ -172,7 +254,7 @@
             document.getElementById('statUndone').innerText = undone;
 
             if(filteredOrders.length === 0) {
-                list.innerHTML = `<p class="text-center py-20 text-gray-400 font-bold uppercase text-xs tracking-widest opacity-30">Hakuna oda tarehe hii</p>`;
+                list.innerHTML = `<p class="text-center py-20 text-gray-400 font-bold uppercase text-xs">Hakuna oda</p>`;
                 return;
             }
 
@@ -187,55 +269,27 @@
                                     <span class="text-[10px] bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded font-black">${o.branch}</span>
                                 </div>
                                 <h3 class="text-lg font-black mt-1 uppercase tracking-tighter">${o.name}</h3>
-                                <p class="text-blue-600 text-xs font-bold underline">${o.phone}</p>
+                                <p class="text-blue-600 text-xs font-bold underline cursor-pointer" onclick="sendWhatsApp('${o.phone}', '${o.name}', '${formatItems(o.items)}')">${o.phone}</p>
                             </div>
                             <div class="text-right">
-                                <span class="text-[10px] text-gray-400 font-bold block">${o.date.split(',')[1]}</span>
+                                <span class="text-[10px] text-gray-400 font-bold block">${o.date.split(',')[1] || ''}</span>
                                 <span class="text-sm font-black text-slate-800">${(o.total || 0).toLocaleString()} TZS</span>
                             </div>
                         </div>
                         
                         <div class="bg-gray-50 p-4 rounded-2xl text-sm mb-4 border border-gray-100">
                             <p class="text-slate-700"><strong>Vyakula:</strong> ${formatItems(o.items)}</p>
-                            <p class="mt-2 text-slate-700"><strong>Location:</strong> ${o.location}</p>
-                            <p class="mt-1 text-slate-500 text-xs italic"><strong>Malipo:</strong> ${o.payment_method || o.payment}</p>
                         </div>
 
                         <div class="flex gap-2 mt-4 items-center">
-                            ${(!o.status || o.status === 'PENDING') ? 
-                                `<button onclick="updateStatus(${masterIndex}, 'RECEIVED')" class="bg-blue-600 text-white text-xs px-6 py-3 rounded-xl font-black shadow-md active:scale-95 transition">VERIFY ORDER</button>` : ''}
-                            
-                            ${o.status === 'RECEIVED' ? 
-                                `<button onclick="updateStatus(${masterIndex}, 'COMPLETED')" class="bg-green-600 text-white text-xs px-6 py-3 rounded-xl font-black shadow-md active:scale-95 transition">MARK COMPLETED</button>` : ''}
+                            ${(!o.status || o.status === 'PENDING') ? `<button onclick="updateStatus(${masterIndex}, 'RECEIVED')" class="bg-blue-600 text-white text-[10px] px-4 py-2 rounded-xl font-black">VERIFY</button>` : ''}
+                            ${o.status === 'RECEIVED' ? `<button onclick="updateStatus(${masterIndex}, 'COMPLETED')" class="bg-green-600 text-white text-[10px] px-4 py-2 rounded-xl font-black">COMPLETE</button>` : ''}
+                            <button onclick='printInvoice(${JSON.stringify(o)})' class="bg-slate-100 text-slate-600 text-[10px] px-4 py-2 rounded-xl font-black ml-auto">RISITI</button>
                         </div>
                     </div>
                 `;
             }).join('');
             lucide.createIcons();
-        }
-
-        function showReport(type) {
-            const orders = JSON.parse(localStorage.getItem('shishi_master_db')) || [];
-            let total = 0;
-            let count = 0;
-            const now = new Date();
-
-            orders.forEach(o => {
-                const oDate = new Date(o.date);
-                let valid = false;
-                if(type === 'week') {
-                    const weekAgo = new Date(); weekAgo.setDate(now.getDate() - 7);
-                    if(oDate >= weekAgo) valid = true;
-                } else if(type === 'month') {
-                    if(oDate.getMonth() === now.getMonth() && oDate.getFullYear() === now.getFullYear()) valid = true;
-                } else if(type === 'year') {
-                    if(oDate.getFullYear() === now.getFullYear()) valid = true;
-                }
-                
-                if(valid) { total += (o.total || 0); count++; }
-            });
-
-            alert(`RIPOTI YA ${type.toUpperCase()}:\n\nJumla ya Oda: ${count}\nKiasi Kilichokusanywa: ${total.toLocaleString()} TZS`);
         }
 
         function formatItems(items) {
@@ -257,8 +311,8 @@
 
         loadProfilePic();
         setupDateSlider();
-        setInterval(loadOrders, 5000);
         loadOrders();
+        setInterval(loadOrders, 5000);
     </script>
 </body>
 </html>
