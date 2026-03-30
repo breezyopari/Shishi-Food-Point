@@ -78,36 +78,24 @@
     <div id="payModal" class="fixed inset-0 bg-black/90 items-center justify-center p-6 backdrop-blur-sm">
         <div class="bg-white w-full max-w-sm rounded-[2.5rem] p-8 relative overflow-hidden">
             <button onclick="closePayModal()" class="absolute top-4 right-4 text-gray-400 hover:text-black"><i data-lucide="x"></i></button>
-            
-            <div class="text-center mb-6">
-                <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i data-lucide="smartphone" class="text-yellow-600"></i>
+            <div id="payment-content">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4"><i data-lucide="smartphone" class="text-yellow-600"></i></div>
+                    <h3 class="text-xl font-black">Malipo ya Simu</h3>
+                    <p class="text-gray-400 text-xs mt-1">Kiasi: <span id="bill-total" class="text-black font-bold">0 TZS</span></p>
                 </div>
-                <h3 class="text-xl font-black">Malipo ya Simu</h3>
-                <p class="text-gray-400 text-xs mt-1">Kiasi: <span id="bill-total" class="text-black font-bold">0 TZS</span></p>
+                <div id="payment-form" class="space-y-4">
+                    <select id="telco" class="w-full p-4 bg-gray-50 rounded-2xl border-none ring-1 ring-gray-200 outline-none font-bold">
+                        <option>M-Pesa</option><option>Tigo Pesa</option><option>Airtel Money</option><option>Halopesa</option>
+                    </select>
+                    <input type="tel" id="pay-phone" placeholder="07XXXXXXXX" class="w-full p-4 bg-gray-50 rounded-2xl border-none ring-1 ring-gray-200 outline-none font-bold text-center tracking-widest">
+                    <button id="pay-now-btn" onclick="simulatePush()" class="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl shadow-lg active:scale-95 transition">LIPA SASA</button>
+                </div>
             </div>
-
-            <div id="payment-form" class="space-y-4">
-                <select id="telco" class="w-full p-4 bg-gray-50 rounded-2xl border-none ring-1 ring-gray-200 outline-none font-bold">
-                    <option>M-Pesa</option>
-                    <option>Tigo Pesa</option>
-                    <option>Airtel Money</option>
-                    <option>Halopesa</option>
-                </select>
-                <input type="tel" id="pay-phone" placeholder="07XXXXXXXX" class="w-full p-4 bg-gray-50 rounded-2xl border-none ring-1 ring-gray-200 outline-none font-bold text-center tracking-widest">
-                
-                <button id="pay-now-btn" onclick="simulatePush()" class="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl shadow-lg active:scale-95 transition">
-                    LIPA SASA
-                </button>
-            </div>
-
             <div id="payment-success" class="hidden text-center py-6">
-                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 text-green-600">
-                    <i data-lucide="check-circle-2" class="w-12 h-12"></i>
-                </div>
-                <h4 class="text-lg font-black text-green-600 uppercase">Payment Confirmed!</h4>
-                <p class="text-gray-500 text-xs mt-2 italic">Oda yako inatumwa jikoni...</p>
-                <button onclick="finalizeOrder('COMPLETED')" class="mt-6 text-gray-400 font-bold border-b border-gray-300 pb-1">Funga</button>
+                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 text-green-600"><i data-lucide="check-circle-2" class="w-12 h-12"></i></div>
+                <h4 class="text-lg font-black text-green-600 uppercase">Malipo Yamepokelewa!</h4>
+                <button onclick="finalizeOrder('PAID')" class="mt-6 bg-black text-white px-8 py-3 rounded-xl font-bold">Maliza Oda</button>
             </div>
         </div>
     </div>
@@ -125,6 +113,13 @@
     </footer>
 
     <script>
+        // LAZIMA iitwe 'currentUser' ili iendane na admin_dashboard
+        const user = JSON.parse(localStorage.getItem('currentUser')); 
+        if(!user) window.location.href = 'index.html';
+
+        document.getElementById('userBranch').innerText = user.branch;
+        document.getElementById('welcomeMsg').innerText = `Habari, ${user.name.split(' ')[0]}! 👋`;
+
         const menuItems = [
             { name: "Wali/Ugali Kuku Rost Kienyeji", price: 12000 },
             { name: "Wali/Ugali Maini", price: 10000 },
@@ -153,10 +148,7 @@
 
         let cart = {};
         let totalPrice = 0;
-        const user = JSON.parse(localStorage.getItem('registeredUser')); // Mteja aliyesajiliwa
-        if(!user) window.location.href = 'index.html';
 
-        // Render Menu
         const menuContainer = document.getElementById('menu-container');
         menuItems.forEach(item => {
             const div = document.createElement('div');
@@ -170,8 +162,7 @@
                     <button onclick="changeQty('${item.name}', -1)" class="w-8 h-8 bg-white rounded-md font-bold text-red-500 shadow-sm border border-gray-100">-</button>
                     <span id="qty-${item.name}" class="font-black min-w-[20px] text-center">0</span>
                     <button onclick="changeQty('${item.name}', 1)" class="w-8 h-8 bg-yellow-500 rounded-md font-bold shadow-sm">+</button>
-                </div>
-            `;
+                </div>`;
             menuContainer.appendChild(div);
         });
 
@@ -195,31 +186,26 @@
         function handleOrderProcess() {
             const loc = document.getElementById('location').value;
             const payMethod = document.getElementById('payment-method').value;
-            
             if(Object.keys(cart).length === 0 || !loc) return alert("Chagua chakula na mahali!");
 
             if(payMethod === "Mobile Money") {
-                document.getElementById('pay-phone').value = user.phone; // Jaza namba ya mteja kiotomatiki
+                document.getElementById('pay-phone').value = user.phone;
                 document.getElementById('payModal').classList.add('active');
             } else {
-                finalizeOrder('PENDING'); // Cash on delivery status ya malipo inakuwa pending
+                finalizeOrder('UNPAID');
             }
         }
 
         function simulatePush() {
             const phone = document.getElementById('pay-phone').value;
-            if(!phone) return alert("Weka namba ya simu!");
-            
+            if(!phone) return alert("Weka namba!");
             const btn = document.getElementById('pay-now-btn');
-            btn.innerText = "WAITING FOR PUSH...";
-            btn.disabled = true;
-
-            // Simulizi ya Push (Sekunde 3)
+            btn.innerText = "WAITING..."; btn.disabled = true;
             setTimeout(() => {
                 document.getElementById('payment-form').classList.add('hidden');
                 document.getElementById('payment-success').classList.remove('hidden');
                 lucide.createIcons();
-            }, 3000);
+            }, 2000);
         }
 
         function finalizeOrder(payStatus) {
@@ -231,7 +217,7 @@
                 location: document.getElementById('location').value,
                 notes: document.getElementById('extra-notes').value,
                 payment_method: document.getElementById('payment-method').value,
-                payment_status: payStatus, // Hii ndio itaonyesha TIKI kwa admin
+                payment_status: payStatus,
                 date: new Date().toLocaleString(),
                 status: 'PENDING'
             };
@@ -240,15 +226,10 @@
             allOrders.unshift(order);
             localStorage.setItem('shishi_master_db', JSON.stringify(allOrders));
 
-            alert("Oda imepokelewa!");
+            alert("Oda yako imetumwa kwa Admin!");
             location.reload();
         }
 
-        function closePayModal() { document.getElementById('payModal').classList.remove('active'); }
-        function toggleAbout() { document.getElementById('aboutModal').classList.toggle('active'); }
-        function logout() { localStorage.removeItem('currentUser'); window.location.href = 'index.html'; }
-
-        // Live Status logic
         function checkLiveOrder() {
             const allOrders = JSON.parse(localStorage.getItem('shishi_master_db')) || [];
             const myLiveOrder = allOrders.find(o => o.phone === user.phone && o.status !== 'COMPLETED');
@@ -256,12 +237,26 @@
                 document.getElementById('liveStatus').classList.remove('hidden');
                 document.getElementById('currentStatus').innerText = myLiveOrder.status;
                 document.getElementById('statusItems').innerText = Object.entries(myLiveOrder.items).map(([k,v]) => `${k} (x${v})`).join(', ');
+                if(myLiveOrder.status === 'RECEIVED') {
+                    document.getElementById('currentStatus').className = "status-badge bg-blue-500 text-white text-[9px] px-2 py-0.5 rounded-full font-black";
+                }
             } else {
                 document.getElementById('liveStatus').classList.add('hidden');
             }
         }
 
-        setInterval(checkLiveOrder, 2000);
+        function closePayModal() { document.getElementById('payModal').classList.remove('active'); }
+        function toggleAbout() { document.getElementById('aboutModal').classList.toggle('active'); }
+        function logout() { localStorage.removeItem('currentUser'); window.location.href = 'index.html'; }
+
+        // Slider
+        let idx = 0;
+        setInterval(() => {
+            idx = (idx + 1) % 3;
+            document.getElementById('slider').style.transform = `translateX(-${idx * 100}%)`;
+        }, 3000);
+
+        setInterval(checkLiveOrder, 3000);
         checkLiveOrder();
         lucide.createIcons();
     </script>
