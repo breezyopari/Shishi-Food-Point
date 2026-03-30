@@ -1,230 +1,172 @@
 <!DOCTYPE html>
-<html lang="sw" class="scroll-smooth">
+<html lang="sw">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shishi Food Point | Ladha Halisi ya Kiafrika</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Outfit', sans-serif; background-color: #FFFFFF; color: #1a1a1a; }
-        
-        /* --- SLIDER STYLING --- */
-        .slider-container { position: relative; width: 100%; max-width: 800px; margin: 0 auto 30px; height: 400px; overflow: hidden; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .slider { display: flex; transition: transform 0.7s ease-in-out; height: 100%; }
-        .slider img { width: 100%; height: 100%; object-fit: cover; flex-shrink: 0; }
-
-        /* --- MENU TABS --- */
-        .menu-container { text-align: center; padding: 40px 20px; background: #fffaf5; border-radius: 20px; margin: 20px auto; max-width: 900px; }
-        .day-tabs { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 25px; }
-        .tab-btn { padding: 12px 20px; border: 1px solid #d35400; background: white; cursor: pointer; border-radius: 30px; font-weight: bold; transition: 0.3s; color: #d35400; }
-        .tab-btn.active { background: #d35400; color: white; box-shadow: 0 4px 10px rgba(211, 84, 0, 0.3); }
-
-        /* --- MENU ITEMS --- */
-        .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #f0f0f0; }
-        .qty-controls { display: flex; align-items: center; gap: 12px; background: #f8f8f8; padding: 5px 12px; border-radius: 10px; }
-        .qty-btn { width: 28px; height: 28px; background: #d35400; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
-        .qty-val { font-weight: 800; min-width: 20px; }
-
-        /* --- SPECIAL INSTRUCTIONS --- */
-        .special-instructions textarea { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 12px; resize: none; margin-top: 10px; }
-
-        /* --- HISTORY SECTION --- */
-        .history-section { background: #fdfdfd; padding: 20px; border-radius: 15px; margin-top: 30px; border: 1px dashed #d35400; }
-        .history-card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-align: left; }
-        .btn-reorder { background: #d35400; color: white; padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: bold; }
-        .btn-delete { background: #ef4444; color: white; padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: bold; }
-
-        .order-summary-btn { display: inline-block; margin-top: 15px; padding: 15px 35px; background: #25D366; color: white; border-radius: 12px; font-weight: 800; width: 100%; max-width: 320px; text-align: center; cursor: pointer; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shishi Food</title>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
 
-    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md p-4 border-b-2 border-yellow-500">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <div class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center shadow-md">
-                    <i class="fas fa-utensils text-black"></i>
-                </div>
-                <span class="text-xl font-extrabold">SHISHI <span class="text-yellow-500">FOOD</span></span>
-            </div>
-            <a href="#history-anchor" class="text-gray-600 hover:text-yellow-600 flex items-center gap-1">
-                <i class="fas fa-history text-xl"></i> <span class="text-sm font-bold">Oda Zangu</span>
-            </a>
-        </div>
+<body class="bg-gray-100">
+
+<!-- ================= LOGIN PAGE ================= -->
+<div id="loginPage" class="min-h-screen flex items-center justify-center bg-yellow-50">
+    <div class="bg-white p-8 rounded-2xl shadow-xl w-[350px] text-center">
+        <h2 class="text-2xl font-extrabold mb-4">Karibu Shishi Food</h2>
+
+        <input id="username" type="text" placeholder="Jina lako"
+            class="w-full p-3 border rounded-lg mb-3">
+
+        <input id="password" type="password" placeholder="Password"
+            class="w-full p-3 border rounded-lg mb-3">
+
+        <!-- BRANCH -->
+        <select id="branch" class="w-full p-3 border rounded-lg mb-4">
+            <option value="">Chagua Branch</option>
+            <option value="Dar es Salaam">Dar es Salaam</option>
+            <option value="Dodoma">Dodoma</option>
+        </select>
+
+        <button onclick="login()"
+            class="w-full bg-yellow-500 text-white p-3 rounded-lg font-bold">
+            Login
+        </button>
+
+        <p class="text-sm mt-3">
+            Huna account?
+            <span onclick="showRegister()" class="text-blue-500 cursor-pointer">Jisajili</span>
+        </p>
+
+        <button onclick="goHome()"
+            class="mt-4 text-gray-500 text-sm underline">
+            Endelea bila Login
+        </button>
+    </div>
+</div>
+
+<!-- ================= REGISTER ================= -->
+<div id="registerPage" class="hidden min-h-screen flex items-center justify-center bg-yellow-50">
+    <div class="bg-white p-8 rounded-2xl shadow-xl w-[350px] text-center">
+        <h2 class="text-2xl font-extrabold mb-4">Jisajili</h2>
+
+        <input id="regUser" type="text" placeholder="Jina"
+            class="w-full p-3 border rounded-lg mb-3">
+
+        <input id="regPass" type="password" placeholder="Password"
+            class="w-full p-3 border rounded-lg mb-4">
+
+        <button onclick="register()"
+            class="w-full bg-green-500 text-white p-3 rounded-lg font-bold">
+            Sajili
+        </button>
+
+        <p class="text-sm mt-3">
+            Tayari una account?
+            <span onclick="showLogin()" class="text-blue-500 cursor-pointer">Login</span>
+        </p>
+    </div>
+</div>
+
+<!-- ================= MAIN APP ================= -->
+<div id="mainApp" class="hidden">
+
+    <nav class="bg-white p-4 shadow flex justify-between">
+        <h1 id="welcomeText" class="font-bold text-lg"></h1>
+        <button onclick="logout()" class="text-red-500 font-bold">Logout</button>
     </nav>
 
-    <section class="py-6 bg-yellow-50">
-        <div class="slider-container">
-            <div class="slider" id="main-slider">
-                <img src="1000275268.webp" alt="Wali Kuku">
-                <img src="1000275267.webp" alt="Kisinia">
-                <img src="1000275255.webp" alt="Ugali Samaki">
-                <img src="shishi-food.webp" alt="Banner 1">
-                <img src="background-chini.webp" alt="Banner 2">
-            </div>
-        </div>
-        <div class="text-center">
-            <h1 class="text-3xl font-black uppercase">Ladha Halisi ya <span class="text-yellow-500">Kiafrika</span></h1>
-        </div>
-    </section>
+    <div class="p-6 text-center">
+        <h2 class="text-2xl font-bold mb-4">Menu ya Leo</h2>
+        <p class="text-gray-600">Chagua chakula chako hapa kama kawaida...</p>
+    </div>
 
-    <section id="menu" class="container mx-auto px-4 py-6">
-        <div class="menu-container">
-            <div class="day-tabs">
-                <button class="tab-btn active" onclick="openMenu(event, 'Jumatatu')">Jumatatu</button>
-                <button class="tab-btn" onclick="openMenu(event, 'Jumanne')">Jumanne</button>
-                <button class="tab-btn" onclick="openMenu(event, 'Jumatano')">Jumatano</button>
-                <button class="tab-btn" onclick="openMenu(event, 'Alhamisi')">Alhamisi</button>
-                <button class="tab-btn" onclick="openMenu(event, 'Ijumaa')">Ijumaa</button>
-            </div>
+</div>
 
-            <div class="tab-content" style="display:block;">
-                <div id="items-list">
-                    <div class="menu-item">
-                        <span class="font-bold">Ugali & Kuku wa Kukaanga</span>
-                        <div class="qty-controls">
-                            <div class="qty-btn" onclick="changeQty(this, -1, 'Ugali & Kuku')">-</div>
-                            <span class="qty-val" data-name="Ugali & Kuku">0</span>
-                            <div class="qty-btn" onclick="changeQty(this, 1, 'Ugali & Kuku')">+</div>
-                        </div>
-                    </div>
-                    <div class="menu-item">
-                        <span class="font-bold">Ugali na Samaki (Sato)</span>
-                        <div class="qty-controls">
-                            <div class="qty-btn" onclick="changeQty(this, -1, 'Ugali & Samaki')">-</div>
-                            <span class="qty-val" data-name="Ugali & Samaki">0</span>
-                            <div class="qty-btn" onclick="changeQty(this, 1, 'Ugali & Samaki')">+</div>
-                        </div>
-                    </div>
-                    <div class="menu-item">
-                        <span class="font-bold">Kisinia (Mixed Meats)</span>
-                        <div class="qty-controls">
-                            <div class="qty-btn" onclick="changeQty(this, -1, 'Kisinia')">-</div>
-                            <span class="qty-val" data-name="Kisinia">0</span>
-                            <div class="qty-btn" onclick="changeQty(this, 1, 'Kisinia')">+</div>
-                        </div>
-                    </div>
-                </div>
+<script>
+let users = JSON.parse(localStorage.getItem("users")) || [];
 
-                <div class="special-instructions text-left mt-6">
-                    <label class="font-bold text-sm text-gray-700">Maelekezo Maalum (Hiari):</label>
-                    <textarea id="instructions" rows="2" placeholder="Mfano: Sitaki pilipili, niongezee mchuzi..."></textarea>
-                </div>
+// REGISTER
+function register(){
+    let user = document.getElementById("regUser").value;
+    let pass = document.getElementById("regPass").value;
 
-                <button onclick="sendWhatsAppOrder()" class="order-summary-btn">
-                    <i class="fab fa-whatsapp"></i> Tuma Oda WhatsApp
-                </button>
+    if(!user || !pass){
+        alert("Jaza taarifa zote");
+        return;
+    }
 
-                <div class="flex gap-2 justify-center mt-4">
-                    <a href="tel:+255712345678" class="flex-1 bg-blue-600 text-white p-3 rounded-xl font-bold text-sm">
-                        <i class="fas fa-phone-alt"></i> Tupigie
-                    </a>
-                    <a href="https://goo.gl/maps/fgyAuxwUnnMytCqn8" target="_blank" class="flex-1 bg-gray-800 text-white p-3 rounded-xl font-bold text-sm">
-                        <i class="fas fa-map-marker-alt"></i> Ramani (Kawe)
-                    </a>
-                </div>
+    users.push({user, pass});
+    localStorage.setItem("users", JSON.stringify(users));
 
-                <div id="history-anchor" class="history-section mt-10">
-                    <h3 class="font-extrabold mb-4 text-orange-600 text-sm">ODA ZILIZOPITA (RE-ORDER)</h3>
-                    <div id="history-list">
-                        <p class="text-xs text-gray-400">Bado haujatuma oda yoyote.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    alert("Umefanikiwa kujisajili");
+    showLogin();
+}
 
-    <footer class="bg-black text-white p-8 text-center text-sm">
-        <p class="font-bold text-yellow-500">SHISHI FOOD POINT</p>
-        <p>Police Mabatini Kijitonyama, Dar es Salaam</p>
-        <p class="opacity-50 mt-4">&copy; 2026 Shishi Food Point</p>
-    </footer>
+// LOGIN
+function login(){
+    let user = document.getElementById("username").value;
+    let pass = document.getElementById("password").value;
+    let branch = document.getElementById("branch").value;
 
-    <script>
-        let myOrder = {};
-        let currentDay = "Jumatatu";
-        let orderHistory = JSON.parse(localStorage.getItem('shishiOrders')) || [];
+    let found = users.find(u => u.user === user && u.pass === pass);
 
-        // 1. Slider
-        let slideIndex = 0;
-        function rotateSlider() {
-            const slider = document.getElementById('main-slider');
-            slideIndex = (slideIndex + 1) % 5;
-            slider.style.transform = `translateX(-${slideIndex * 100}%)`;
-        }
-        setInterval(rotateSlider, 4000);
+    if(!found){
+        alert("Login Imeshindikana");
+        return;
+    }
 
-        // 2. Tabs
-        function openMenu(evt, day) {
-            currentDay = day;
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            evt.currentTarget.classList.add('active');
-        }
+    if(!branch){
+        alert("Chagua branch");
+        return;
+    }
 
-        // 3. Logic
-        function changeQty(btn, delta, name) {
-            const span = btn.parentElement.querySelector('.qty-val');
-            let val = parseInt(span.innerText) + delta;
-            if (val < 0) val = 0;
-            span.innerText = val;
-            if (val > 0) myOrder[name] = val; else delete myOrder[name];
-        }
+    localStorage.setItem("currentUser", user);
+    localStorage.setItem("branch", branch);
 
-        function updateHistoryUI() {
-            const list = document.getElementById('history-list');
-            if (orderHistory.length === 0) return;
-            list.innerHTML = orderHistory.map((o, i) => `
-                <div class="history-card">
-                    <div class="text-[10px] text-gray-400">${o.date}</div>
-                    <div class="font-bold text-xs">${o.items}</div>
-                    <div class="mt-2 flex gap-2">
-                        <button onclick="reorder(${i})" class="btn-reorder">Kurudia</button>
-                        <button onclick="deleteOrder(${i})" class="btn-delete">Futa</button>
-                    </div>
-                </div>
-            `).join('');
-        }
+    openApp();
+}
 
-        function sendWhatsAppOrder() {
-            if (Object.keys(myOrder).length === 0) {
-                alert("Chagua chakula kwanza!");
-                return;
-            }
-            const inst = document.getElementById('instructions').value;
-            let summary = "";
-            for (let f in myOrder) summary += `${f} (${myOrder[f]}), `;
-            summary = summary.slice(0, -2);
+// OPEN APP
+function openApp(){
+    document.getElementById("loginPage").classList.add("hidden");
+    document.getElementById("registerPage").classList.add("hidden");
+    document.getElementById("mainApp").classList.remove("hidden");
 
-            // Save to history
-            orderHistory.unshift({ date: new Date().toLocaleString(), items: summary, data: {...myOrder}, day: currentDay });
-            if(orderHistory.length > 5) orderHistory.pop();
-            localStorage.setItem('shishiOrders', JSON.stringify(orderHistory));
-            updateHistoryUI();
+    let branch = localStorage.getItem("branch") || "Karibu";
+    document.getElementById("welcomeText").innerText =
+        "Karibu Shishi Food " + branch;
+}
 
-            let text = `Habari Shishi Food! Oda yangu ya ${currentDay}:%0A${summary}${inst ? '%0A%0AMaelezo: '+inst : ''}`;
-            window.open(`https://wa.me/255712345678?text=${text}`, '_blank');
-        }
+// LOGOUT
+function logout(){
+    localStorage.removeItem("currentUser");
+    location.reload();
+}
 
-        function reorder(index) {
-            const saved = orderHistory[index].data;
-            myOrder = {...saved};
-            document.querySelectorAll('.qty-val').forEach(span => {
-                span.innerText = saved[span.dataset.name] || 0;
-            });
-            window.scrollTo({top: 400, behavior: 'smooth'});
-            alert("Oda imewekwa kwenye menu! Bonyeza 'Tuma Oda WhatsApp' kukamilisha.");
-        }
+// SWITCH PAGES
+function showRegister(){
+    document.getElementById("loginPage").classList.add("hidden");
+    document.getElementById("registerPage").classList.remove("hidden");
+}
 
-        function deleteOrder(index) {
-            orderHistory.splice(index, 1);
-            localStorage.setItem('shishiOrders', JSON.stringify(orderHistory));
-            updateHistoryUI();
-            if(orderHistory.length === 0) document.getElementById('history-list').innerHTML = '<p class="text-xs text-gray-400">Bado haujatuma oda yoyote.</p>';
-        }
+function showLogin(){
+    document.getElementById("registerPage").classList.add("hidden");
+    document.getElementById("loginPage").classList.remove("hidden");
+}
 
-        updateHistoryUI();
-    </script>
+// SKIP LOGIN
+function goHome(){
+    localStorage.setItem("branch", "Mteja");
+    openApp();
+}
+
+// AUTO LOGIN
+window.onload = function(){
+    if(localStorage.getItem("currentUser")){
+        openApp();
+    }
+}
+</script>
+
 </body>
 </html>
