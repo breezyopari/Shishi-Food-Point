@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-100 font-['Outfit']">
+    <nav class="bg-slate-900 text-white p-4 flex justify-between items-center shadow-lg">
+        <h1 class="font-black italic text-yellow-500">SHISHI ADMIN</h1>
+        <button onclick="location.href='index.html'" class="bg-red-600 px-4 py-2 rounded-lg text-xs font-bold">LOGOUT</button>
+    </nav>
+
+    <div class="p-4 max-w-4xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-black">Oda Zilizopokelewa</h2>
+            <button onclick="clearAll()" class="text-xs text-red-500 underline font-bold">Futa Zote</button>
+        </div>
+
+        <div id="adminList" class="space-y-4">
+            </div>
+    </div>
+
+    <script>
+        if(sessionStorage.getItem('isAdmin') !== 'true') window.location.href = 'admin_login.html';
+
+        function loadOrders() {
+            const orders = JSON.parse(localStorage.getItem('shishi_master_db')) || [];
+            const list = document.getElementById('adminList');
+            
+            if(orders.length === 0) {
+                list.innerHTML = `<p class="text-center py-20 text-gray-400">Hakuna oda mpya.</p>`;
+                return;
+            }
+
+            list.innerHTML = orders.map((o, i) => `
+                <div class="bg-white p-6 rounded-3xl shadow-sm border-l-4 border-yellow-500">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <span class="text-[10px] bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded font-black">${o.branch}</span>
+                            <h3 class="text-lg font-black mt-1">${o.name}</h3>
+                            <p class="text-blue-600 text-xs font-bold">${o.phone}</p>
+                        </div>
+                        <span class="text-[10px] text-gray-400 font-bold">${o.date}</span>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-2xl text-sm mb-4">
+                        <p><strong>Vyakula:</strong> ${Object.entries(o.items).map(([k,v]) => `${k} (x${v})`).join(', ')}</p>
+                        <p class="mt-2"><strong>Location:</strong> ${o.location}</p>
+                        <p><strong>Malipo:</strong> ${o.payment}</p>
+                    </div>
+                    <button onclick="deleteOrder(${i})" class="text-red-500 text-xs font-bold flex items-center gap-1">
+                        <i data-lucide="trash-2" class="w-3 h-3"></i> Futa Oda
+                    </button>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function deleteOrder(i) {
+            let orders = JSON.parse(localStorage.getItem('shishi_master_db'));
+            orders.splice(i, 1);
+            localStorage.setItem('shishi_master_db', JSON.stringify(orders));
+            loadOrders();
+        }
+
+        function clearAll() {
+            if(confirm("Futa oda zote?")) {
+                localStorage.removeItem('shishi_master_db');
+                loadOrders();
+            }
+        }
+
+        loadOrders();
+    </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 min-h-screen flex items-center justify-center p-6">
+    <div class="max-w-md w-full bg-slate-800 p-8 rounded-[2rem] shadow-2xl text-white">
+        <h2 class="text-2xl font-black mb-6 text-yellow-500">ADMIN ACCESS</h2>
+        <div class="space-y-4">
+            <input type="text" id="admUser" placeholder="Username" class="w-full p-4 bg-slate-700 rounded-xl border-none outline-none">
+            <input type="password" id="admPass" placeholder="Password" class="w-full p-4 bg-slate-700 rounded-xl border-none outline-none">
+            <button onclick="checkAdmin()" class="w-full bg-yellow-500 text-black font-black py-4 rounded-xl">LOGIN</button>
+            <a href="index.html" class="block text-center text-slate-500 text-xs mt-4">Rudi Kwa Mteja</a>
+        </div>
+    </div>
+    <script>
+        function checkAdmin() {
+            if(document.getElementById('admUser').value === 'admin' && document.getElementById('admPass').value === '1234') {
+                sessionStorage.setItem('isAdmin', 'true');
+                window.location.href = 'admin_dashboard.html';
+            } else { alert("Login imefeli!"); }
+        }
+    </script>
+</body>
+</html>

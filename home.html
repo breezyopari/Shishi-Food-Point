@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu | Shishi Food Point</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .slider { display: flex; transition: 0.5s; }
+        .slider img { width: 100%; flex-shrink: 0; border-radius: 20px; height: 250px; object-fit: cover; }
+    </style>
+</head>
+<body class="bg-gray-50 font-['Outfit'] pb-20">
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md p-4 border-b flex justify-between items-center shadow-sm">
+        <div>
+            <span id="userBranch" class="text-[10px] font-bold text-yellow-600 block leading-none"></span>
+            <h1 class="font-black text-lg">SHISHI FOOD</h1>
+        </div>
+        <button onclick="logout()" class="p-2 text-red-500 bg-red-50 rounded-xl"><i data-lucide="log-out" class="w-5 h-5"></i></button>
+    </nav>
+
+    <div class="p-4 overflow-hidden relative">
+        <div class="slider" id="slider">
+            <img src="shishi-food.webp" alt="1">
+            <img src="1000275268.webp" alt="2">
+            <img src="1000275255.webp" alt="3">
+        </div>
+    </div>
+
+    <div class="px-4 mb-4">
+        <h2 id="welcomeMsg" class="text-2xl font-black">Habari! 👋</h2>
+        <p class="text-gray-400 text-sm">Chagua chakula chako kitamu leo.</p>
+    </div>
+
+    <div class="px-4 space-y-3">
+        <div class="bg-white p-4 rounded-2xl flex justify-between items-center shadow-sm border border-gray-50">
+            <span class="font-bold">Ugali na Kuku Kukaanga</span>
+            <div class="flex items-center gap-3 bg-gray-50 p-1 rounded-lg">
+                <button onclick="changeQty('Kuku', -1)" class="w-8 h-8 bg-white rounded-md font-bold text-red-500 shadow-sm">-</button>
+                <span id="qty-Kuku" class="font-black min-w-[20px] text-center">0</span>
+                <button onclick="changeQty('Kuku', 1)" class="w-8 h-8 bg-yellow-500 rounded-md font-bold shadow-sm">+</button>
+            </div>
+        </div>
+        <div class="bg-white p-4 rounded-2xl flex justify-between items-center shadow-sm border border-gray-50">
+            <span class="font-bold">Ugali na Samaki (Sato)</span>
+            <div class="flex items-center gap-3 bg-gray-50 p-1 rounded-lg">
+                <button onclick="changeQty('Samaki', -1)" class="w-8 h-8 bg-white rounded-md font-bold text-red-500 shadow-sm">-</button>
+                <span id="qty-Samaki" class="font-black min-w-[20px] text-center">0</span>
+                <button onclick="changeQty('Samaki', 1)" class="w-8 h-8 bg-yellow-500 rounded-md font-bold shadow-sm">+</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-4 mt-6 space-y-4">
+        <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm">
+            <label class="block text-xs font-black text-gray-400 mb-2">MAHALI PA KULETA</label>
+            <input type="text" id="location" placeholder="Street / Office Name" class="w-full p-4 bg-gray-50 rounded-xl mb-4 outline-none border-none ring-1 ring-gray-100">
+            
+            <label class="block text-xs font-black text-gray-400 mb-2">NJIA YA MALIPO</label>
+            <select id="payment" class="w-full p-4 bg-gray-50 rounded-xl outline-none border-none ring-1 ring-gray-100">
+                <option>M-Pesa</option>
+                <option>Tigo Pesa</option>
+                <option>Airtel Money</option>
+                <option>Cash on Delivery</option>
+            </select>
+        </div>
+
+        <button onclick="sendOrder()" class="w-full bg-green-500 text-white font-black py-5 rounded-2xl shadow-xl flex items-center justify-center gap-3 active:scale-95 transition">
+            <i data-lucide="whatsapp"></i> TUMA ODA WHATSAPP
+        </button>
+    </div>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('currentUser'));
+        if(!user) window.location.href = 'index.html';
+
+        document.getElementById('userBranch').innerText = user.branch;
+        document.getElementById('welcomeMsg').innerText = `Habari, ${user.name.split(' ')[0]}! 👋`;
+
+        let cart = {};
+        function changeQty(item, d) {
+            cart[item] = (cart[item] || 0) + d;
+            if(cart[item] <= 0) delete cart[item];
+            document.getElementById(`qty-${item}`).innerText = cart[item] || 0;
+        }
+
+        function sendOrder() {
+            const loc = document.getElementById('location').value;
+            if(Object.keys(cart).length === 0 || !loc) return alert("Jaza oda na mahali!");
+
+            const order = {
+                id: Date.now(),
+                ...user,
+                items: {...cart},
+                location: loc,
+                payment: document.getElementById('payment').value,
+                date: new Date().toLocaleString()
+            };
+
+            // Save for Admin
+            const allOrders = JSON.parse(localStorage.getItem('shishi_master_db')) || [];
+            allOrders.unshift(order);
+            localStorage.setItem('shishi_master_db', JSON.stringify(allOrders));
+
+            // WhatsApp
+            let txt = `*ODA MPYA SHISHI FOOD*\n*Mteja:* ${user.name}\n*Tawi:* ${user.branch}\n*Vyakula:* ${Object.entries(cart).map(([k,v]) => `${k} (${v})`).join(', ')}\n*Mahali:* ${loc}\n*Malipo:* ${order.payment}`;
+            window.open(`https://wa.me/255712345678?text=${encodeURIComponent(txt)}`);
+
+            alert("Oda imetumwa! Asante.");
+            location.reload();
+        }
+
+        function logout() { localStorage.clear(); window.location.href = 'index.html'; }
+        
+        // Slider Logic
+        let idx = 0;
+        setInterval(() => {
+            idx = (idx + 1) % 3;
+            document.getElementById('slider').style.transform = `translateX(-${idx * 100}%)`;
+        }, 3000);
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>
