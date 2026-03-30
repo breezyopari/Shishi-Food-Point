@@ -14,7 +14,7 @@
 
     <nav class="bg-slate-900 text-white p-4 flex justify-between items-center shadow-lg">
         <h1 class="font-black italic text-yellow-500">SHISHI ADMIN</h1>
-        <button onclick="logoutAdmin()" class="bg-red-600 px-4 py-2 rounded-lg text-xs font-bold">LOGOUT</button>
+        <button onclick="logoutAdmin()" class="bg-red-600 px-4 py-2 rounded-lg text-xs font-bold shadow-md active:scale-95">LOGOUT</button>
     </nav>
 
     <div class="p-4 max-w-4xl mx-auto">
@@ -28,9 +28,12 @@
     </div>
 
     <script>
-        // Kagua kama admin ameshalogin
-        if (localStorage.getItem('shishi_admin_auth') !== 'true') {
-            window.location.href = 'admin_login.html';
+        // --- SEHEMU YA ULINZI (LOGOUT FIX) ---
+        // Tunatumia localStorage ili asitolewe nje kila mara
+        const auth = localStorage.getItem('shishi_admin_auth');
+        
+        if (auth !== 'true') {
+            window.location.replace('admin_login.html');
         }
 
         let lastOrderCount = 0;
@@ -39,9 +42,8 @@
             const orders = JSON.parse(localStorage.getItem('shishi_master_db')) || [];
             const list = document.getElementById('adminList');
             
-            // Logic ya Sauti: Kama idadi ya oda imeongezeka, piga mlio
             if (orders.length > lastOrderCount && lastOrderCount !== 0) {
-                document.getElementById('notifSound').play().catch(e => console.log("Sauti inahitaji ruhusa ya browser"));
+                document.getElementById('notifSound').play().catch(e => console.log("Sauti inahitaji interaction"));
             }
             lastOrderCount = orders.length;
 
@@ -86,13 +88,11 @@
             lucide.createIcons();
         }
 
-        // Kurekebisha muonekano wa vyakula
         function formatItems(items) {
             if (typeof items === 'string') return items;
             return Object.entries(items).map(([k,v]) => `${k} (x${v})`).join(', ');
         }
 
-        // Kazi ya kubadili Status
         function updateStatus(index, newStatus) {
             let orders = JSON.parse(localStorage.getItem('shishi_master_db'));
             orders[index].status = newStatus;
@@ -116,12 +116,12 @@
             }
         }
 
+        // --- FIX LOGOUT ---
         function logoutAdmin() {
             localStorage.removeItem('shishi_admin_auth');
-            window.location.href = 'index.html';
+            window.location.replace('index.html');
         }
 
-        // Inakagua oda mpya kila baada ya sekunde 5
         setInterval(loadOrders, 5000);
         loadOrders();
     </script>
