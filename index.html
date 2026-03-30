@@ -1,141 +1,100 @@
-<!DOCTYPE html>
-<html lang="sw">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shishi Food PRO</title>
+<!-- ===================== NEW SYSTEM ADDITIONS ===================== -->
 
-<script src="https://cdn.tailwindcss.com"></script>
-
-<style>
-body{font-family:sans-serif;background:#f5f5f5}
-.hidden{display:none}
-.card{background:white;border-radius:15px;padding:15px;box-shadow:0 5px 15px rgba(0,0,0,0.1)}
-.btn{padding:10px;border-radius:10px;font-weight:bold}
-</style>
-</head>
-
-<body>
-
-<!-- NOTIFICATION -->
-<div id="toast" class="fixed top-5 right-5 bg-green-500 text-white px-4 py-2 rounded hidden"></div>
+<!-- TOAST -->
+<div id="toast" class="hidden fixed top-5 right-5 bg-green-500 text-white px-4 py-2 rounded-xl z-50"></div>
 
 <!-- LOGIN -->
-<div id="loginPage" class="min-h-screen flex items-center justify-center">
-<div class="card w-[350px] text-center">
+<div id="loginPage" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+<div class="bg-white p-6 rounded-xl w-[320px] text-center">
+<h2 class="font-bold text-lg mb-3">Shishi Login</h2>
 
-<h2 class="text-xl font-bold mb-4">Shishi Food Login</h2>
+<input id="loginUser" placeholder="Username" class="w-full p-2 border mb-2">
+<input id="loginPass" type="password" placeholder="Password" class="w-full p-2 border mb-2">
 
-<input id="username" placeholder="Username" class="w-full p-2 border mb-2 rounded">
-<input id="password" type="password" placeholder="Password" class="w-full p-2 border mb-2 rounded">
-
-<select id="branch" class="w-full p-2 border mb-3 rounded">
+<select id="branchSelect" class="w-full p-2 border mb-3">
 <option value="">Chagua Branch</option>
 <option>Dar es Salaam</option>
 <option>Dodoma</option>
 </select>
 
-<button onclick="login()" class="btn bg-yellow-500 text-white w-full">Login</button>
-
-<button onclick="skip()" class="text-sm mt-3 underline">Endelea bila login</button>
-
+<button onclick="login()" class="bg-yellow-500 text-white w-full p-2 rounded mb-2">Login</button>
+<button onclick="showRegister()" class="text-sm underline">Register</button>
+<button onclick="skipLogin()" class="text-sm underline block mt-1">Skip</button>
 </div>
 </div>
 
-<!-- APP -->
-<div id="app" class="hidden p-4">
-
-<div class="flex justify-between mb-4">
-<h2 id="welcome" class="font-bold"></h2>
-<button onclick="logout()" class="text-red-500">Logout</button>
-</div>
-
-<!-- MENU -->
-<div class="card">
-
-<h3 class="font-bold mb-3">Menu</h3>
-
-<div class="flex justify-between mb-2">
-<span>Ugali & Kuku</span>
-<div>
-<button onclick="qty('kuku',-1)">-</button>
-<span id="kuku">0</span>
-<button onclick="qty('kuku',1)">+</button>
+<!-- REGISTER -->
+<div id="registerPage" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+<div class="bg-white p-6 rounded-xl w-[320px] text-center">
+<h2 class="font-bold mb-3">Register</h2>
+<input id="regUser" placeholder="Username" class="w-full p-2 border mb-2">
+<input id="regPass" type="password" placeholder="Password" class="w-full p-2 border mb-2">
+<button onclick="register()" class="bg-green-500 text-white w-full p-2 rounded">Create</button>
+<button onclick="backLogin()" class="text-sm underline mt-2">Back</button>
 </div>
 </div>
 
-<div class="flex justify-between mb-2">
-<span>Ugali & Samaki</span>
-<div>
-<button onclick="qty('samaki',-1)">-</button>
-<span id="samaki">0</span>
-<button onclick="qty('samaki',1)">+</button>
-</div>
-</div>
+<!-- DELIVERY + PAYMENT -->
+<div class="container mx-auto px-4 mt-6">
+<div class="menu-container">
 
-</div>
-
-<!-- DELIVERY -->
-<div class="card mt-4">
-
-<h3 class="font-bold mb-3">Delivery Info</h3>
-
+<h3 class="font-bold mb-3">Delivery</h3>
 <input id="phone" placeholder="Namba ya simu" class="w-full p-2 border mb-2 rounded">
-<input id="location" placeholder="Mahali ulipo" class="w-full p-2 border mb-2 rounded">
-<textarea id="note" placeholder="Maelezo..." class="w-full p-2 border rounded"></textarea>
+<input id="location" placeholder="Location yako" class="w-full p-2 border mb-3 rounded">
 
-</div>
+<h3 class="font-bold mb-2">Malipo</h3>
+<select id="payment" class="w-full p-2 border rounded mb-2">
+<option value="">Chagua Malipo</option>
+<option>M-Pesa</option>
+<option>TigoPesa</option>
+<option>Airtel Money</option>
+</select>
 
-<!-- ORDER -->
-<button onclick="preview()" class="btn bg-blue-500 text-white w-full mt-4">
+<div id="payInfo" class="text-sm text-gray-600"></div>
+
+<button onclick="previewOrder()" class="order-summary-btn mt-4 bg-blue-600">
 Preview Order
 </button>
 
 </div>
-
-<!-- PREVIEW -->
-<div id="previewBox" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center">
-
-<div class="card w-[300px]">
-
-<h3 class="font-bold mb-3">Order Summary</h3>
-
-<div id="summary"></div>
-
-<button onclick="send()" class="btn bg-green-500 text-white w-full mt-3">
-Confirm & Send
-</button>
-
 </div>
 
+<!-- PREVIEW MODAL -->
+<div id="previewBox" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+<div class="bg-white p-5 rounded-xl w-[320px]">
+<h3 class="font-bold mb-2">Receipt</h3>
+<div id="summary"></div>
+<button onclick="confirmOrder()" class="bg-green-500 text-white w-full p-2 mt-3 rounded">Confirm</button>
+</div>
 </div>
 
 <!-- ADMIN -->
-<div id="adminPage" class="hidden p-4">
-
-<h2 class="font-bold mb-3">ADMIN DASHBOARD</h2>
-
-<div id="orders"></div>
-
+<div id="adminPage" class="hidden fixed inset-0 bg-white z-50 p-4 overflow-auto">
+<h2 class="font-bold text-xl mb-3">ADMIN DASHBOARD</h2>
+<div id="adminOrders"></div>
+<button onclick="logout()" class="bg-red-500 text-white p-2 mt-3 rounded">Logout</button>
 </div>
 
 <script>
-let order={};
-let allOrders=JSON.parse(localStorage.getItem("orders"))||[];
 
-/* TOAST */
-function show(msg){
-let t=document.getElementById("toast");
-t.innerText=msg;
+/* ================= GLOBAL ================= */
+let users = JSON.parse(localStorage.getItem("users")) || [];
+let allOrders = JSON.parse(localStorage.getItem("allOrders")) || [];
+let branch = "";
+
+/* ================= TOAST ================= */
+function toast(msg){
+let t = document.getElementById("toast");
+t.innerText = msg;
 t.classList.remove("hidden");
 setTimeout(()=>t.classList.add("hidden"),2000);
 }
 
-/* LOGIN */
+/* ================= AUTH ================= */
 function login(){
-let u=username.value;
-let p=password.value;
-let b=branch.value;
+let u = loginUser.value;
+let p = loginPass.value;
+let b = branchSelect.value;
 
 if(u==="admin" && p==="1234"){
 loginPage.classList.add("hidden");
@@ -144,105 +103,121 @@ renderAdmin();
 return;
 }
 
-if(!b){show("Chagua branch");return;}
+if(!b){toast("Chagua branch"); return;}
 
+branch = b;
 localStorage.setItem("branch",b);
-openApp();
-}
 
-function skip(){
-localStorage.setItem("branch","Mteja");
-openApp();
-}
-
-/* APP */
-function openApp(){
 loginPage.classList.add("hidden");
-app.classList.remove("hidden");
-
-welcome.innerText="Karibu Shishi Food "+localStorage.getItem("branch");
+document.querySelector("h1").innerText = "Karibu Shishi Food "+b;
 }
 
-/* QTY */
-function qty(name,val){
-let el=document.getElementById(name);
-let n=parseInt(el.innerText)+val;
-if(n<0)n=0;
-el.innerText=n;
-
-if(n>0)order[name]=n;
-else delete order[name];
+function skipLogin(){
+loginPage.classList.add("hidden");
 }
 
-/* PREVIEW */
-function preview(){
-if(Object.keys(order).length===0){
-show("Chagua chakula");return;
+function showRegister(){
+loginPage.classList.add("hidden");
+registerPage.classList.remove("hidden");
 }
 
-let s="";
-for(let k in order){
-s+=k+"("+order[k]+")<br>";
+function backLogin(){
+registerPage.classList.add("hidden");
+loginPage.classList.remove("hidden");
 }
 
-summary.innerHTML=s;
+function register(){
+users.push({u:regUser.value,p:regPass.value});
+localStorage.setItem("users",JSON.stringify(users));
+toast("Registered");
+backLogin();
+}
+
+function logout(){
+location.reload();
+}
+
+/* ================= PAYMENT ================= */
+payment.onchange = ()=>{
+if(payment.value==="M-Pesa") payInfo.innerText="Lipa: 255700000000";
+if(payment.value==="TigoPesa") payInfo.innerText="Lipa: 255600000000";
+if(payment.value==="Airtel Money") payInfo.innerText="Lipa: 255780000000";
+};
+
+/* ================= PREVIEW ================= */
+function previewOrder(){
+if(Object.keys(myOrder).length===0){
+toast("Chagua chakula");
+return;
+}
+
+let sum="";
+for(let k in myOrder){
+sum += k+"("+myOrder[k]+")<br>";
+}
+
+sum += "<br><b>Payment:</b> "+payment.value;
+sum += "<br><b>Simu:</b> "+phone.value;
+sum += "<br><b>Location:</b> "+location.value;
+
+summary.innerHTML = sum;
 previewBox.classList.remove("hidden");
 }
 
-/* SEND */
-function send(){
-let phone=document.getElementById("phone").value;
-let loc=document.getElementById("location").value;
-
-if(!phone||!loc){
-show("Jaza delivery info");return;
-}
+/* ================= CONFIRM ================= */
+function confirmOrder(){
 
 let data={
-items:order,
-phone,
-loc,
-date:new Date().toLocaleString()
+items: myOrder,
+phone: phone.value,
+location: location.value,
+payment: payment.value,
+branch: branch || "Mteja",
+date: new Date().toLocaleString()
 };
 
 allOrders.unshift(data);
-localStorage.setItem("orders",JSON.stringify(allOrders));
+localStorage.setItem("allOrders",JSON.stringify(allOrders));
+
+let text = "ODA:%0A"+JSON.stringify(data);
+window.open("https://wa.me/255712345678?text="+text);
 
 previewBox.classList.add("hidden");
 
-show("Order imetumwa!");
+toast("Order imetumwa!");
 
-order={};
-document.querySelectorAll("span").forEach(s=>{
-if(!isNaN(s.innerText))s.innerText=0;
-});
+/* RESET */
+myOrder = {};
+document.querySelectorAll(".qty-val").forEach(s=>s.innerText=0);
+document.getElementById("instructions").value="";
+phone.value="";
+location.value="";
+payment.value="";
+payInfo.innerText="";
 
-setTimeout(()=>window.scrollTo({top:0,behavior:"smooth"}),2000);
+/* RETURN TOP */
+setTimeout(()=>window.scrollTo({top:0,behavior:"smooth"}),3000);
 }
 
-/* ADMIN */
+/* ================= ADMIN ================= */
 function renderAdmin(){
-let box=document.getElementById("orders");
+let box = document.getElementById("adminOrders");
 
 if(allOrders.length===0){
 box.innerHTML="Hakuna orders";
 return;
 }
 
-box.innerHTML=allOrders.map(o=>
-`<div class="card mb-2">
+box.innerHTML = allOrders.map(o=>`
+<div class="border p-3 mb-2 rounded">
 ${o.date}<br>
 ${JSON.stringify(o.items)}<br>
+💳 ${o.payment}<br>
 📞 ${o.phone}<br>
-📍 ${o.loc}
-</div>`).join("");
+📍 ${o.location}<br>
+🏙️ ${o.branch}
+</div>
+`).join("");
 }
 
-/* LOGOUT */
-function logout(){
-location.reload();
-}
 </script>
-
-</body>
-</html>
