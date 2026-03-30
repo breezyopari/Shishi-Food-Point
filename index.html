@@ -3,169 +3,271 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shishi Food</title>
+<title>Shishi Food Ultimate</title>
+
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+body{font-family:sans-serif;background:#f4f4f4}
+.card{background:white;padding:15px;border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,0.1)}
+.btn{padding:12px;border-radius:10px;font-weight:bold}
+.hidden{display:none}
+.slider img{width:100%}
+</style>
 </head>
 
-<body class="bg-gray-100">
+<body>
 
-<!-- ================= LOGIN PAGE ================= -->
+<!-- TOAST -->
+<div id="toast" class="fixed top-5 right-5 bg-green-500 text-white px-4 py-2 rounded hidden"></div>
+
+<!-- LOGIN -->
 <div id="loginPage" class="min-h-screen flex items-center justify-center bg-yellow-50">
-    <div class="bg-white p-8 rounded-2xl shadow-xl w-[350px] text-center">
-        <h2 class="text-2xl font-extrabold mb-4">Karibu Shishi Food</h2>
+<div class="card w-[350px] text-center">
 
-        <input id="username" type="text" placeholder="Jina lako"
-            class="w-full p-3 border rounded-lg mb-3">
+<h2 class="text-xl font-bold mb-4">Shishi Food</h2>
 
-        <input id="password" type="password" placeholder="Password"
-            class="w-full p-3 border rounded-lg mb-3">
+<input id="username" placeholder="Username" class="w-full p-2 border mb-2 rounded">
+<input id="password" type="password" placeholder="Password" class="w-full p-2 border mb-2 rounded">
 
-        <!-- BRANCH -->
-        <select id="branch" class="w-full p-3 border rounded-lg mb-4">
-            <option value="">Chagua Branch</option>
-            <option value="Dar es Salaam">Dar es Salaam</option>
-            <option value="Dodoma">Dodoma</option>
-        </select>
+<select id="branch" class="w-full p-2 border mb-3 rounded">
+<option value="">Chagua Branch</option>
+<option>Dar es Salaam</option>
+<option>Dodoma</option>
+</select>
 
-        <button onclick="login()"
-            class="w-full bg-yellow-500 text-white p-3 rounded-lg font-bold">
-            Login
-        </button>
+<button onclick="login()" class="btn bg-yellow-500 text-white w-full">Login</button>
 
-        <p class="text-sm mt-3">
-            Huna account?
-            <span onclick="showRegister()" class="text-blue-500 cursor-pointer">Jisajili</span>
-        </p>
+<button onclick="skip()" class="text-sm mt-3 underline">Endelea bila login</button>
 
-        <button onclick="goHome()"
-            class="mt-4 text-gray-500 text-sm underline">
-            Endelea bila Login
-        </button>
-    </div>
+</div>
 </div>
 
-<!-- ================= REGISTER ================= -->
-<div id="registerPage" class="hidden min-h-screen flex items-center justify-center bg-yellow-50">
-    <div class="bg-white p-8 rounded-2xl shadow-xl w-[350px] text-center">
-        <h2 class="text-2xl font-extrabold mb-4">Jisajili</h2>
+<!-- APP -->
+<div id="app" class="hidden p-4">
 
-        <input id="regUser" type="text" placeholder="Jina"
-            class="w-full p-3 border rounded-lg mb-3">
-
-        <input id="regPass" type="password" placeholder="Password"
-            class="w-full p-3 border rounded-lg mb-4">
-
-        <button onclick="register()"
-            class="w-full bg-green-500 text-white p-3 rounded-lg font-bold">
-            Sajili
-        </button>
-
-        <p class="text-sm mt-3">
-            Tayari una account?
-            <span onclick="showLogin()" class="text-blue-500 cursor-pointer">Login</span>
-        </p>
-    </div>
+<!-- NAV -->
+<div class="flex justify-between mb-3">
+<h2 id="welcome" class="font-bold"></h2>
+<button onclick="logout()" class="text-red-500">Logout</button>
 </div>
 
-<!-- ================= MAIN APP ================= -->
-<div id="mainApp" class="hidden">
+<!-- SLIDER -->
+<div class="card mb-3 overflow-hidden">
+<div id="slider" class="flex transition">
+<img src="1000275268.webp">
+<img src="1000275267.webp">
+<img src="1000275255.webp">
+</div>
+</div>
 
-    <nav class="bg-white p-4 shadow flex justify-between">
-        <h1 id="welcomeText" class="font-bold text-lg"></h1>
-        <button onclick="logout()" class="text-red-500 font-bold">Logout</button>
-    </nav>
+<!-- MENU -->
+<div class="card">
+<h3 class="font-bold mb-2">Menu</h3>
 
-    <div class="p-6 text-center">
-        <h2 class="text-2xl font-bold mb-4">Menu ya Leo</h2>
-        <p class="text-gray-600">Chagua chakula chako hapa kama kawaida...</p>
-    </div>
+<div class="flex justify-between"><span>Kuku</span>
+<div><button onclick="qty('kuku',-1)">-</button><span id="kuku">0</span><button onclick="qty('kuku',1)">+</button></div></div>
 
+<div class="flex justify-between"><span>Samaki</span>
+<div><button onclick="qty('samaki',-1)">-</button><span id="samaki">0</span><button onclick="qty('samaki',1)">+</button></div></div>
+</div>
+
+<!-- DELIVERY -->
+<div class="card mt-3">
+<h3>Delivery</h3>
+<input id="phone" placeholder="Simu" class="w-full p-2 border mb-2 rounded">
+<input id="location" placeholder="Location" class="w-full p-2 border mb-2 rounded">
+<textarea id="note" placeholder="Maelezo..." class="w-full p-2 border rounded"></textarea>
+</div>
+
+<!-- PAYMENT -->
+<div class="card mt-3">
+<h3>Malipo</h3>
+<select id="payment" class="w-full p-2 border rounded mb-2">
+<option value="">Chagua</option>
+<option>M-Pesa</option>
+<option>TigoPesa</option>
+<option>Airtel Money</option>
+</select>
+<div id="payInfo" class="text-sm"></div>
+</div>
+
+<button onclick="preview()" class="btn bg-blue-500 text-white w-full mt-3">Preview</button>
+
+<!-- HISTORY -->
+<div class="card mt-3">
+<h3>History</h3>
+<div id="history"></div>
+</div>
+
+</div>
+
+<!-- PREVIEW -->
+<div id="previewBox" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center">
+<div class="card w-[300px]">
+<h3 class="font-bold">Receipt</h3>
+<div id="summary"></div>
+<button onclick="send()" class="btn bg-green-500 text-white w-full mt-2">Confirm</button>
+</div>
+</div>
+
+<!-- ADMIN -->
+<div id="adminPage" class="hidden p-4">
+<h2 class="font-bold mb-3">ADMIN DASHBOARD</h2>
+<div id="orders"></div>
 </div>
 
 <script>
-let users = JSON.parse(localStorage.getItem("users")) || [];
+let order={};
+let orders=JSON.parse(localStorage.getItem("orders"))||[];
 
-// REGISTER
-function register(){
-    let user = document.getElementById("regUser").value;
-    let pass = document.getElementById("regPass").value;
-
-    if(!user || !pass){
-        alert("Jaza taarifa zote");
-        return;
-    }
-
-    users.push({user, pass});
-    localStorage.setItem("users", JSON.stringify(users));
-
-    alert("Umefanikiwa kujisajili");
-    showLogin();
+/* TOAST */
+function show(m){
+toast.innerText=m;
+toast.classList.remove("hidden");
+setTimeout(()=>toast.classList.add("hidden"),2000);
 }
 
-// LOGIN
+/* LOGIN */
 function login(){
-    let user = document.getElementById("username").value;
-    let pass = document.getElementById("password").value;
-    let branch = document.getElementById("branch").value;
+let u=username.value;
+let p=password.value;
+let b=branch.value;
 
-    let found = users.find(u => u.user === user && u.pass === pass);
-
-    if(!found){
-        alert("Login Imeshindikana");
-        return;
-    }
-
-    if(!branch){
-        alert("Chagua branch");
-        return;
-    }
-
-    localStorage.setItem("currentUser", user);
-    localStorage.setItem("branch", branch);
-
-    openApp();
+if(u==="admin" && p==="1234"){
+loginPage.classList.add("hidden");
+adminPage.classList.remove("hidden");
+renderAdmin();
+return;
 }
 
-// OPEN APP
+if(!b){show("Chagua branch");return;}
+
+localStorage.setItem("branch",b);
+openApp();
+}
+
+/* SKIP */
+function skip(){
+localStorage.setItem("branch","Mteja");
+openApp();
+}
+
+/* OPEN APP */
 function openApp(){
-    document.getElementById("loginPage").classList.add("hidden");
-    document.getElementById("registerPage").classList.add("hidden");
-    document.getElementById("mainApp").classList.remove("hidden");
+loginPage.classList.add("hidden");
+app.classList.remove("hidden");
 
-    let branch = localStorage.getItem("branch") || "Karibu";
-    document.getElementById("welcomeText").innerText =
-        "Karibu Shishi Food " + branch;
+welcome.innerText="Karibu Shishi Food "+localStorage.getItem("branch");
+renderHistory();
 }
 
-// LOGOUT
+/* LOGOUT */
 function logout(){
-    localStorage.removeItem("currentUser");
-    location.reload();
+localStorage.clear();
+location.reload();
 }
 
-// SWITCH PAGES
-function showRegister(){
-    document.getElementById("loginPage").classList.add("hidden");
-    document.getElementById("registerPage").classList.remove("hidden");
+/* QTY */
+function qty(n,v){
+let el=document.getElementById(n);
+let val=parseInt(el.innerText)+v;
+if(val<0)val=0;
+el.innerText=val;
+if(val>0)order[n]=val; else delete order[n];
 }
 
-function showLogin(){
-    document.getElementById("registerPage").classList.add("hidden");
-    document.getElementById("loginPage").classList.remove("hidden");
+/* PAYMENT */
+payment.onchange=()=>{
+if(payment.value==="M-Pesa") payInfo.innerText="Lipa: 255700000000";
+if(payment.value==="TigoPesa") payInfo.innerText="Lipa: 255600000000";
+if(payment.value==="Airtel Money") payInfo.innerText="Lipa: 255780000000";
+};
+
+/* PREVIEW */
+function preview(){
+if(Object.keys(order).length===0){show("Hakuna order");return;}
+
+let sum="";
+for(let k in order) sum+=k+"("+order[k]+")<br>";
+
+sum+="<br>Payment:"+payment.value;
+sum+="<br>Phone:"+phone.value;
+sum+="<br>Location:"+location.value;
+
+summary.innerHTML=sum;
+previewBox.classList.remove("hidden");
 }
 
-// SKIP LOGIN
-function goHome(){
-    localStorage.setItem("branch", "Mteja");
-    openApp();
+/* SEND */
+function send(){
+let data={
+order,
+payment:payment.value,
+phone:phone.value,
+location:location.value,
+date:new Date().toLocaleString()
+};
+
+orders.unshift(data);
+localStorage.setItem("orders",JSON.stringify(orders));
+
+let msg="Order:\n"+JSON.stringify(order)+
+"\nPayment:"+payment.value+
+"\nPhone:"+phone.value+
+"\nLocation:"+location.value;
+
+window.open("https://wa.me/255712345678?text="+encodeURIComponent(msg));
+
+previewBox.classList.add("hidden");
+show("Order imetumwa!");
+
+// reset
+order={};
+document.querySelectorAll("span").forEach(s=>{
+if(!isNaN(s.innerText))s.innerText=0;
+});
+
+renderHistory();
 }
 
-// AUTO LOGIN
-window.onload = function(){
-    if(localStorage.getItem("currentUser")){
-        openApp();
-    }
+/* HISTORY */
+function renderHistory(){
+if(orders.length===0){
+history.innerHTML="Hakuna order";
+return;
 }
+history.innerHTML=orders.slice(0,5).map(o=>
+`<div class="text-xs border p-2 mb-2">
+${o.date}<br>${JSON.stringify(o.order)}
+</div>`).join("");
+}
+
+/* ADMIN */
+function renderAdmin(){
+ordersDiv=document.getElementById("orders");
+if(orders.length===0){
+ordersDiv.innerHTML="Hakuna orders";
+return;
+}
+ordersDiv.innerHTML=orders.map(o=>
+`<div class="card mb-2">
+${o.date}<br>
+${JSON.stringify(o.order)}<br>
+💳 ${o.payment}<br>
+📞 ${o.phone}<br>
+📍 ${o.location}
+</div>`).join("");
+}
+
+/* SLIDER */
+let i=0;
+setInterval(()=>{
+let s=document.getElementById("slider");
+i=(i+1)%3;
+s.style.transform="translateX(-"+(i*100)+"%)";
+},3000);
 </script>
 
 </body>
