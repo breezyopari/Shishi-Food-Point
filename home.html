@@ -12,8 +12,6 @@
         .slider img { width: 100%; flex-shrink: 0; border-radius: 20px; height: 250px; object-fit: cover; }
         .status-badge { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
-        
-        /* Modal Hidden by Default */
         #aboutModal { display: none; z-index: 100; }
         #aboutModal.active { display: flex; }
     </style>
@@ -50,27 +48,14 @@
         <p class="text-gray-400 text-sm">Chagua chakula chako kitamu leo.</p>
     </div>
 
-    <div class="px-4 space-y-3">
-        <div class="bg-white p-4 rounded-2xl flex justify-between items-center shadow-sm border border-gray-50">
-            <span class="font-bold">Ugali na Kuku Kukaanga</span>
-            <div class="flex items-center gap-3 bg-gray-50 p-1 rounded-lg">
-                <button onclick="changeQty('Kuku', -1)" class="w-8 h-8 bg-white rounded-md font-bold text-red-500 shadow-sm">-</button>
-                <span id="qty-Kuku" class="font-black min-w-[20px] text-center">0</span>
-                <button onclick="changeQty('Kuku', 1)" class="w-8 h-8 bg-yellow-500 rounded-md font-bold shadow-sm">+</button>
-            </div>
+    <div class="px-4 space-y-3" id="menu-container">
         </div>
-        <div class="bg-white p-4 rounded-2xl flex justify-between items-center shadow-sm border border-gray-50">
-            <span class="font-bold">Ugali na Samaki (Sato)</span>
-            <div class="flex items-center gap-3 bg-gray-50 p-1 rounded-lg">
-                <button onclick="changeQty('Samaki', -1)" class="w-8 h-8 bg-white rounded-md font-bold text-red-500 shadow-sm">-</button>
-                <span id="qty-Samaki" class="font-black min-w-[20px] text-center">0</span>
-                <button onclick="changeQty('Samaki', 1)" class="w-8 h-8 bg-yellow-500 rounded-md font-bold shadow-sm">+</button>
-            </div>
-        </div>
-    </div>
 
     <div class="p-4 mt-6 space-y-4">
         <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm">
+            <label class="block text-xs font-black text-gray-400 mb-2 uppercase">Maelezo ya ziada (Mfano: Usiweke Pilipili)</label>
+            <textarea id="extra-notes" placeholder="Andika hapa maelezo yako..." class="w-full p-4 bg-gray-50 rounded-xl mb-4 outline-none border-none ring-1 ring-gray-100 text-sm h-20 resize-none"></textarea>
+
             <label class="block text-xs font-black text-gray-400 mb-2">MAHALI PA KULETA</label>
             <input type="text" id="location" placeholder="Street / Office Name" class="w-full p-4 bg-gray-50 rounded-xl mb-4 outline-none border-none ring-1 ring-gray-100">
             
@@ -81,6 +66,11 @@
                 <option>Airtel Money</option>
                 <option>Cash on Delivery</option>
             </select>
+        </div>
+
+        <div class="bg-yellow-500 p-5 rounded-2xl flex justify-between items-center shadow-lg mx-2">
+            <span class="font-black text-black">JUMLA KUU:</span>
+            <span id="total-display" class="font-black text-2xl text-black">0 TZS</span>
         </div>
 
         <button id="orderBtn" onclick="sendOrder()" class="w-full bg-black text-white font-black py-5 rounded-2xl shadow-xl flex items-center justify-center gap-3 active:scale-95 transition">
@@ -105,20 +95,79 @@
     </footer>
 
     <script>
+        const menuItems = [
+            { name: "Wali/Ugali Kuku Rost Kienyeji", price: 12000 },
+            { name: "Wali/Ugali Maini", price: 10000 },
+            { name: "Wali/Ugali Nyama", price: 9000 },
+            { name: "Makange Kuku Kienyeji Nusu", price: 20000 },
+            { name: "Makange Kuku Kisasa Nusu", price: 15000 },
+            { name: "Chips Kuku", price: 12000 },
+            { name: "Chips Yai", price: 6000 },
+            { name: "Ugali Mboga Mboga zote", price: 6000 },
+            { name: "Pilau Kuku Choma", price: 12000 },
+            { name: "Pilau Kuku Rost", price: 15000 },
+            { name: "Biriani Kuku Local", price: 15000 },
+            { name: "Biriani Kuku Kisasa", price: 12000 },
+            { name: "Biriani Nyama", price: 10000 },
+            { name: "Biriani Mbuzi", price: 12000 },
+            { name: "Biriani Samaki Sato", price: 15000 },
+            { name: "Biriani Samaki Tasi/Changu", price: 12000 },
+            { name: "Ugali/Wali Samaki Sato Rost", price: 15000 },
+            { name: "Ugali/Wali Samaki Sato Mkavu", price: 12000 },
+            { name: "Samaki Changu Mkavu Ugali/Wali", price: 10000 },
+            { name: "Samaki Rost Changu Ugali/Wali", price: 12000 },
+            { name: "Makange Firigisi", price: 12000 },
+            { name: "Shishi Taste", price: 15000 },
+            { name: "Mafyonso", price: 15000 }
+        ];
+
+        let cart = {};
+        let totalPrice = 0;
+
+        const menuContainer = document.getElementById('menu-container');
+        menuItems.forEach(item => {
+            const div = document.createElement('div');
+            div.className = "bg-white p-4 rounded-2xl flex justify-between items-center shadow-sm border border-gray-50";
+            div.innerHTML = `
+                <div class="flex flex-col">
+                    <span class="font-bold text-sm">${item.name}</span>
+                    <span class="text-yellow-600 font-black text-xs">${item.price.toLocaleString()} TZS</span>
+                </div>
+                <div class="flex items-center gap-3 bg-gray-50 p-1 rounded-lg">
+                    <button onclick="changeQty('${item.name}', -1, ${item.price})" class="w-8 h-8 bg-white rounded-md font-bold text-red-500 shadow-sm border border-gray-100">-</button>
+                    <span id="qty-${item.name}" class="font-black min-w-[20px] text-center">0</span>
+                    <button onclick="changeQty('${item.name}', 1, ${item.price})" class="w-8 h-8 bg-yellow-500 rounded-md font-bold shadow-sm">+</button>
+                </div>
+            `;
+            menuContainer.appendChild(div);
+        });
+
+        function changeQty(item, d, price) {
+            cart[item] = (cart[item] || 0) + d;
+            if(cart[item] <= 0) {
+                delete cart[item];
+                document.getElementById(`qty-${item}`).innerText = 0;
+            } else {
+                document.getElementById(`qty-${item}`).innerText = cart[item];
+            }
+            updateTotal();
+        }
+
+        function updateTotal() {
+            totalPrice = 0;
+            for (let name in cart) {
+                const itemData = menuItems.find(m => m.name === name);
+                totalPrice += itemData.price * cart[name];
+            }
+            document.getElementById('total-display').innerText = `${totalPrice.toLocaleString()} TZS`;
+        }
+
         const user = JSON.parse(localStorage.getItem('currentUser'));
         if(!user) window.location.href = 'index.html';
 
         document.getElementById('userBranch').innerText = user.branch;
         document.getElementById('welcomeMsg').innerText = `Habari, ${user.name.split(' ')[0]}! 👋`;
 
-        let cart = {};
-        function changeQty(item, d) {
-            cart[item] = (cart[item] || 0) + d;
-            if(cart[item] <= 0) delete cart[item];
-            document.getElementById(`qty-${item}`).innerText = cart[item] || 0;
-        }
-
-        // Pop-up Logic
         function toggleAbout() {
             document.getElementById('aboutModal').classList.toggle('active');
         }
@@ -142,13 +191,16 @@
 
         function sendOrder() {
             const loc = document.getElementById('location').value;
-            if(Object.keys(cart).length === 0 || !loc) return alert("Jaza oda na mahali!");
+            const notes = document.getElementById('extra-notes').value;
+            if(Object.keys(cart).length === 0 || !loc) return alert("Jaza oda na mahali pa kuleta!");
 
             const order = {
                 id: Date.now(),
                 ...user,
                 items: {...cart},
+                total: totalPrice,
                 location: loc,
+                notes: notes,
                 payment: document.getElementById('payment').value,
                 date: new Date().toLocaleString(),
                 status: 'PENDING'
@@ -158,7 +210,7 @@
             allOrders.unshift(order);
             localStorage.setItem('shishi_master_db', JSON.stringify(allOrders));
 
-            alert("Oda yako imepokelewa na jikoni! Endelea kuangalia status hapa.");
+            alert("Oda yako ya TZS " + totalPrice.toLocaleString() + " imepokelewa! Tunaiandaa.");
             location.reload();
         }
 
