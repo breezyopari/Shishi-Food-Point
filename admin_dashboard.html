@@ -10,34 +10,42 @@
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Background kwa mbali kwenye Header */
+        nav.custom-header {
+            background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), url('Homefooter.webp');
+            background-size: cover;
+            background-position: center;
+        }
     </style>
 </head>
-<body class="bg-gray-100 font-['Outfit'] pb-10">
+<body class="bg-gray-100 font-['Outfit']">
 
     <audio id="notifSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
 
-    <nav class="bg-slate-900 text-white p-4 flex justify-between items-center shadow-lg sticky top-0 z-50">
-        <h1 class="font-black italic text-yellow-500">SHISHI ADMIN</h1>
+    <nav class="custom-header text-white p-6 flex justify-between items-center shadow-lg sticky top-0 z-50">
+        <div>
+            <h1 class="font-black italic text-yellow-500 text-2xl tracking-tighter">SHISHI ADMIN</h1>
+            <p class="text-[10px] font-bold opacity-60 uppercase tracking-widest">Management Panel</p>
+        </div>
         <button onclick="logoutAdmin()" class="bg-red-600 px-4 py-2 rounded-lg text-xs font-bold shadow-md active:scale-95">LOGOUT</button>
     </nav>
 
-    <div class="p-4 max-w-4xl mx-auto flex gap-2">
-        <button onclick="showReport('week')" class="flex-1 bg-white p-3 rounded-2xl shadow-sm border border-gray-200 text-[10px] font-black uppercase text-slate-600 hover:bg-slate-50">Week Report</button>
-        <button onclick="showReport('month')" class="flex-1 bg-white p-3 rounded-2xl shadow-sm border border-gray-200 text-[10px] font-black uppercase text-slate-600 hover:bg-slate-50">Month Report</button>
-        <button onclick="showReport('year')" class="flex-1 bg-white p-3 rounded-2xl shadow-sm border border-gray-200 text-[10px] font-black uppercase text-slate-600 hover:bg-slate-50">Year Report</button>
+    <div class="p-4 max-w-4xl mx-auto flex gap-2 mt-2">
+        <button onclick="showReport('week')" class="flex-1 bg-white p-3 rounded-2xl shadow-sm border border-gray-200 text-[10px] font-black uppercase text-slate-600 hover:bg-slate-50 transition">Week Report</button>
+        <button onclick="showReport('month')" class="flex-1 bg-white p-3 rounded-2xl shadow-sm border border-gray-200 text-[10px] font-black uppercase text-slate-600 hover:bg-slate-50 transition">Month Report</button>
+        <button onclick="showReport('year')" class="flex-1 bg-white p-3 rounded-2xl shadow-sm border border-gray-200 text-[10px] font-black uppercase text-slate-600 hover:bg-slate-50 transition">Year Report</button>
     </div>
 
-    <div class="px-4 max-w-4xl mx-auto overflow-x-auto flex gap-3 no-scrollbar py-2" id="dateSlider">
-        </div>
+    <div class="px-4 max-w-4xl mx-auto overflow-x-auto flex gap-3 no-scrollbar py-2" id="dateSlider"></div>
 
-    <div class="p-4 max-w-4xl mx-auto">
+    <div class="p-4 max-w-4xl mx-auto min-h-screen">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-xl font-black text-slate-800" id="selectedDateTitle">Oda za Leo</h2>
             <button onclick="clearAll()" class="text-xs text-red-500 underline font-bold">Futa Zote (Master)</button>
         </div>
 
-        <div id="adminList" class="space-y-4 mb-10">
-            </div>
+        <div id="adminList" class="space-y-4 mb-10"></div>
 
         <div class="bg-slate-900 text-white p-6 rounded-[2.5rem] shadow-2xl space-y-4 border-t-4 border-yellow-500">
             <h3 class="text-xs font-black uppercase tracking-widest text-yellow-500 text-center">Muhtasari wa Siku</h3>
@@ -65,6 +73,15 @@
             </div>
         </div>
     </div>
+
+    <footer class="mt-10 bg-white border-t border-gray-200">
+        <div class="p-4">
+            <img src="indexfooter.webp" alt="Footer" class="w-full h-auto rounded-3xl shadow-lg">
+        </div>
+        <div class="text-center py-6 pb-10">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">© 2026 Shishi Food Point Admin</p>
+        </div>
+    </footer>
 
     <script>
         const auth = localStorage.getItem('shishi_admin_auth');
@@ -107,10 +124,8 @@
             }
             lastOrderCount = orders.length;
 
-            // Filter by Selected Date
             const filteredOrders = orders.filter(o => o.date.includes(selectedDate));
             
-            // Calculate Stats for the Selected Date
             let totalAmt = 0;
             let received = 0;
             let completed = 0;
@@ -123,7 +138,6 @@
                 else undone++;
             });
 
-            // Update Stats Display
             document.getElementById('statTotalOrders').innerText = filteredOrders.length;
             document.getElementById('statTotalAmount').innerText = totalAmt.toLocaleString() + " TZS";
             document.getElementById('statReceived').innerText = received;
@@ -131,12 +145,11 @@
             document.getElementById('statUndone').innerText = undone;
 
             if(filteredOrders.length === 0) {
-                list.innerHTML = `<p class="text-center py-20 text-gray-400">Hakuna oda tarehe hii.</p>`;
+                list.innerHTML = `<p class="text-center py-20 text-gray-400 font-bold uppercase text-xs tracking-widest opacity-30">Hakuna oda tarehe hii</p>`;
                 return;
             }
 
             list.innerHTML = filteredOrders.map((o, i) => {
-                // Find actual index in master DB
                 const masterIndex = orders.findIndex(mo => mo.id === o.id);
                 return `
                     <div class="bg-white p-6 rounded-3xl shadow-sm border-l-4 ${o.status === 'COMPLETED' ? 'border-green-500 opacity-60' : 'border-yellow-500'}">
@@ -146,8 +159,8 @@
                                     <span class="text-[9px] bg-black text-white px-2 py-0.5 rounded font-black tracking-widest">${o.status || 'PENDING'}</span>
                                     <span class="text-[10px] bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded font-black">${o.branch}</span>
                                 </div>
-                                <h3 class="text-lg font-black mt-1">${o.name}</h3>
-                                <p class="text-blue-600 text-xs font-bold">${o.phone}</p>
+                                <h3 class="text-lg font-black mt-1 uppercase tracking-tighter">${o.name}</h3>
+                                <p class="text-blue-600 text-xs font-bold underline">${o.phone}</p>
                             </div>
                             <div class="text-right">
                                 <span class="text-[10px] text-gray-400 font-bold block">${o.date.split(',')[1]}</span>
@@ -155,18 +168,18 @@
                             </div>
                         </div>
                         
-                        <div class="bg-gray-50 p-4 rounded-2xl text-sm mb-4">
-                            <p><strong>Vyakula:</strong> ${formatItems(o.items)}</p>
-                            <p class="mt-2"><strong>Location:</strong> ${o.location}</p>
-                            <p><strong>Malipo:</strong> ${o.payment_method || o.payment}</p>
+                        <div class="bg-gray-50 p-4 rounded-2xl text-sm mb-4 border border-gray-100">
+                            <p class="text-slate-700"><strong>Vyakula:</strong> ${formatItems(o.items)}</p>
+                            <p class="mt-2 text-slate-700"><strong>Location:</strong> ${o.location}</p>
+                            <p class="mt-1 text-slate-500 text-xs italic"><strong>Malipo:</strong> ${o.payment_method || o.payment}</p>
                         </div>
 
                         <div class="flex gap-2 mt-4 items-center">
                             ${(!o.status || o.status === 'PENDING') ? 
-                                `<button onclick="updateStatus(${masterIndex}, 'RECEIVED')" class="bg-blue-600 text-white text-xs px-4 py-2 rounded-lg font-bold shadow-md active:scale-95 transition">VERIFY ORDER</button>` : ''}
+                                `<button onclick="updateStatus(${masterIndex}, 'RECEIVED')" class="bg-blue-600 text-white text-xs px-6 py-3 rounded-xl font-black shadow-md active:scale-95 transition">VERIFY ORDER</button>` : ''}
                             
                             ${o.status === 'RECEIVED' ? 
-                                `<button onclick="updateStatus(${masterIndex}, 'COMPLETED')" class="bg-green-600 text-white text-xs px-4 py-2 rounded-lg font-bold shadow-md active:scale-95 transition">MARK COMPLETED</button>` : ''}
+                                `<button onclick="updateStatus(${masterIndex}, 'COMPLETED')" class="bg-green-600 text-white text-xs px-6 py-3 rounded-xl font-black shadow-md active:scale-95 transition">MARK COMPLETED</button>` : ''}
                         </div>
                     </div>
                 `;
@@ -198,7 +211,7 @@
                 }
             });
 
-            alert(`RIPOTI YA ${type.toUpperCase()}:\nTotal Orders: ${count}\nTotal Amount: ${total.toLocaleString()} TZS`);
+            alert(`RIPOTI YA ${type.toUpperCase()}:\n\nJumla ya Oda: ${count}\nKiasi Kilichokusanywa: ${total.toLocaleString()} TZS`);
         }
 
         function formatItems(items) {
