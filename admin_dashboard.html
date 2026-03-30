@@ -3,89 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Admin Dashboard | Shishi Food</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;800&display=swap" rel="stylesheet">
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
 </head>
-<body class="bg-gray-100 font-['Outfit']">
+<body class="bg-gray-100 font-['Outfit'] pb-10">
 
     <audio id="notifSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
 
-    <nav class="bg-slate-900 text-white p-4 flex justify-between items-center shadow-lg">
+    <nav class="bg-slate-900 text-white p-4 flex justify-between items-center shadow-lg sticky top-0 z-50">
         <h1 class="font-black italic text-yellow-500">SHISHI ADMIN</h1>
         <button onclick="logoutAdmin()" class="bg-red-600 px-4 py-2 rounded-lg text-xs font-bold shadow-md active:scale-95">LOGOUT</button>
     </nav>
 
-    <div class="p-4 max-w-4xl mx-auto">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-black text-slate-800">Oda Zilizopokelewa</h2>
-            <button onclick="clearAll()" class="text-xs text-red-500 underline font-bold">Futa Zote</button>
+    <div class="p-4 max-w-4xl mx-auto flex gap-2">
+        <button onclick="showReport('week')" class="flex-1 bg-white p-3 rounded-2xl shadow-sm border border-gray-200 text-[10px] font-black uppercase text-slate-600 hover:bg-slate-50">Week Report</button>
+        <button onclick="showReport('month')" class="flex-1 bg-white p-3 rounded-2xl shadow-sm border border-gray-200 text-[10px] font-black uppercase text-slate-600 hover:bg-slate-50">Month Report</button>
+        <button onclick="showReport('year')" class="flex-1 bg-white p-3 rounded-2xl shadow-sm border border-gray-200 text-[10px] font-black uppercase text-slate-600 hover:bg-slate-50">Year Report</button>
+    </div>
+
+    <div class="px-4 max-w-4xl mx-auto overflow-x-auto flex gap-3 no-scrollbar py-2" id="dateSlider">
         </div>
 
-        <div id="adminList" class="space-y-4">
+    <div class="p-4 max-w-4xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-black text-slate-800" id="selectedDateTitle">Oda za Leo</h2>
+            <button onclick="clearAll()" class="text-xs text-red-500 underline font-bold">Futa Zote (Master)</button>
+        </div>
+
+        <div id="adminList" class="space-y-4 mb-10">
             </div>
+
+        <div class="bg-slate-900 text-white p-6 rounded-[2.5rem] shadow-2xl space-y-4 border-t-4 border-yellow-500">
+            <h3 class="text-xs font-black uppercase tracking-widest text-yellow-500 text-center">Muhtasari wa Siku</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-slate-800 p-4 rounded-2xl">
+                    <p class="text-[9px] text-gray-400 font-bold uppercase">Total Orders</p>
+                    <p class="text-xl font-black" id="statTotalOrders">0</p>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-2xl">
+                    <p class="text-[9px] text-gray-400 font-bold uppercase">Amount Collected</p>
+                    <p class="text-xl font-black text-green-400" id="statTotalAmount">0 TZS</p>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-2xl">
+                    <p class="text-[9px] text-gray-400 font-bold uppercase">Received (Active)</p>
+                    <p class="text-xl font-black text-blue-400" id="statReceived">0</p>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-2xl">
+                    <p class="text-[9px] text-gray-400 font-bold uppercase">Completed</p>
+                    <p class="text-xl font-black text-yellow-500" id="statCompleted">0</p>
+                </div>
+            </div>
+            <div class="bg-yellow-500 text-black p-4 rounded-2xl text-center">
+                <p class="text-[10px] font-black uppercase">Undone Orders (Pending)</p>
+                <p class="text-2xl font-black" id="statUndone">0</p>
+            </div>
+        </div>
     </div>
 
     <script>
-        // --- SEHEMU YA ULINZI (LOGOUT FIX) ---
-        // Tunatumia localStorage ili asitolewe nje kila mara
         const auth = localStorage.getItem('shishi_admin_auth');
-        
-        if (auth !== 'true') {
-            window.location.replace('admin_login.html');
-        }
+        if (auth !== 'true') window.location.replace('admin_login.html');
 
         let lastOrderCount = 0;
+        let selectedDate = new Date().toLocaleDateString();
+
+        function setupDateSlider() {
+            const slider = document.getElementById('dateSlider');
+            slider.innerHTML = '';
+            for(let i = 0; i < 7; i++) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                const dateStr = d.toLocaleDateString();
+                const isActive = dateStr === selectedDate;
+                
+                slider.innerHTML += `
+                    <button onclick="selectDate('${dateStr}')" class="flex-shrink-0 px-6 py-3 rounded-2xl font-black text-xs transition-all shadow-sm
+                        ${isActive ? 'bg-yellow-500 text-black scale-105' : 'bg-white text-gray-400 border border-gray-100'}">
+                        ${i === 0 ? 'LEO' : dateStr.split('/')[0] + '/' + dateStr.split('/')[1]}
+                    </button>
+                `;
+            }
+        }
+
+        function selectDate(date) {
+            selectedDate = date;
+            document.getElementById('selectedDateTitle').innerText = date === new Date().toLocaleDateString() ? "Oda za Leo" : `Oda za ${date}`;
+            setupDateSlider();
+            loadOrders();
+        }
 
         function loadOrders() {
             const orders = JSON.parse(localStorage.getItem('shishi_master_db')) || [];
             const list = document.getElementById('adminList');
             
             if (orders.length > lastOrderCount && lastOrderCount !== 0) {
-                document.getElementById('notifSound').play().catch(e => console.log("Sauti inahitaji interaction"));
+                document.getElementById('notifSound').play().catch(e => {});
             }
             lastOrderCount = orders.length;
 
-            if(orders.length === 0) {
-                list.innerHTML = `<p class="text-center py-20 text-gray-400">Hakuna oda mpya.</p>`;
+            // Filter by Selected Date
+            const filteredOrders = orders.filter(o => o.date.includes(selectedDate));
+            
+            // Calculate Stats for the Selected Date
+            let totalAmt = 0;
+            let received = 0;
+            let completed = 0;
+            let undone = 0;
+
+            filteredOrders.forEach(o => {
+                totalAmt += (o.total || 0);
+                if(o.status === 'RECEIVED') received++;
+                else if(o.status === 'COMPLETED') completed++;
+                else undone++;
+            });
+
+            // Update Stats Display
+            document.getElementById('statTotalOrders').innerText = filteredOrders.length;
+            document.getElementById('statTotalAmount').innerText = totalAmt.toLocaleString() + " TZS";
+            document.getElementById('statReceived').innerText = received;
+            document.getElementById('statCompleted').innerText = completed;
+            document.getElementById('statUndone').innerText = undone;
+
+            if(filteredOrders.length === 0) {
+                list.innerHTML = `<p class="text-center py-20 text-gray-400">Hakuna oda tarehe hii.</p>`;
                 return;
             }
 
-            list.innerHTML = orders.map((o, i) => `
-                <div class="bg-white p-6 rounded-3xl shadow-sm border-l-4 ${o.status === 'COMPLETED' ? 'border-green-500 opacity-60' : 'border-yellow-500'}">
-                    <div class="flex justify-between items-start mb-3">
-                        <div>
-                            <div class="flex gap-2 items-center mb-1">
-                                <span class="text-[9px] bg-black text-white px-2 py-0.5 rounded font-black tracking-widest">${o.status || 'PENDING'}</span>
-                                <span class="text-[10px] bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded font-black">${o.branch}</span>
+            list.innerHTML = filteredOrders.map((o, i) => {
+                // Find actual index in master DB
+                const masterIndex = orders.findIndex(mo => mo.id === o.id);
+                return `
+                    <div class="bg-white p-6 rounded-3xl shadow-sm border-l-4 ${o.status === 'COMPLETED' ? 'border-green-500 opacity-60' : 'border-yellow-500'}">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <div class="flex gap-2 items-center mb-1">
+                                    <span class="text-[9px] bg-black text-white px-2 py-0.5 rounded font-black tracking-widest">${o.status || 'PENDING'}</span>
+                                    <span class="text-[10px] bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded font-black">${o.branch}</span>
+                                </div>
+                                <h3 class="text-lg font-black mt-1">${o.name}</h3>
+                                <p class="text-blue-600 text-xs font-bold">${o.phone}</p>
                             </div>
-                            <h3 class="text-lg font-black mt-1">${o.name}</h3>
-                            <p class="text-blue-600 text-xs font-bold">${o.phone}</p>
+                            <div class="text-right">
+                                <span class="text-[10px] text-gray-400 font-bold block">${o.date.split(',')[1]}</span>
+                                <span class="text-sm font-black text-slate-800">${(o.total || 0).toLocaleString()} TZS</span>
+                            </div>
                         </div>
-                        <span class="text-[10px] text-gray-400 font-bold">${o.date}</span>
-                    </div>
-                    
-                    <div class="bg-gray-50 p-4 rounded-2xl text-sm mb-4">
-                        <p><strong>Vyakula:</strong> ${formatItems(o.items)}</p>
-                        <p class="mt-2"><strong>Location:</strong> ${o.location}</p>
-                        <p><strong>Malipo:</strong> ${o.payment}</p>
-                    </div>
+                        
+                        <div class="bg-gray-50 p-4 rounded-2xl text-sm mb-4">
+                            <p><strong>Vyakula:</strong> ${formatItems(o.items)}</p>
+                            <p class="mt-2"><strong>Location:</strong> ${o.location}</p>
+                            <p><strong>Malipo:</strong> ${o.payment_method || o.payment}</p>
+                        </div>
 
-                    <div class="flex gap-2 mt-4 items-center">
-                        ${(!o.status || o.status === 'PENDING') ? 
-                            `<button onclick="updateStatus(${i}, 'RECEIVED')" class="bg-blue-600 text-white text-xs px-4 py-2 rounded-lg font-bold shadow-md active:scale-95 transition">VERIFY ORDER</button>` : ''}
-                        
-                        ${o.status === 'RECEIVED' ? 
-                            `<button onclick="updateStatus(${i}, 'COMPLETED')" class="bg-green-600 text-white text-xs px-4 py-2 rounded-lg font-bold shadow-md active:scale-95 transition">MARK COMPLETED</button>` : ''}
-                        
-                        <button onclick="deleteOrder(${i})" class="text-red-500 text-xs font-bold flex items-center gap-1 ml-auto">
-                            <i data-lucide="trash-2" class="w-3 h-3"></i> Futa Oda
-                        </button>
+                        <div class="flex gap-2 mt-4 items-center">
+                            ${(!o.status || o.status === 'PENDING') ? 
+                                `<button onclick="updateStatus(${masterIndex}, 'RECEIVED')" class="bg-blue-600 text-white text-xs px-4 py-2 rounded-lg font-bold shadow-md active:scale-95 transition">VERIFY ORDER</button>` : ''}
+                            
+                            ${o.status === 'RECEIVED' ? 
+                                `<button onclick="updateStatus(${masterIndex}, 'COMPLETED')" class="bg-green-600 text-white text-xs px-4 py-2 rounded-lg font-bold shadow-md active:scale-95 transition">MARK COMPLETED</button>` : ''}
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
             lucide.createIcons();
+        }
+
+        function showReport(type) {
+            const orders = JSON.parse(localStorage.getItem('shishi_master_db')) || [];
+            let total = 0;
+            let count = 0;
+            const now = new Date();
+
+            orders.forEach(o => {
+                const oDate = new Date(o.date);
+                let valid = false;
+                if(type === 'week') {
+                    const weekAgo = new Date(); weekAgo.setDate(now.getDate() - 7);
+                    if(oDate >= weekAgo) valid = true;
+                } else if(type === 'month') {
+                    if(oDate.getMonth() === now.getMonth() && oDate.getFullYear() === now.getFullYear()) valid = true;
+                } else if(type === 'year') {
+                    if(oDate.getFullYear() === now.getFullYear()) valid = true;
+                }
+                
+                if(valid) {
+                    total += (o.total || 0);
+                    count++;
+                }
+            });
+
+            alert(`RIPOTI YA ${type.toUpperCase()}:\nTotal Orders: ${count}\nTotal Amount: ${total.toLocaleString()} TZS`);
         }
 
         function formatItems(items) {
@@ -100,28 +213,19 @@
             loadOrders();
         }
 
-        function deleteOrder(i) {
-            if(confirm("Futa oda hii?")) {
-                let orders = JSON.parse(localStorage.getItem('shishi_master_db'));
-                orders.splice(i, 1);
-                localStorage.setItem('shishi_master_db', JSON.stringify(orders));
-                loadOrders();
-            }
-        }
-
         function clearAll() {
-            if(confirm("Futa oda zote?")) {
+            if(confirm("ONYO: Hii itafuta data zote kabisa kwenye mfumo. Endelea?")) {
                 localStorage.removeItem('shishi_master_db');
                 loadOrders();
             }
         }
 
-        // --- FIX LOGOUT ---
         function logoutAdmin() {
             localStorage.removeItem('shishi_admin_auth');
             window.location.replace('index.html');
         }
 
+        setupDateSlider();
         setInterval(loadOrders, 5000);
         loadOrders();
     </script>
