@@ -3,30 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shishi Food Ultimate</title>
+<title>Shishi Food PRO</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <style>
-body{font-family:sans-serif;background:#f4f4f4}
-.card{background:white;padding:15px;border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,0.1)}
-.btn{padding:12px;border-radius:10px;font-weight:bold}
+body{font-family:sans-serif;background:#f5f5f5}
 .hidden{display:none}
-.slider img{width:100%}
+.card{background:white;border-radius:15px;padding:15px;box-shadow:0 5px 15px rgba(0,0,0,0.1)}
+.btn{padding:10px;border-radius:10px;font-weight:bold}
 </style>
 </head>
 
 <body>
 
-<!-- TOAST -->
+<!-- NOTIFICATION -->
 <div id="toast" class="fixed top-5 right-5 bg-green-500 text-white px-4 py-2 rounded hidden"></div>
 
 <!-- LOGIN -->
-<div id="loginPage" class="min-h-screen flex items-center justify-center bg-yellow-50">
+<div id="loginPage" class="min-h-screen flex items-center justify-center">
 <div class="card w-[350px] text-center">
 
-<h2 class="text-xl font-bold mb-4">Shishi Food</h2>
+<h2 class="text-xl font-bold mb-4">Shishi Food Login</h2>
 
 <input id="username" placeholder="Username" class="w-full p-2 border mb-2 rounded">
 <input id="password" type="password" placeholder="Password" class="w-full p-2 border mb-2 rounded">
@@ -47,86 +45,90 @@ body{font-family:sans-serif;background:#f4f4f4}
 <!-- APP -->
 <div id="app" class="hidden p-4">
 
-<!-- NAV -->
-<div class="flex justify-between mb-3">
+<div class="flex justify-between mb-4">
 <h2 id="welcome" class="font-bold"></h2>
 <button onclick="logout()" class="text-red-500">Logout</button>
 </div>
 
-<!-- SLIDER -->
-<div class="card mb-3 overflow-hidden">
-<div id="slider" class="flex transition">
-<img src="1000275268.webp">
-<img src="1000275267.webp">
-<img src="1000275255.webp">
-</div>
-</div>
-
 <!-- MENU -->
 <div class="card">
-<h3 class="font-bold mb-2">Menu</h3>
 
-<div class="flex justify-between"><span>Kuku</span>
-<div><button onclick="qty('kuku',-1)">-</button><span id="kuku">0</span><button onclick="qty('kuku',1)">+</button></div></div>
+<h3 class="font-bold mb-3">Menu</h3>
 
-<div class="flex justify-between"><span>Samaki</span>
-<div><button onclick="qty('samaki',-1)">-</button><span id="samaki">0</span><button onclick="qty('samaki',1)">+</button></div></div>
+<div class="flex justify-between mb-2">
+<span>Ugali & Kuku</span>
+<div>
+<button onclick="qty('kuku',-1)">-</button>
+<span id="kuku">0</span>
+<button onclick="qty('kuku',1)">+</button>
+</div>
+</div>
+
+<div class="flex justify-between mb-2">
+<span>Ugali & Samaki</span>
+<div>
+<button onclick="qty('samaki',-1)">-</button>
+<span id="samaki">0</span>
+<button onclick="qty('samaki',1)">+</button>
+</div>
+</div>
+
 </div>
 
 <!-- DELIVERY -->
-<div class="card mt-3">
-<h3>Delivery</h3>
-<input id="phone" placeholder="Simu" class="w-full p-2 border mb-2 rounded">
-<input id="location" placeholder="Location" class="w-full p-2 border mb-2 rounded">
+<div class="card mt-4">
+
+<h3 class="font-bold mb-3">Delivery Info</h3>
+
+<input id="phone" placeholder="Namba ya simu" class="w-full p-2 border mb-2 rounded">
+<input id="location" placeholder="Mahali ulipo" class="w-full p-2 border mb-2 rounded">
 <textarea id="note" placeholder="Maelezo..." class="w-full p-2 border rounded"></textarea>
+
 </div>
 
-<!-- PAYMENT -->
-<div class="card mt-3">
-<h3>Malipo</h3>
-<select id="payment" class="w-full p-2 border rounded mb-2">
-<option value="">Chagua</option>
-<option>M-Pesa</option>
-<option>TigoPesa</option>
-<option>Airtel Money</option>
-</select>
-<div id="payInfo" class="text-sm"></div>
-</div>
-
-<button onclick="preview()" class="btn bg-blue-500 text-white w-full mt-3">Preview</button>
-
-<!-- HISTORY -->
-<div class="card mt-3">
-<h3>History</h3>
-<div id="history"></div>
-</div>
+<!-- ORDER -->
+<button onclick="preview()" class="btn bg-blue-500 text-white w-full mt-4">
+Preview Order
+</button>
 
 </div>
 
 <!-- PREVIEW -->
 <div id="previewBox" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center">
+
 <div class="card w-[300px]">
-<h3 class="font-bold">Receipt</h3>
+
+<h3 class="font-bold mb-3">Order Summary</h3>
+
 <div id="summary"></div>
-<button onclick="send()" class="btn bg-green-500 text-white w-full mt-2">Confirm</button>
+
+<button onclick="send()" class="btn bg-green-500 text-white w-full mt-3">
+Confirm & Send
+</button>
+
 </div>
+
 </div>
 
 <!-- ADMIN -->
 <div id="adminPage" class="hidden p-4">
+
 <h2 class="font-bold mb-3">ADMIN DASHBOARD</h2>
+
 <div id="orders"></div>
+
 </div>
 
 <script>
 let order={};
-let orders=JSON.parse(localStorage.getItem("orders"))||[];
+let allOrders=JSON.parse(localStorage.getItem("orders"))||[];
 
 /* TOAST */
-function show(m){
-toast.innerText=m;
-toast.classList.remove("hidden");
-setTimeout(()=>toast.classList.add("hidden"),2000);
+function show(msg){
+let t=document.getElementById("toast");
+t.innerText=msg;
+t.classList.remove("hidden");
+setTimeout(()=>t.classList.add("hidden"),2000);
 }
 
 /* LOGIN */
@@ -148,126 +150,98 @@ localStorage.setItem("branch",b);
 openApp();
 }
 
-/* SKIP */
 function skip(){
 localStorage.setItem("branch","Mteja");
 openApp();
 }
 
-/* OPEN APP */
+/* APP */
 function openApp(){
 loginPage.classList.add("hidden");
 app.classList.remove("hidden");
 
 welcome.innerText="Karibu Shishi Food "+localStorage.getItem("branch");
-renderHistory();
-}
-
-/* LOGOUT */
-function logout(){
-localStorage.clear();
-location.reload();
 }
 
 /* QTY */
-function qty(n,v){
-let el=document.getElementById(n);
-let val=parseInt(el.innerText)+v;
-if(val<0)val=0;
-el.innerText=val;
-if(val>0)order[n]=val; else delete order[n];
-}
+function qty(name,val){
+let el=document.getElementById(name);
+let n=parseInt(el.innerText)+val;
+if(n<0)n=0;
+el.innerText=n;
 
-/* PAYMENT */
-payment.onchange=()=>{
-if(payment.value==="M-Pesa") payInfo.innerText="Lipa: 255700000000";
-if(payment.value==="TigoPesa") payInfo.innerText="Lipa: 255600000000";
-if(payment.value==="Airtel Money") payInfo.innerText="Lipa: 255780000000";
-};
+if(n>0)order[name]=n;
+else delete order[name];
+}
 
 /* PREVIEW */
 function preview(){
-if(Object.keys(order).length===0){show("Hakuna order");return;}
+if(Object.keys(order).length===0){
+show("Chagua chakula");return;
+}
 
-let sum="";
-for(let k in order) sum+=k+"("+order[k]+")<br>";
+let s="";
+for(let k in order){
+s+=k+"("+order[k]+")<br>";
+}
 
-sum+="<br>Payment:"+payment.value;
-sum+="<br>Phone:"+phone.value;
-sum+="<br>Location:"+location.value;
-
-summary.innerHTML=sum;
+summary.innerHTML=s;
 previewBox.classList.remove("hidden");
 }
 
 /* SEND */
 function send(){
+let phone=document.getElementById("phone").value;
+let loc=document.getElementById("location").value;
+
+if(!phone||!loc){
+show("Jaza delivery info");return;
+}
+
 let data={
-order,
-payment:payment.value,
-phone:phone.value,
-location:location.value,
+items:order,
+phone,
+loc,
 date:new Date().toLocaleString()
 };
 
-orders.unshift(data);
-localStorage.setItem("orders",JSON.stringify(orders));
-
-let msg="Order:\n"+JSON.stringify(order)+
-"\nPayment:"+payment.value+
-"\nPhone:"+phone.value+
-"\nLocation:"+location.value;
-
-window.open("https://wa.me/255712345678?text="+encodeURIComponent(msg));
+allOrders.unshift(data);
+localStorage.setItem("orders",JSON.stringify(allOrders));
 
 previewBox.classList.add("hidden");
+
 show("Order imetumwa!");
 
-// reset
 order={};
 document.querySelectorAll("span").forEach(s=>{
 if(!isNaN(s.innerText))s.innerText=0;
 });
 
-renderHistory();
-}
-
-/* HISTORY */
-function renderHistory(){
-if(orders.length===0){
-history.innerHTML="Hakuna order";
-return;
-}
-history.innerHTML=orders.slice(0,5).map(o=>
-`<div class="text-xs border p-2 mb-2">
-${o.date}<br>${JSON.stringify(o.order)}
-</div>`).join("");
+setTimeout(()=>window.scrollTo({top:0,behavior:"smooth"}),2000);
 }
 
 /* ADMIN */
 function renderAdmin(){
-ordersDiv=document.getElementById("orders");
-if(orders.length===0){
-ordersDiv.innerHTML="Hakuna orders";
+let box=document.getElementById("orders");
+
+if(allOrders.length===0){
+box.innerHTML="Hakuna orders";
 return;
 }
-ordersDiv.innerHTML=orders.map(o=>
+
+box.innerHTML=allOrders.map(o=>
 `<div class="card mb-2">
 ${o.date}<br>
-${JSON.stringify(o.order)}<br>
-💳 ${o.payment}<br>
+${JSON.stringify(o.items)}<br>
 📞 ${o.phone}<br>
-📍 ${o.location}
+📍 ${o.loc}
 </div>`).join("");
 }
 
-/* SLIDER */
-let i=0;
-setInterval(()=>{
-let s=document.getElementById("slider");
-i=(i+1)%3;
-s.style.transform="translateX(-"+(i*100)+"%)";
-},3000);
+/* LOGOUT */
+function logout(){
+location.reload();
+}
 </script>
 
 </body>
