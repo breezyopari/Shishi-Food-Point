@@ -1,223 +1,414 @@
-<!-- ===================== NEW SYSTEM ADDITIONS ===================== -->
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shishi Food Point | Ladha Halisi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Outfit', sans-serif; scroll-behavior: smooth; }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .slider-container { overflow: hidden; border-radius: 20px; height: 300px; position: relative; }
+        .slider { display: flex; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .slider img { width: 100%; flex-shrink: 0; object-fit: cover; }
+        .hide { display: none; }
+        .toast { position: fixed; bottom: 20px; right: 20px; transform: translateY(100px); transition: 0.3s; z-index: 9999; }
+        .toast.show { transform: translateY(0); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
 
-<!-- TOAST -->
-<div id="toast" class="hidden fixed top-5 right-5 bg-green-500 text-white px-4 py-2 rounded-xl z-50"></div>
+    <div id="toast" class="toast bg-black text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3">
+        <i data-lucide="check-circle" class="text-green-500"></i>
+        <span id="toast-msg">Imefanikiwa!</span>
+    </div>
 
-<!-- LOGIN -->
-<div id="loginPage" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-<div class="bg-white p-6 rounded-xl w-[320px] text-center">
-<h2 class="font-bold text-lg mb-3">Shishi Login</h2>
+    <section id="auth-screen" class="min-h-screen flex items-center justify-center p-6">
+        <div class="max-w-md w-full bg-white p-8 rounded-3xl shadow-xl border border-gray-100 text-center">
+            <div class="w-20 h-20 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <i data-lucide="utensils" class="w-10 h-10 text-white"></i>
+            </div>
+            <h2 class="text-3xl font-black mb-2">KARIBU <span class="text-yellow-500">SHISHI</span></h2>
+            <p class="text-gray-500 mb-8">Tafadhali ingia ili kuendelea</p>
+            
+            <div class="space-y-4">
+                <input type="text" id="user-name" placeholder="Jina lako kamili" class="w-full p-4 bg-gray-50 rounded-xl border border-gray-200 focus:ring-2 ring-yellow-500 outline-none">
+                <input type="tel" id="user-phone" placeholder="Namba ya Simu" class="w-full p-4 bg-gray-50 rounded-xl border border-gray-200 focus:ring-2 ring-yellow-500 outline-none">
+                <select id="user-branch" class="w-full p-4 bg-gray-50 rounded-xl border border-gray-200 outline-none">
+                    <option value="Dar es Salaam">Tawi: Dar es Salaam (Mabatini)</option>
+                    <option value="Dodoma">Tawi: Dodoma (City Center)</option>
+                </select>
+                <button onclick="handleLogin()" class="w-full bg-yellow-500 text-black font-black py-4 rounded-xl hover:bg-yellow-400 transition shadow-lg">INGIA SASA</button>
+                <button onclick="toggleAdminLogin()" class="text-sm text-gray-400 mt-4 underline">Admin Login</button>
+            </div>
+        </div>
+    </section>
 
-<input id="loginUser" placeholder="Username" class="w-full p-2 border mb-2">
-<input id="loginPass" type="password" placeholder="Password" class="w-full p-2 border mb-2">
+    <section id="admin-auth" class="min-h-screen flex items-center justify-center p-6 hide">
+        <div class="max-w-md w-full bg-slate-900 text-white p-8 rounded-3xl shadow-2xl">
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-2 text-yellow-500">
+                <i data-lucide="lock"></i> Admin Panel
+            </h2>
+            <div class="space-y-4">
+                <input type="text" id="admin-user" placeholder="Username" class="w-full p-4 bg-slate-800 rounded-xl border border-slate-700 outline-none">
+                <input type="password" id="admin-pass" placeholder="Password" class="w-full p-4 bg-slate-800 rounded-xl border border-slate-700 outline-none">
+                <button onclick="handleAdminLogin()" class="w-full bg-white text-black font-bold py-4 rounded-xl">LOGIN AS ADMIN</button>
+                <button onclick="location.reload()" class="w-full text-gray-400 text-sm">Rudi Nyuma</button>
+            </div>
+        </div>
+    </section>
 
-<select id="branchSelect" class="w-full p-2 border mb-3">
-<option value="">Chagua Branch</option>
-<option>Dar es Salaam</option>
-<option>Dodoma</option>
-</select>
+    <main id="app-screen" class="hide pb-20">
+        <nav class="sticky top-0 z-50 glass border-b border-gray-100 p-4">
+            <div class="container mx-auto flex justify-between items-center">
+                <div>
+                    <p class="text-[10px] text-gray-400 uppercase tracking-widest font-bold" id="nav-branch-display">DAR ES SALAAM</p>
+                    <h1 class="text-xl font-black">SHISHI <span class="text-yellow-500">FOOD</span></h1>
+                </div>
+                <div class="flex gap-4">
+                    <button onclick="scrollToSection('history-section')" class="text-gray-600"><i data-lucide="history"></i></button>
+                    <button onclick="logout()" class="text-red-500"><i data-lucide="log-out"></i></button>
+                </div>
+            </div>
+        </nav>
 
-<button onclick="login()" class="bg-yellow-500 text-white w-full p-2 rounded mb-2">Login</button>
-<button onclick="showRegister()" class="text-sm underline">Register</button>
-<button onclick="skipLogin()" class="text-sm underline block mt-1">Skip</button>
-</div>
-</div>
+        <header class="p-4">
+            <div class="slider-container shadow-2xl">
+                <div class="slider" id="main-slider">
+                    <img src="1000275268.webp" alt="Food 1">
+                    <img src="1000275267.webp" alt="Food 2">
+                    <img src="1000275255.webp" alt="Food 3">
+                    <img src="shishi-food.webp" alt="Food 4">
+                </div>
+                <div class="absolute bottom-4 left-4 glass px-4 py-2 rounded-full shadow-lg">
+                    <p class="text-xs font-bold" id="welcome-msg">Karibu, Mteja!</p>
+                </div>
+            </div>
+        </header>
 
-<!-- REGISTER -->
-<div id="registerPage" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-<div class="bg-white p-6 rounded-xl w-[320px] text-center">
-<h2 class="font-bold mb-3">Register</h2>
-<input id="regUser" placeholder="Username" class="w-full p-2 border mb-2">
-<input id="regPass" type="password" placeholder="Password" class="w-full p-2 border mb-2">
-<button onclick="register()" class="bg-green-500 text-white w-full p-2 rounded">Create</button>
-<button onclick="backLogin()" class="text-sm underline mt-2">Back</button>
-</div>
-</div>
+        <section class="p-4">
+            <div class="flex gap-2 overflow-x-auto pb-4 no-scrollbar">
+                <button class="tab-btn active bg-yellow-500 text-black px-6 py-2 rounded-full font-bold whitespace-nowrap shadow-md" onclick="switchDay(this, 'Jumatatu')">Jumatatu</button>
+                <button class="tab-btn bg-white border px-6 py-2 rounded-full font-bold whitespace-nowrap" onclick="switchDay(this, 'Jumanne')">Jumanne</button>
+                <button class="tab-btn bg-white border px-6 py-2 rounded-full font-bold whitespace-nowrap" onclick="switchDay(this, 'Jumatano')">Jumatano</button>
+                <button class="tab-btn bg-white border px-6 py-2 rounded-full font-bold whitespace-nowrap" onclick="switchDay(this, 'Alhamisi')">Alhamisi</button>
+                <button class="tab-btn bg-white border px-6 py-2 rounded-full font-bold whitespace-nowrap" onclick="switchDay(this, 'Ijumaa')">Ijumaa</button>
+            </div>
 
-<!-- DELIVERY + PAYMENT -->
-<div class="container mx-auto px-4 mt-6">
-<div class="menu-container">
+            <div id="menu-items" class="space-y-3 mt-4">
+                <div class="bg-white p-4 rounded-2xl flex justify-between items-center shadow-sm border border-gray-100">
+                    <div>
+                        <h4 class="font-bold">Ugali & Kuku wa Kukaanga</h4>
+                        <p class="text-yellow-600 font-extrabold text-sm">Tsh 7,000</p>
+                    </div>
+                    <div class="flex items-center gap-4 bg-gray-50 p-2 rounded-xl">
+                        <button onclick="updateQty('Ugali & Kuku', -1, 7000)" class="w-8 h-8 bg-white shadow rounded-lg flex items-center justify-center text-red-500 font-bold">-</button>
+                        <span class="qty-val font-black" id="qty-Ugali & Kuku">0</span>
+                        <button onclick="updateQty('Ugali & Kuku', 1, 7000)" class="w-8 h-8 bg-yellow-500 shadow rounded-lg flex items-center justify-center font-bold">+</button>
+                    </div>
+                </div>
 
-<h3 class="font-bold mb-3">Delivery</h3>
-<input id="phone" placeholder="Namba ya simu" class="w-full p-2 border mb-2 rounded">
-<input id="location" placeholder="Location yako" class="w-full p-2 border mb-3 rounded">
+                <div class="bg-white p-4 rounded-2xl flex justify-between items-center shadow-sm border border-gray-100">
+                    <div>
+                        <h4 class="font-bold">Ugali na Samaki (Sato)</h4>
+                        <p class="text-yellow-600 font-extrabold text-sm">Tsh 9,000</p>
+                    </div>
+                    <div class="flex items-center gap-4 bg-gray-50 p-2 rounded-xl">
+                        <button onclick="updateQty('Ugali & Samaki', -1, 9000)" class="w-8 h-8 bg-white shadow rounded-lg flex items-center justify-center text-red-500 font-bold">-</button>
+                        <span class="qty-val font-black" id="qty-Ugali & Samaki">0</span>
+                        <button onclick="updateQty('Ugali & Samaki', 1, 9000)" class="w-8 h-8 bg-yellow-500 shadow rounded-lg flex items-center justify-center font-bold">+</button>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-<h3 class="font-bold mb-2">Malipo</h3>
-<select id="payment" class="w-full p-2 border rounded mb-2">
-<option value="">Chagua Malipo</option>
-<option>M-Pesa</option>
-<option>TigoPesa</option>
-<option>Airtel Money</option>
-</select>
+        <section class="p-4 space-y-4">
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                <h3 class="font-black mb-4 flex items-center gap-2"><i data-lucide="truck" class="text-yellow-500"></i> MAELEZO YA ODA</h3>
+                <input type="text" id="delivery-loc" placeholder="Mahali unapoishi (Street / Office)" class="w-full p-4 bg-gray-50 rounded-xl mb-3 border-none ring-1 ring-gray-200">
+                <textarea id="order-notes" placeholder="Maelekezo mengine (mf. Ongeza pilipili...)" class="w-full p-4 bg-gray-50 rounded-xl border-none ring-1 ring-gray-200" rows="2"></textarea>
+            </div>
 
-<div id="payInfo" class="text-sm text-gray-600"></div>
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                <h3 class="font-black mb-4 flex items-center gap-2"><i data-lucide="credit-card" class="text-yellow-500"></i> NJIA YA MALIPO</h3>
+                <div class="grid grid-cols-3 gap-2 text-center">
+                    <label class="cursor-pointer">
+                        <input type="radio" name="payment" value="M-Pesa" class="hidden peer" checked>
+                        <div class="peer-checked:bg-red-500 peer-checked:text-white bg-gray-50 p-3 rounded-xl font-bold text-xs transition">M-Pesa</div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="payment" value="TigoPesa" class="hidden peer">
+                        <div class="peer-checked:bg-blue-600 peer-checked:text-white bg-gray-50 p-3 rounded-xl font-bold text-xs transition">TigoPesa</div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="payment" value="AirtelMoney" class="hidden peer">
+                        <div class="peer-checked:bg-red-600 peer-checked:text-white bg-gray-50 p-3 rounded-xl font-bold text-xs transition">Airtel</div>
+                    </label>
+                </div>
+            </div>
 
-<button onclick="previewOrder()" class="order-summary-btn mt-4 bg-blue-600">
-Preview Order
-</button>
+            <div id="receipt-preview" class="bg-yellow-50 border-2 border-dashed border-yellow-200 p-6 rounded-3xl">
+                <h3 class="font-bold text-center mb-2">RISITI YAKO</h3>
+                <div id="receipt-items" class="space-y-1 text-sm">
+                    <p class="text-gray-400 text-center">Chagua chakula kuona muhtasari</p>
+                </div>
+                <hr class="my-3 border-yellow-200">
+                <div class="flex justify-between font-black text-lg">
+                    <span>JUMLA KUU:</span>
+                    <span id="total-price">Tsh 0</span>
+                </div>
+            </div>
 
-</div>
-</div>
+            <button onclick="submitOrder()" class="w-full bg-green-500 text-white font-black py-5 rounded-2xl shadow-xl flex items-center justify-center gap-3 hover:bg-green-600 transition">
+                <i data-lucide="send"></i> TUMA ODA WHATSAPP
+            </button>
+        </section>
 
-<!-- PREVIEW MODAL -->
-<div id="previewBox" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-<div class="bg-white p-5 rounded-xl w-[320px]">
-<h3 class="font-bold mb-2">Receipt</h3>
-<div id="summary"></div>
-<button onclick="confirmOrder()" class="bg-green-500 text-white w-full p-2 mt-3 rounded">Confirm</button>
-</div>
-</div>
+        <section id="history-section" class="p-4">
+            <h3 class="font-black text-gray-400 text-sm mb-4 tracking-widest uppercase">Oda zako za nyuma</h3>
+            <div id="history-container" class="space-y-3">
+                </div>
+        </section>
+    </main>
 
-<!-- ADMIN -->
-<div id="adminPage" class="hidden fixed inset-0 bg-white z-50 p-4 overflow-auto">
-<h2 class="font-bold text-xl mb-3">ADMIN DASHBOARD</h2>
-<div id="adminOrders"></div>
-<button onclick="logout()" class="bg-red-500 text-white p-2 mt-3 rounded">Logout</button>
-</div>
+    <section id="admin-dashboard" class="hide min-h-screen bg-slate-100 p-4">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-black">ADMIN <span class="text-yellow-600">PANEL</span></h1>
+            <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-xl text-sm font-bold">LOGOUT</button>
+        </div>
+        
+        <div id="admin-orders-list" class="space-y-4">
+            </div>
+    </section>
 
-<script>
+    <script>
+        // -- STATE MANAGEMENT --
+        let currentUser = null;
+        let cart = {};
+        let selectedDay = "Jumatatu";
+        let orders = JSON.parse(localStorage.getItem('shishi_orders')) || [];
+        let allOrdersAdmin = JSON.parse(localStorage.getItem('admin_master_orders')) || []; // Mock database
 
-/* ================= GLOBAL ================= */
-let users = JSON.parse(localStorage.getItem("users")) || [];
-let allOrders = JSON.parse(localStorage.getItem("allOrders")) || [];
-let branch = "";
+        // -- SLIDER --
+        let slideIndex = 0;
+        setInterval(() => {
+            const slider = document.getElementById('main-slider');
+            if(slider) {
+                slideIndex = (slideIndex + 1) % 4;
+                slider.style.transform = `translateX(-${slideIndex * 100}%)`;
+            }
+        }, 4000);
 
-/* ================= TOAST ================= */
-function toast(msg){
-let t = document.getElementById("toast");
-t.innerText = msg;
-t.classList.remove("hidden");
-setTimeout(()=>t.classList.add("hidden"),2000);
-}
+        // -- AUTH LOGIC --
+        function handleLogin() {
+            const name = document.getElementById('user-name').value;
+            const phone = document.getElementById('user-phone').value;
+            const branch = document.getElementById('user-branch').value;
 
-/* ================= AUTH ================= */
-function login(){
-let u = loginUser.value;
-let p = loginPass.value;
-let b = branchSelect.value;
+            if(!name || !phone) return showToast("Tafadhali jaza taarifa zote!");
 
-if(u==="admin" && p==="1234"){
-loginPage.classList.add("hidden");
-adminPage.classList.remove("hidden");
-renderAdmin();
-return;
-}
+            currentUser = { name, phone, branch };
+            document.getElementById('auth-screen').classList.add('hide');
+            document.getElementById('app-screen').classList.remove('hide');
+            document.getElementById('welcome-msg').innerText = `Karibu, ${name}! 👋`;
+            document.getElementById('nav-branch-display').innerText = branch;
+            showToast(`Karibu ${name}`);
+            lucide.createIcons();
+        }
 
-if(!b){toast("Chagua branch"); return;}
+        function toggleAdminLogin() {
+            document.getElementById('auth-screen').classList.add('hide');
+            document.getElementById('admin-auth').classList.remove('hide');
+        }
 
-branch = b;
-localStorage.setItem("branch",b);
+        function handleAdminLogin() {
+            const user = document.getElementById('admin-user').value;
+            const pass = document.getElementById('admin-pass').value;
 
-loginPage.classList.add("hidden");
-document.querySelector("h1").innerText = "Karibu Shishi Food "+b;
-}
+            if(user === "admin" && pass === "1234") {
+                document.getElementById('admin-auth').classList.add('hide');
+                document.getElementById('admin-dashboard').classList.remove('hide');
+                renderAdminOrders();
+            } else {
+                alert("Login Imefeli!");
+            }
+        }
 
-function skipLogin(){
-loginPage.classList.add("hidden");
-}
+        function logout() { location.reload(); }
 
-function showRegister(){
-loginPage.classList.add("hidden");
-registerPage.classList.remove("hidden");
-}
+        // -- CORE SYSTEM --
+        function updateQty(name, delta, price) {
+            if(!cart[name]) cart[name] = { qty: 0, price: price };
+            cart[name].qty += delta;
+            if(cart[name].qty <= 0) delete cart[name];
+            
+            document.getElementById(`qty-${name}`).innerText = cart[name]?.qty || 0;
+            updateReceipt();
+        }
 
-function backLogin(){
-registerPage.classList.add("hidden");
-loginPage.classList.remove("hidden");
-}
+        function updateReceipt() {
+            const container = document.getElementById('receipt-items');
+            let total = 0;
+            let html = "";
 
-function register(){
-users.push({u:regUser.value,p:regPass.value});
-localStorage.setItem("users",JSON.stringify(users));
-toast("Registered");
-backLogin();
-}
+            for(let key in cart) {
+                const subtotal = cart[key].qty * cart[key].price;
+                total += subtotal;
+                html += `<div class="flex justify-between"><span>${key} x${cart[key].qty}</span><span>${subtotal.toLocaleString()}</span></div>`;
+            }
 
-function logout(){
-location.reload();
-}
+            container.innerHTML = html || `<p class="text-gray-400 text-center">Chagua chakula kuona muhtasari</p>`;
+            document.getElementById('total-price').innerText = `Tsh ${total.toLocaleString()}`;
+        }
 
-/* ================= PAYMENT ================= */
-payment.onchange = ()=>{
-if(payment.value==="M-Pesa") payInfo.innerText="Lipa: 255700000000";
-if(payment.value==="TigoPesa") payInfo.innerText="Lipa: 255600000000";
-if(payment.value==="Airtel Money") payInfo.innerText="Lipa: 255780000000";
-};
+        function switchDay(btn, day) {
+            selectedDay = day;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active', 'bg-yellow-500', 'text-black', 'shadow-md'));
+            btn.classList.add('active', 'bg-yellow-500', 'text-black', 'shadow-md');
+            showToast("Menu ya " + day);
+        }
 
-/* ================= PREVIEW ================= */
-function previewOrder(){
-if(Object.keys(myOrder).length===0){
-toast("Chagua chakula");
-return;
-}
+        function submitOrder() {
+            if(Object.keys(cart).length === 0) return showToast("Chagua angalau chakula kimoja!");
+            const location_val = document.getElementById('delivery-loc').value;
+            const notes = document.getElementById('order-notes').value;
+            const payment = document.querySelector('input[name="payment"]:checked').value;
 
-let sum="";
-for(let k in myOrder){
-sum += k+"("+myOrder[k]+")<br>";
-}
+            if(!location_val) return showToast("Weka sehemu ya kuleta chakula!");
 
-sum += "<br><b>Payment:</b> "+payment.value;
-sum += "<br><b>Simu:</b> "+phone.value;
-sum += "<br><b>Location:</b> "+location.value;
+            const orderData = {
+                id: Date.now(),
+                user: currentUser.name,
+                phone: currentUser.phone,
+                branch: currentUser.branch,
+                items: {...cart},
+                total: document.getElementById('total-price').innerText,
+                location: location_val,
+                notes: notes,
+                payment: payment,
+                day: selectedDay,
+                date: new Date().toLocaleString()
+            };
 
-summary.innerHTML = sum;
-previewBox.classList.remove("hidden");
-}
+            // Save to local histories
+            orders.unshift(orderData);
+            localStorage.setItem('shishi_orders', JSON.stringify(orders.slice(0, 5)));
+            
+            allOrdersAdmin.unshift(orderData);
+            localStorage.setItem('admin_master_orders', JSON.stringify(allOrdersAdmin));
 
-/* ================= CONFIRM ================= */
-function confirmOrder(){
+            // WhatsApp Message
+            let itemText = "";
+            for(let key in cart) itemText += `• ${key} (${cart[key].qty})\n`;
+            
+            const msg = `*ODA MPYA - SHISHI FOOD*\n--------------------------\n*Mteja:* ${currentUser.name}\n*Tawi:* ${currentUser.branch}\n*Siku:* ${selectedDay}\n\n*ITEMS:*\n${itemText}\n*Jumla:* ${orderData.total}\n*Malipo:* ${payment}\n*Location:* ${location_val}\n*Maelezo:* ${notes || 'Hamna'}`;
 
-let data={
-items: myOrder,
-phone: phone.value,
-location: location.value,
-payment: payment.value,
-branch: branch || "Mteja",
-date: new Date().toLocaleString()
-};
+            window.open(`https://wa.me/255712345678?text=${encodeURIComponent(msg)}`, '_blank');
 
-allOrders.unshift(data);
-localStorage.setItem("allOrders",JSON.stringify(allOrders));
+            showToast("Oda imetumwa! Inarudi baada ya sekunde 3...");
+            
+            setTimeout(() => {
+                resetApp();
+            }, 3000);
+        }
 
-let text = "ODA:%0A"+JSON.stringify(data);
-window.open("https://wa.me/255712345678?text="+text);
+        function resetApp() {
+            cart = {};
+            document.querySelectorAll('.qty-val').forEach(el => el.innerText = "0");
+            document.getElementById('delivery-loc').value = "";
+            document.getElementById('order-notes').value = "";
+            updateReceipt();
+            renderHistory();
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
 
-previewBox.classList.add("hidden");
+        function renderHistory() {
+            const container = document.getElementById('history-container');
+            if(orders.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-400">Hakuna historia ya oda.</p>`;
+                return;
+            }
 
-toast("Order imetumwa!");
+            container.innerHTML = orders.map((o, index) => `
+                <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
+                    <div class="flex justify-between items-start mb-2">
+                        <p class="text-[10px] text-gray-400 font-bold uppercase">${o.date}</p>
+                        <span class="text-xs font-bold text-yellow-600">${o.total}</span>
+                    </div>
+                    <p class="text-sm font-bold mb-3">${Object.keys(o.items).join(', ')}</p>
+                    <div class="flex gap-2">
+                        <button onclick="reorder(${index})" class="flex-1 bg-gray-100 py-2 rounded-lg text-xs font-bold hover:bg-yellow-100 transition">Rudia Oda</button>
+                        <button onclick="deleteHistory(${index})" class="px-3 bg-red-50 text-red-500 py-2 rounded-lg text-xs"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
 
-/* RESET */
-myOrder = {};
-document.querySelectorAll(".qty-val").forEach(s=>s.innerText=0);
-document.getElementById("instructions").value="";
-phone.value="";
-location.value="";
-payment.value="";
-payInfo.innerText="";
+        function reorder(idx) {
+            const o = orders[idx];
+            cart = {...o.items};
+            for(let key in cart) {
+                const el = document.getElementById(`qty-${key}`);
+                if(el) el.innerText = cart[key].qty;
+            }
+            updateReceipt();
+            window.scrollTo({top: 600, behavior: 'smooth'});
+            showToast("Oda imerudishwa kwenye menu!");
+        }
 
-/* RETURN TOP */
-setTimeout(()=>window.scrollTo({top:0,behavior:"smooth"}),3000);
-}
+        function deleteHistory(idx) {
+            orders.splice(idx, 1);
+            localStorage.setItem('shishi_orders', JSON.stringify(orders));
+            renderHistory();
+            showToast("Oda imefutwa kwenye historia");
+        }
 
-/* ================= ADMIN ================= */
-function renderAdmin(){
-let box = document.getElementById("adminOrders");
+        // -- ADMIN LOGIC --
+        function renderAdminOrders() {
+            const container = document.getElementById('admin-orders-list');
+            if(allOrdersAdmin.length === 0) {
+                container.innerHTML = `<div class="p-10 text-center text-gray-400">Hakuna oda zilizopokelewa bado.</div>`;
+                return;
+            }
 
-if(allOrders.length===0){
-box.innerHTML="Hakuna orders";
-return;
-}
+            container.innerHTML = allOrdersAdmin.map(o => `
+                <div class="bg-white p-6 rounded-3xl shadow-sm border-l-8 border-yellow-500">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="bg-black text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase">${o.branch}</span>
+                        <span class="text-xs text-gray-400">${o.date}</span>
+                    </div>
+                    <h3 class="font-black text-lg">${o.user} (${o.phone})</h3>
+                    <div class="my-4 space-y-1">
+                         <p class="text-sm"><strong>Vyakula:</strong> ${Object.entries(o.items).map(([name, val]) => `${name} (x${val.qty})`).join(', ')}</p>
+                         <p class="text-sm"><strong>Location:</strong> ${o.location}</p>
+                         <p class="text-sm"><strong>Malipo:</strong> ${o.payment}</p>
+                         <p class="text-sm italic text-gray-500"><strong>Maelezo:</strong> ${o.notes || 'Hamna'}</p>
+                    </div>
+                    <div class="text-xl font-black text-green-600">${o.total}</div>
+                </div>
+            `).join('');
+        }
 
-box.innerHTML = allOrders.map(o=>`
-<div class="border p-3 mb-2 rounded">
-${o.date}<br>
-${JSON.stringify(o.items)}<br>
-💳 ${o.payment}<br>
-📞 ${o.phone}<br>
-📍 ${o.location}<br>
-🏙️ ${o.branch}
-</div>
-`).join("");
-}
+        // -- UTILS --
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
 
-</script>
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Init
+        window.onload = () => {
+            renderHistory();
+            lucide.createIcons();
+        };
+    </script>
+</body>
+</html>
