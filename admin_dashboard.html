@@ -12,7 +12,7 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         nav.custom-header {
-            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url('Homefooter.webp');
+            background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), url('Homefooter.webp');
             background-size: cover;
             background-position: center;
             border-bottom: 3px solid #eab308;
@@ -27,7 +27,7 @@
 
     <nav class="custom-header text-white p-6 flex justify-between items-center shadow-lg sticky top-0 z-50">
         <div class="flex items-center gap-4">
-            <div onclick="document.getElementById('profileUpload').click()" class="relative w-14 h-14 rounded-full border-2 border-yellow-500 overflow-hidden cursor-pointer group bg-slate-700 shadow-xl">
+            <div onclick="document.getElementById('profileUpload').click()" class="relative w-14 h-14 rounded-full border-2 border-yellow-500 overflow-hidden cursor-pointer group bg-slate-700">
                 <img id="adminProfilePic" src="shishi-food.webp" alt="Admin" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
                     <i data-lucide="camera" class="w-4 h-4 text-white"></i>
@@ -39,30 +39,30 @@
                 <p class="text-[10px] font-bold opacity-70 uppercase tracking-widest mt-1">Management Panel</p>
             </div>
         </div>
-        <button onclick="logoutAdmin()" class="bg-red-600 px-4 py-2 rounded-lg text-xs font-bold shadow-md active:scale-95 transition-all">LOGOUT</button>
+        <button onclick="logoutAdmin()" class="bg-red-600 px-4 py-2 rounded-lg text-xs font-bold shadow-md active:scale-95">LOGOUT</button>
     </nav>
 
     <div class="max-w-4xl mx-auto p-4 flex gap-2 overflow-x-auto no-scrollbar">
-        <button onclick="switchTab('orders')" class="bg-slate-900 text-white px-6 py-2 rounded-full text-xs font-bold whitespace-nowrap">Oda</button>
-        <button onclick="switchTab('analytics')" class="bg-white border px-6 py-2 rounded-full text-xs font-bold whitespace-nowrap">Analytics & Graph</button>
-        <button onclick="switchTab('menu')" class="bg-white border px-6 py-2 rounded-full text-xs font-bold whitespace-nowrap">Menu & Stock</button>
+        <button id="btn-orders" onclick="switchTab('orders')" class="tab-btn bg-slate-900 text-white px-6 py-2 rounded-full text-xs font-bold whitespace-nowrap">Oda</button>
+        <button id="btn-analytics" onclick="switchTab('analytics')" class="tab-btn bg-white border px-6 py-2 rounded-full text-xs font-bold whitespace-nowrap">Analytics</button>
+        <button id="btn-menu" onclick="switchTab('menu')" class="tab-btn bg-white border px-6 py-2 rounded-full text-xs font-bold whitespace-nowrap">Menu Control</button>
     </div>
 
     <div id="ordersTab" class="tab-content active">
         <div class="px-4 max-w-4xl mx-auto mb-4">
             <div class="relative">
-                <i data-lucide="search" class="absolute left-4 top-3 w-4 h-4 text-gray-400"></i>
-                <input type="text" id="searchInput" onkeyup="filterOrders()" placeholder="Tafuta mteja au namba ya simu..." class="w-full p-3 pl-12 rounded-2xl border-none shadow-sm text-sm focus:ring-2 focus:ring-yellow-500">
+                <i data-lucide="search" class="absolute left-4 top-3.5 w-4 h-4 text-gray-400"></i>
+                <input type="text" id="searchInput" onkeyup="filterOrders()" placeholder="Tafuta mteja au namba..." class="w-full p-3.5 pl-12 rounded-2xl border-none shadow-sm text-sm focus:ring-2 focus:ring-yellow-500">
             </div>
         </div>
 
         <div class="px-4 max-w-4xl mx-auto flex gap-2">
-            <button onclick="showReport('week')" class="flex-1 bg-white p-3 rounded-2xl shadow-sm border text-[10px] font-black uppercase">Week Report</button>
-            <button onclick="showReport('month')" class="flex-1 bg-white p-3 rounded-2xl shadow-sm border text-[10px] font-black uppercase">Month Report</button>
-            <button onclick="exportToExcel()" class="flex-1 bg-green-600 text-white p-3 rounded-2xl shadow-sm text-[10px] font-black uppercase">Export Excel</button>
+            <button onclick="showReport('week')" class="flex-1 bg-white p-3 rounded-2xl shadow-sm border text-[10px] font-black uppercase">Wiki</button>
+            <button onclick="showReport('month')" class="flex-1 bg-white p-3 rounded-2xl shadow-sm border text-[10px] font-black uppercase">Mwezi</button>
+            <button onclick="exportToExcel()" class="flex-1 bg-green-600 text-white p-3 rounded-2xl shadow-sm text-[10px] font-black uppercase">Excel</button>
         </div>
 
-        <div class="px-4 max-w-4xl mx-auto overflow-x-auto flex gap-3 no-scrollbar py-2" id="dateSlider"></div>
+        <div class="px-4 max-w-4xl mx-auto overflow-x-auto flex gap-3 no-scrollbar py-4" id="dateSlider"></div>
 
         <div class="p-4 max-w-4xl mx-auto min-h-screen">
             <h2 class="text-xl font-black text-slate-800 mb-6" id="selectedDateTitle">Oda za Leo</h2>
@@ -72,33 +72,36 @@
 
     <div id="analyticsTab" class="tab-content px-4 max-w-4xl mx-auto">
         <div class="bg-white p-6 rounded-[2.5rem] shadow-sm mb-6">
-            <h3 class="font-black text-slate-800 mb-4 uppercase text-xs tracking-widest text-center">Sales Trend (Last 7 Days)</h3>
-            <canvas id="salesChart" height="200"></canvas>
+            <h3 class="font-black text-slate-800 mb-4 uppercase text-xs tracking-widest text-center">Mwenendo wa Mauzo (Siku 7)</h3>
+            <canvas id="salesChart" height="250"></canvas>
         </div>
     </div>
 
     <div id="menuTab" class="tab-content px-4 max-w-4xl mx-auto">
         <div class="bg-white p-6 rounded-[2.5rem] shadow-sm">
-            <h3 class="font-black text-slate-800 mb-4 uppercase text-xs tracking-widest">Menu Stock Control</h3>
-            <div class="space-y-3" id="menuControl">
-                <p class="text-gray-400 text-xs italic text-center py-10">Unganisha na Menu DB yako hapa...</p>
+            <h3 class="font-black text-slate-800 mb-4 uppercase text-xs tracking-widest">Stock & Menu Management</h3>
+            <div class="grid grid-cols-1 gap-3" id="menuControl">
+                <p class="text-gray-500 text-sm italic">Hapa unaweza kuweka list ya vyakula vyako ili uweze kuwasha/kuzima (In-Stock / Out-of-Stock) hivi karibuni.</p>
             </div>
         </div>
     </div>
 
     <div class="p-4 max-w-4xl mx-auto">
         <div class="bg-slate-900 text-white p-6 rounded-[2.5rem] shadow-2xl space-y-4 border-t-4 border-yellow-500">
-            <h3 class="text-xs font-black uppercase tracking-widest text-yellow-500 text-center">Muhtasari wa Siku</h3>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="bg-slate-800 p-4 rounded-2xl text-center"><p class="text-[9px] text-gray-400 font-bold uppercase">Orders</p><p class="text-xl font-black" id="statTotalOrders">0</p></div>
-                <div class="bg-slate-800 p-4 rounded-2xl text-center"><p class="text-[9px] text-gray-400 font-bold uppercase">Amount</p><p class="text-xl font-black text-green-400" id="statTotalAmount">0</p></div>
-                <div class="bg-slate-800 p-4 rounded-2xl text-center"><p class="text-[9px] text-gray-400 font-bold uppercase">Active</p><p class="text-xl font-black text-blue-400" id="statReceived">0</p></div>
-                <div class="bg-slate-800 p-4 rounded-2xl text-center"><p class="text-[9px] text-gray-400 font-bold uppercase">Done</p><p class="text-xl font-black text-yellow-500" id="statCompleted">0</p></div>
+            <div class="grid grid-cols-2 gap-4 text-center">
+                <div class="bg-slate-800 p-4 rounded-2xl">
+                    <p class="text-[9px] text-gray-400 font-bold uppercase">Orders</p>
+                    <p class="text-xl font-black" id="statTotalOrders">0</p>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-2xl">
+                    <p class="text-[9px] text-gray-400 font-bold uppercase">TZS Total</p>
+                    <p class="text-xl font-black text-green-400" id="statTotalAmount">0</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <footer class="mt-10 bg-white border-t border-gray-200">
+    <footer class="mt-10 bg-white border-t">
         <div class="p-4"><img src="indexfooter.webp" alt="Footer" class="w-full h-auto rounded-3xl shadow-lg"></div>
         <div class="text-center py-6 pb-10"><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">© 2026 Shishi Food Point Admin</p></div>
     </footer>
@@ -112,11 +115,19 @@
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.remove('bg-slate-900', 'text-white');
+                b.classList.add('bg-white', 'text-slate-900', 'border');
+            });
+            
             document.getElementById(tabId + 'Tab').classList.add('active');
+            document.getElementById('btn-' + tabId).classList.add('bg-slate-900', 'text-white');
+            document.getElementById('btn-' + tabId).classList.remove('bg-white', 'text-slate-900', 'border');
+            
             if(tabId === 'analytics') renderChart();
+            if(tabId === 'orders') loadOrders();
         }
 
-        // 1. UPDATE PROFILE PIC
         function updateProfilePic(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -128,12 +139,6 @@
             }
         }
 
-        function loadProfilePic() {
-            const savedPic = localStorage.getItem('shishi_admin_avatar');
-            if (savedPic) document.getElementById('adminProfilePic').src = savedPic;
-        }
-
-        // 2. SEARCH FILTER (NEW)
         function filterOrders() {
             const val = document.getElementById('searchInput').value.toLowerCase();
             const cards = document.querySelectorAll('#adminList > div');
@@ -143,86 +148,42 @@
             });
         }
 
-        // 3. CHART RENDERING (NEW)
         function renderChart() {
             const ctx = document.getElementById('salesChart').getContext('2d');
             const orders = JSON.parse(localStorage.getItem('shishi_master_db')) || [];
-            
-            // Logic ya kupata data za siku 7
             let labels = []; let data = [];
             for(let i=6; i>=0; i--) {
                 const d = new Date(); d.setDate(d.getDate()-i);
                 const dStr = d.toLocaleDateString();
                 labels.push(dStr.split('/')[0] + '/' + dStr.split('/')[1]);
-                const dayTotal = orders.filter(o => o.date.includes(dStr)).reduce((acc, curr) => acc + (curr.total || 0), 0);
+                const dayTotal = orders.filter(o => o.date.includes(dStr)).reduce((acc, curr) => acc + (Number(curr.total) || 0), 0);
                 data.push(dayTotal);
             }
-
             if(window.myChart) window.myChart.destroy();
             window.myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Mauzo (TZS)',
+                        label: 'Mauzo',
                         data: data,
                         borderColor: '#eab308',
                         backgroundColor: 'rgba(234, 179, 8, 0.1)',
-                        fill: true, tension: 0.4, borderWidth: 3
+                        fill: true, tension: 0.4
                     }]
-                },
-                options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+                }
             });
         }
 
-        // 4. WHATSAPP & INVOICE (NEW)
-        function sendWhatsApp(phone, name, items) {
-            const msg = `Habari ${name}, Oda yako ya (${items}) imepokelewa na sasa inaandaliwa. Asante kwa kuchagua Shishi Food!`;
-            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`);
-        }
-
-        function printInvoice(order) {
-            const win = window.open('', '_blank');
-            win.document.write(`
-                <div style="font-family:sans-serif; padding:20px; text-align:center;">
-                    <h2>SHISHI FOOD POINT</h2>
-                    <p>Mteja: ${order.name} | ${order.date}</p>
-                    <hr>
-                    <p>${formatItems(order.items)}</p>
-                    <h3>Total: ${order.total} TZS</h3>
-                    <p>Asante, Karibu tena!</p>
-                </div>
-            `);
-            win.print();
-        }
-
-        // 5. EXCEL EXPORT (NEW)
-        function exportToExcel() {
-            const orders = JSON.parse(localStorage.getItem('shishi_master_db')) || [];
-            let csv = "Tarehe,Mteja,Simu,Tawi,Jumla,Hali\n";
-            orders.forEach(o => {
-                csv += `${o.date},${o.name},${o.phone},${o.branch},${o.total},${o.status}\n`;
-            });
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.setAttribute('hidden', '');
-            a.setAttribute('href', url);
-            a.setAttribute('download', 'shishi_orders_report.csv');
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-
-        // ORIGINAL LOGIC (MAINTAINED)
         function setupDateSlider() {
             const slider = document.getElementById('dateSlider');
+            if(!slider) return;
             slider.innerHTML = '';
             for(let i = 0; i < 7; i++) {
                 const d = new Date(); d.setDate(d.getDate() - i);
                 const dateStr = d.toLocaleDateString();
                 const isActive = dateStr === selectedDate;
-                slider.innerHTML += `<button onclick="selectDate('${dateStr}')" class="flex-shrink-0 px-6 py-3 rounded-2xl font-black text-xs transition-all shadow-sm ${isActive ? 'bg-yellow-500 text-black scale-105' : 'bg-white text-gray-400 border'}">${i === 0 ? 'LEO' : dateStr.split('/')[0] + '/' + dateStr.split('/')[1]}</button>`;
+                slider.innerHTML += `<button onclick="selectDate('${dateStr}')" class="flex-shrink-0 px-6 py-3 rounded-2xl font-black text-xs transition-all shadow-sm ${isActive ? 'bg-yellow-500 text-black' : 'bg-white text-gray-400 border'}">${i === 0 ? 'LEO' : dateStr.split('/')[0] + '/' + dateStr.split('/')[1]}</button>`;
             }
         }
 
@@ -236,22 +197,24 @@
         function loadOrders() {
             const orders = JSON.parse(localStorage.getItem('shishi_master_db')) || [];
             const list = document.getElementById('adminList');
-            const filteredOrders = orders.filter(o => o.date.includes(selectedDate));
-            
-            let totalAmt = 0; let received = 0; let completed = 0; let undone = 0;
+            if(!list) return;
+
+            if (orders.length > lastOrderCount && lastOrderCount !== 0) {
+                document.getElementById('notifSound').play().catch(e => {});
+            }
+            lastOrderCount = orders.length;
+
+            const filteredOrders = orders.filter(o => o.date && o.date.includes(selectedDate));
+            let totalAmt = 0; let received = 0; let completed = 0;
 
             filteredOrders.forEach(o => {
-                totalAmt += (o.total || 0);
+                totalAmt += (Number(o.total) || 0);
                 if(o.status === 'RECEIVED') received++;
-                else if(o.status === 'COMPLETED') completed++;
-                else undone++;
+                if(o.status === 'COMPLETED') completed++;
             });
 
             document.getElementById('statTotalOrders').innerText = filteredOrders.length;
             document.getElementById('statTotalAmount').innerText = totalAmt.toLocaleString() + " TZS";
-            document.getElementById('statReceived').innerText = received;
-            document.getElementById('statCompleted').innerText = completed;
-            document.getElementById('statUndone').innerText = undone;
 
             if(filteredOrders.length === 0) {
                 list.innerHTML = `<p class="text-center py-20 text-gray-400 font-bold uppercase text-xs">Hakuna oda</p>`;
@@ -264,27 +227,21 @@
                     <div class="bg-white p-6 rounded-3xl shadow-sm border-l-4 ${o.status === 'COMPLETED' ? 'border-green-500 opacity-60' : 'border-yellow-500'}">
                         <div class="flex justify-between items-start mb-3">
                             <div>
-                                <div class="flex gap-2 items-center mb-1">
-                                    <span class="text-[9px] bg-black text-white px-2 py-0.5 rounded font-black tracking-widest">${o.status || 'PENDING'}</span>
-                                    <span class="text-[10px] bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded font-black">${o.branch}</span>
-                                </div>
-                                <h3 class="text-lg font-black mt-1 uppercase tracking-tighter">${o.name}</h3>
-                                <p class="text-blue-600 text-xs font-bold underline cursor-pointer" onclick="sendWhatsApp('${o.phone}', '${o.name}', '${formatItems(o.items)}')">${o.phone}</p>
+                                <span class="text-[9px] bg-black text-white px-2 py-0.5 rounded font-black uppercase tracking-widest">${o.status || 'PENDING'}</span>
+                                <h3 class="text-lg font-black mt-1 uppercase">${o.name || 'Mteja'}</h3>
+                                <p class="text-blue-600 text-xs font-bold underline" onclick="sendWhatsApp('${o.phone}', '${o.name}')">${o.phone || ''}</p>
                             </div>
                             <div class="text-right">
-                                <span class="text-[10px] text-gray-400 font-bold block">${o.date.split(',')[1] || ''}</span>
-                                <span class="text-sm font-black text-slate-800">${(o.total || 0).toLocaleString()} TZS</span>
+                                <span class="text-sm font-black text-slate-800">${(Number(o.total) || 0).toLocaleString()} TZS</span>
                             </div>
                         </div>
-                        
-                        <div class="bg-gray-50 p-4 rounded-2xl text-sm mb-4 border border-gray-100">
-                            <p class="text-slate-700"><strong>Vyakula:</strong> ${formatItems(o.items)}</p>
+                        <div class="bg-gray-50 p-4 rounded-2xl text-sm mb-4">
+                            <p><strong>Vyakula:</strong> ${formatItems(o.items)}</p>
                         </div>
-
-                        <div class="flex gap-2 mt-4 items-center">
+                        <div class="flex gap-2">
                             ${(!o.status || o.status === 'PENDING') ? `<button onclick="updateStatus(${masterIndex}, 'RECEIVED')" class="bg-blue-600 text-white text-[10px] px-4 py-2 rounded-xl font-black">VERIFY</button>` : ''}
                             ${o.status === 'RECEIVED' ? `<button onclick="updateStatus(${masterIndex}, 'COMPLETED')" class="bg-green-600 text-white text-[10px] px-4 py-2 rounded-xl font-black">COMPLETE</button>` : ''}
-                            <button onclick='printInvoice(${JSON.stringify(o)})' class="bg-slate-100 text-slate-600 text-[10px] px-4 py-2 rounded-xl font-black ml-auto">RISITI</button>
+                            <button onclick='printInvoice(${JSON.stringify(o)})' class="bg-slate-100 text-[10px] px-4 py-2 rounded-xl font-black ml-auto">RISITI</button>
                         </div>
                     </div>
                 `;
@@ -293,15 +250,42 @@
         }
 
         function formatItems(items) {
+            if (!items) return "—";
             if (typeof items === 'string') return items;
-            return Object.entries(items).map(([k,v]) => `${k} (x${v})`).join(', ');
+            try {
+                return Object.entries(items).map(([k,v]) => `${k} (x${v})`).join(', ');
+            } catch(e) { return "Gharama tu"; }
         }
 
         function updateStatus(index, newStatus) {
-            let orders = JSON.parse(localStorage.getItem('shishi_master_db'));
-            orders[index].status = newStatus;
-            localStorage.setItem('shishi_master_db', JSON.stringify(orders));
-            loadOrders();
+            let orders = JSON.parse(localStorage.getItem('shishi_master_db')) || [];
+            if(orders[index]) {
+                orders[index].status = newStatus;
+                localStorage.setItem('shishi_master_db', JSON.stringify(orders));
+                loadOrders();
+            }
+        }
+
+        function sendWhatsApp(phone, name) {
+            const msg = `Habari ${name}, Oda yako inapokelewa sasa. Asante!`;
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`);
+        }
+
+        function printInvoice(o) {
+            const win = window.open('', '_blank');
+            win.document.write(`<html><body style="text-align:center;font-family:sans-serif"><h2>SHISHI FOOD</h2><p>${o.name}</p><p>${formatItems(o.items)}</p><h3>Total: ${o.total} TZS</h3></body></html>`);
+            win.print();
+        }
+
+        function exportToExcel() {
+            const orders = JSON.parse(localStorage.getItem('shishi_master_db')) || [];
+            let csv = "Tarehe,Mteja,Total\n";
+            orders.forEach(o => { csv += `${o.date},${o.name},${o.total}\n`; });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'oda.csv';
+            a.click();
         }
 
         function logoutAdmin() {
@@ -309,7 +293,10 @@
             window.location.replace('index.html');
         }
 
-        loadProfilePic();
+        // INITIALIZE
+        const savedAvatar = localStorage.getItem('shishi_admin_avatar');
+        if(savedAvatar) document.getElementById('adminProfilePic').src = savedAvatar;
+        
         setupDateSlider();
         loadOrders();
         setInterval(loadOrders, 5000);
