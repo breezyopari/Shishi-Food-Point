@@ -3,20 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Admin Dashboard | Shishi Food</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;800&display=swap" rel="stylesheet">
 </head>
-<body class="bg-gray-100 font-['Outfit']">
-    <nav class="bg-slate-900 text-white p-4 flex justify-between items-center shadow-lg">
-        <h1 class="font-black italic text-yellow-500">SHISHI ADMIN</h1>
-        <button onclick="location.href='index.html'" class="bg-red-600 px-4 py-2 rounded-lg text-xs font-bold">LOGOUT</button>
+<body class="bg-gray-100 font-['Outfit'] min-h-screen">
+
+    <audio id="notifSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
+
+    <nav class="bg-slate-900 text-white p-4 sticky top-0 z-50 flex justify-between items-center shadow-xl">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center">
+                <i data-lucide="layout-dashboard" class="text-black w-5 h-5"></i>
+            </div>
+            <h1 class="font-black italic text-yellow-500 uppercase tracking-tighter">SHISHI ADMIN</h1>
+        </div>
+        <button onclick="logoutAdmin()" class="bg-red-600 px-4 py-2 rounded-xl text-xs font-bold shadow-lg">LOGOUT</button>
     </nav>
 
     <div class="p-4 max-w-4xl mx-auto">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-black">Oda Zilizopokelewa</h2>
-            <button onclick="clearAll()" class="text-xs text-red-500 underline font-bold">Futa Zote</button>
+        <div class="flex justify-between items-end mb-6">
+            <div>
+                <h2 class="text-2xl font-black text-slate-800">Oda Zote</h2>
+                <p class="text-xs text-gray-500 font-bold uppercase tracking-widest" id="orderCount">0 ODA ZIMEPATIKANA</p>
+            </div>
+            <button onclick="clearCompleted()" class="text-[10px] bg-white border border-gray-200 px-3 py-2 rounded-lg font-bold text-gray-400 hover:text-red-500">Futa Zilizokamilika</button>
         </div>
 
         <div id="adminList" class="space-y-4">
@@ -24,55 +36,111 @@
     </div>
 
     <script>
-        if(sessionStorage.getItem('isAdmin') !== 'true') window.location.href = 'admin_login.html';
+        // Security Check
+        if (localStorage.getItem('shishi_admin_auth') !== 'true') {
+            window.location.href = 'admin_login.html';
+        }
+
+        let lastOrderCount = 0;
 
         function loadOrders() {
             const orders = JSON.parse(localStorage.getItem('shishi_master_db')) || [];
             const list = document.getElementById('adminList');
+            document.getElementById('orderCount').innerText = `${orders.length} ODA ZIMEPATIKANA`;
             
+            // Notification Sound Logic
+            if (orders.length > lastOrderCount && lastOrderCount !== 0) {
+                document.getElementById('notifSound').play();
+            }
+            lastOrderCount = orders.length;
+
             if(orders.length === 0) {
-                list.innerHTML = `<p class="text-center py-20 text-gray-400">Hakuna oda mpya.</p>`;
+                list.innerHTML = `<div class="text-center py-20 opacity-20 font-black text-2xl uppercase">Hakuna Oda</div>`;
                 return;
             }
 
             list.innerHTML = orders.map((o, i) => `
-                <div class="bg-white p-6 rounded-3xl shadow-sm border-l-4 border-yellow-500">
-                    <div class="flex justify-between items-start mb-3">
+                <div class="bg-white p-5 rounded-[2rem] shadow-sm border-2 ${o.status === 'COMPLETED' ? 'border-green-100 opacity-60' : 'border-white'} relative overflow-hidden">
+                    ${o.status === 'COMPLETED' ? '<div class="absolute top-0 right-0 bg-green-500 text-white text-[8px] px-4 py-1 font-black rounded-bl-xl">DONE</div>' : ''}
+                    
+                    <div class="flex justify-between items-start mb-4">
                         <div>
-                            <span class="text-[10px] bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded font-black">${o.branch}</span>
-                            <h3 class="text-lg font-black mt-1">${o.name}</h3>
-                            <p class="text-blue-600 text-xs font-bold">${o.phone}</p>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[9px] font-black px-2 py-1 rounded bg-slate-100 text-slate-600 uppercase tracking-tighter">${o.branch}</span>
+                                <span class="text-[9px] font-black px-2 py-1 rounded ${getStatusColor(o.status)} uppercase tracking-tighter">${o.status}</span>
+                            </div>
+                            <h3 class="text-lg font-black mt-2 text-slate-800">${o.name}</h3>
+                            <p class="text-blue-600 text-xs font-bold underline">${o.phone}</p>
                         </div>
-                        <span class="text-[10px] text-gray-400 font-bold">${o.date}</span>
+                        <div class="text-right">
+                            <p class="text-[10px] text-gray-400 font-bold">${o.date.split(',')[1]}</p>
+                            <p class="text-[9px] text-gray-300 font-bold uppercase">${o.payment}</p>
+                        </div>
                     </div>
-                    <div class="bg-gray-50 p-4 rounded-2xl text-sm mb-4">
-                        <p><strong>Vyakula:</strong> ${Object.entries(o.items).map(([k,v]) => `${k} (x${v})`).join(', ')}</p>
-                        <p class="mt-2"><strong>Location:</strong> ${o.location}</p>
-                        <p><strong>Malipo:</strong> ${o.payment}</p>
+
+                    <div class="bg-gray-50 p-4 rounded-2xl text-sm mb-4 border border-gray-100">
+                        <p class="font-bold text-slate-700 leading-relaxed"><span class="text-gray-400 uppercase text-[10px] block">Vyakula:</span> ${formatItems(o.items)}</p>
+                        <p class="mt-2 text-slate-600"><span class="text-gray-400 uppercase text-[10px] block">Location:</span> ${o.location}</p>
                     </div>
-                    <button onclick="deleteOrder(${i})" class="text-red-500 text-xs font-bold flex items-center gap-1">
-                        <i data-lucide="trash-2" class="w-3 h-3"></i> Futa Oda
-                    </button>
+
+                    <div class="flex gap-2">
+                        ${o.status === 'PENDING' ? 
+                            `<button onclick="updateStatus(${i}, 'RECEIVED')" class="flex-1 bg-yellow-500 text-black text-xs py-3 rounded-xl font-black shadow-md active:scale-95 transition underline tracking-tighter">VERIFY ORDER</button>` : ''}
+                        
+                        ${o.status === 'RECEIVED' ? 
+                            `<button onclick="updateStatus(${i}, 'COMPLETED')" class="flex-1 bg-green-600 text-white text-xs py-3 rounded-xl font-black shadow-md active:scale-95 transition tracking-tighter">ORDER COMPLETED</button>` : ''}
+                        
+                        <button onclick="deleteOrder(${i})" class="p-3 bg-red-50 text-red-500 rounded-xl hover:bg-red-100"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </div>
                 </div>
             `).join('');
             lucide.createIcons();
         }
 
-        function deleteOrder(i) {
+        function formatItems(items) {
+            if (typeof items === 'string') return items;
+            return Object.entries(items).map(([k,v]) => `${k} (x${v})`).join(', ');
+        }
+
+        function getStatusColor(s) {
+            if(s === 'PENDING') return 'bg-orange-100 text-orange-600';
+            if(s === 'RECEIVED') return 'bg-blue-100 text-blue-600';
+            if(s === 'COMPLETED') return 'bg-green-100 text-green-600';
+            return 'bg-gray-100 text-gray-600';
+        }
+
+        function updateStatus(index, newStatus) {
             let orders = JSON.parse(localStorage.getItem('shishi_master_db'));
-            orders.splice(i, 1);
+            orders[index].status = newStatus;
             localStorage.setItem('shishi_master_db', JSON.stringify(orders));
             loadOrders();
         }
 
-        function clearAll() {
-            if(confirm("Futa oda zote?")) {
-                localStorage.removeItem('shishi_master_db');
+        function deleteOrder(i) {
+            if(confirm("Futa hii oda?")) {
+                let orders = JSON.parse(localStorage.getItem('shishi_master_db'));
+                orders.splice(i, 1);
+                localStorage.setItem('shishi_master_db', JSON.stringify(orders));
                 loadOrders();
             }
         }
 
+        function clearCompleted() {
+            let orders = JSON.parse(localStorage.getItem('shishi_master_db')) || [];
+            orders = orders.filter(o => o.status !== 'COMPLETED');
+            localStorage.setItem('shishi_master_db', JSON.stringify(orders));
+            loadOrders();
+        }
+
+        function logoutAdmin() {
+            localStorage.removeItem('shishi_admin_auth');
+            window.location.href = 'index.html';
+        }
+
+        // Auto Refresh kila sekunde 5 ili kuona oda mpya bila ku-reload
+        setInterval(loadOrders, 5000);
         loadOrders();
+        lucide.createIcons();
     </script>
 </body>
 </html>
