@@ -11,11 +11,12 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* Background kwa mbali kwenye Header */
+        /* Background kwa mbali kwenye Header - Imeboreshwa */
         nav.custom-header {
-            background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), url('Homefooter.webp');
+            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url('Homefooter.webp');
             background-size: cover;
             background-position: center;
+            border-bottom: 3px solid #eab308;
         }
     </style>
 </head>
@@ -24,11 +25,21 @@
     <audio id="notifSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
 
     <nav class="custom-header text-white p-6 flex justify-between items-center shadow-lg sticky top-0 z-50">
-        <div>
-            <h1 class="font-black italic text-yellow-500 text-2xl tracking-tighter">SHISHI ADMIN</h1>
-            <p class="text-[10px] font-bold opacity-60 uppercase tracking-widest">Management Panel</p>
+        <div class="flex items-center gap-4">
+            <div onclick="document.getElementById('profileUpload').click()" class="relative w-14 h-14 rounded-full border-2 border-yellow-500 overflow-hidden cursor-pointer group bg-slate-700 shadow-xl">
+                <img id="adminProfilePic" src="shishi-food.webp" alt="Admin" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                    <i data-lucide="camera" class="w-4 h-4 text-white"></i>
+                </div>
+            </div>
+            <input type="file" id="profileUpload" class="hidden" accept="image/*" onchange="updateProfilePic(this)">
+            
+            <div>
+                <h1 class="font-black italic text-yellow-500 text-2xl tracking-tighter leading-none text-shadow-md">SHISHI ADMIN</h1>
+                <p class="text-[10px] font-bold opacity-70 uppercase tracking-widest mt-1">Management Panel</p>
+            </div>
         </div>
-        <button onclick="logoutAdmin()" class="bg-red-600 px-4 py-2 rounded-lg text-xs font-bold shadow-md active:scale-95">LOGOUT</button>
+        <button onclick="logoutAdmin()" class="bg-red-600 px-4 py-2 rounded-lg text-xs font-bold shadow-md active:scale-95 transition-all">LOGOUT</button>
     </nav>
 
     <div class="p-4 max-w-4xl mx-auto flex gap-2 mt-2">
@@ -42,8 +53,7 @@
     <div class="p-4 max-w-4xl mx-auto min-h-screen">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-xl font-black text-slate-800" id="selectedDateTitle">Oda za Leo</h2>
-            <button onclick="clearAll()" class="text-xs text-red-500 underline font-bold">Futa Zote (Master)</button>
-        </div>
+            </div>
 
         <div id="adminList" class="space-y-4 mb-10"></div>
 
@@ -89,6 +99,23 @@
 
         let lastOrderCount = 0;
         let selectedDate = new Date().toLocaleDateString();
+
+        // PROFILE PICTURE FUNCTIONS
+        function updateProfilePic(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('adminProfilePic').src = e.target.result;
+                    localStorage.setItem('shishi_admin_avatar', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function loadProfilePic() {
+            const savedPic = localStorage.getItem('shishi_admin_avatar');
+            if (savedPic) document.getElementById('adminProfilePic').src = savedPic;
+        }
 
         function setupDateSlider() {
             const slider = document.getElementById('dateSlider');
@@ -205,10 +232,7 @@
                     if(oDate.getFullYear() === now.getFullYear()) valid = true;
                 }
                 
-                if(valid) {
-                    total += (o.total || 0);
-                    count++;
-                }
+                if(valid) { total += (o.total || 0); count++; }
             });
 
             alert(`RIPOTI YA ${type.toUpperCase()}:\n\nJumla ya Oda: ${count}\nKiasi Kilichokusanywa: ${total.toLocaleString()} TZS`);
@@ -226,18 +250,12 @@
             loadOrders();
         }
 
-        function clearAll() {
-            if(confirm("ONYO: Hii itafuta data zote kabisa kwenye mfumo. Endelea?")) {
-                localStorage.removeItem('shishi_master_db');
-                loadOrders();
-            }
-        }
-
         function logoutAdmin() {
             localStorage.removeItem('shishi_admin_auth');
             window.location.replace('index.html');
         }
 
+        loadProfilePic();
         setupDateSlider();
         setInterval(loadOrders, 5000);
         loadOrders();
