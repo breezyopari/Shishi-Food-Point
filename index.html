@@ -20,8 +20,17 @@
 <body class="bg-pattern">
 
     <div class="wrapper">
-        <main class="flex-grow flex items-center justify-center p-4">
-            <div class="max-w-sm w-full bg-white p-6 rounded-[2rem] shadow-2xl border-4 border-black/5">
+        <main class="flex-grow flex flex-col items-center justify-center p-4 gap-4">
+            
+            <div class="max-w-sm w-full overflow-hidden rounded-[2rem] shadow-2xl border-4 border-white bg-black aspect-video relative">
+                <video autoplay loop muted playsinline class="w-full h-full object-cover">
+                    <source src="videoad.mp4" type="video/mp4">
+                    Browser yako haisapoti video.
+                </video>
+                <div class="absolute inset-0 bg-black/10"></div>
+            </div>
+
+            <div class="max-w-sm w-full bg-white p-6 rounded-[2.5rem] shadow-2xl border-4 border-black/5">
                 <div class="text-center mb-6">
                     <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-3 rotate-6 shadow-xl border-4 border-yellow-500 overflow-hidden">
                         <img src="logo.webp" alt="Shishi Logo" class="w-full h-full object-cover">
